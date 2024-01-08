@@ -14,7 +14,7 @@ namespace KitchenMysteryMenu
         public const string MOD_NAME = "MysteryMenu";
         public const string MOD_VERSION = "0.1.0";
         public const string MOD_AUTHOR = "Kailaria";
-        public const string MOD_GAMEVERSION = ">=1.1.4";
+        public const string MOD_GAMEVERSION = ">=1.1.8";
 
         public static AssetBundle Bundle;
         public static KitchenLogger Logger;
@@ -24,6 +24,7 @@ namespace KitchenMysteryMenu
         protected override void OnInitialise()
         {
             Logger.LogWarning($"{MOD_GUID} v{MOD_VERSION} in use!");
+            // Modify existing GDOs
         }
 
         protected override void OnUpdate()
@@ -32,6 +33,7 @@ namespace KitchenMysteryMenu
 
         protected override void OnPostActivate(KitchenMods.Mod mod)
         {
+            // Add new GDOs
             Bundle = mod.GetPacks<AssetBundleModPack>().SelectMany(e => e.AssetBundles).FirstOrDefault() ?? throw new MissingAssetBundleException(MOD_GUID);
             Logger = InitLogger();
         }
