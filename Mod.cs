@@ -2,6 +2,10 @@ using KitchenLib;
 using KitchenLib.Logging;
 using KitchenLib.Logging.Exceptions;
 using KitchenMods;
+using KitchenMysteryMenu.Customs.Appliances;
+using KitchenMysteryMenu.Customs.Dishes;
+using KitchenMysteryMenu.Customs.Dishes.Steaks;
+using KitchenMysteryMenu.Customs.Ingredients;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
@@ -34,8 +38,12 @@ namespace KitchenMysteryMenu
         protected override void OnPostActivate(KitchenMods.Mod mod)
         {
             // Add new GDOs
-            Bundle = mod.GetPacks<AssetBundleModPack>().SelectMany(e => e.AssetBundles).FirstOrDefault() ?? throw new MissingAssetBundleException(MOD_GUID);
+            //Bundle = mod.GetPacks<AssetBundleModPack>().SelectMany(e => e.AssetBundles).FirstOrDefault() ?? throw new MissingAssetBundleException(MOD_GUID);
             Logger = InitLogger();
+            AddGameDataObject<MysteryIngredientProvider>();
+            AddGameDataObject<MysteryMeat>();
+            AddGameDataObject<MysterySteakDish>();
+            AddGameDataObject<MysteryMenuDish>();
         }
     }
 }
