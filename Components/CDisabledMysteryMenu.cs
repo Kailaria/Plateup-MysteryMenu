@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Unity.Entities;
 
-namespace MysteryMenu.Components
+namespace KitchenMysteryMenu.Components
 {
     [StructLayout(LayoutKind.Sequential, Size = 1)]
     public struct CDisabledMysteryMenu : IComponentData
