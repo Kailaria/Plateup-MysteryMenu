@@ -44,6 +44,7 @@ namespace KitchenMysteryMenu.Customs.Dishes
         {
             // Add X Mystery Ingredients
             GDOUtils.GetCastedGDO<Item, MysteryMeat>(),
+            GDOUtils.GetCastedGDO<Item, MysteryFlour>(),
             (Item)GDOUtils.GetExistingGDO(ItemReferences.Plate),
             (Item)GDOUtils.GetExistingGDO(ItemReferences.Wok)
         };
@@ -51,6 +52,21 @@ namespace KitchenMysteryMenu.Customs.Dishes
         {
             (Process)GDOUtils.GetExistingGDO(ProcessReferences.Chop),
             (Process)GDOUtils.GetExistingGDO(ProcessReferences.RequireOven)
+        };
+        public override List<Dish.MenuItem> ResultingMenuItems => new()
+        {
+            new()
+            {
+                Item = (Item) GDOUtils.GetExistingGDO(ItemReferences.SteakPlated),
+                Phase = MenuPhase.Main,
+                Weight = 1
+            },
+            new()
+            {
+                Item = (Item) GDOUtils.GetExistingGDO(ItemReferences.BreakfastPlated),
+                Phase = MenuPhase.Main,
+                Weight = 1
+            }
         };
         public override List<Dish> AlsoAddRecipes => new()
         {
