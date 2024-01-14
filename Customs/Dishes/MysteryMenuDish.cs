@@ -57,6 +57,10 @@ namespace KitchenMysteryMenu.Customs.Dishes
             // Add the Mystery versions of every base main
             GDOUtils.GetCastedGDO<Dish, MysterySteakDish>()
         };
+        public override Dictionary<Locale, string> Recipe => new()
+        {
+            { Locale.English, "Make other base main recipes with the given ingredients, then plate." }
+        };
         public override List<(Locale, UnlockInfo)> InfoList => new()
         {
             (Locale.English, new UnlockInfo()

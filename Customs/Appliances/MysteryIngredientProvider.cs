@@ -1,6 +1,8 @@
 ﻿using Kitchen;
 using KitchenData;
 using KitchenLib.Customs;
+using KitchenLib.References;
+using KitchenLib.Utils;
 using KitchenMysteryMenu;
 using KitchenMysteryMenu.Components;
 using System;
@@ -8,19 +10,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace KitchenMysteryMenu.Customs.Appliances
 {
     public class MysteryIngredientProvider : CustomAppliance
     {
-        public override string UniqueNameID => Mod.MOD_GUID + ":MysteryIngredientProvider";
-        //public override GameObject Prefab => ;
+        public override string UniqueNameID => "Mystery Ingredient Provider";
+        public override GameObject Prefab => ((Appliance) GDOUtils.GetExistingGDO(ApplianceReferences.SourceFish)).Prefab;
         public override List<IApplianceProperty> Properties => new List<IApplianceProperty>()
         {
             new CMysteryMenuProvider() {
                 Type = Utils.MysteryMenuType.Mystery
-            },
-            new CItemProvider()
+            }
         };
         public override bool IsNonInteractive => false;
         public override OccupancyLayer Layer => OccupancyLayer.Default;
