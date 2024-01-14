@@ -23,8 +23,4 @@
 	<ItemGroup>
 		<PackageReference Include="Yariazen.PlateUp.ModBuildUtilities" Version="1.10.21" />
 	</ItemGroup>
-  
-	<ItemGroup>
-	  <Folder Include="Customs\ItemGroups\" />
-	</ItemGroup>
 </Project>
