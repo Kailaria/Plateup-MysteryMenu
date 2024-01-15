@@ -7,11 +7,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KitchenMysteryMenu.Customs.Dishes.Breakfast
+namespace KitchenMysteryMenu.Customs.Dishes.Salad
 {
-    public class MysteryBreakfastDish : GenericMysteryDish
+    public class MysterySaladDish : GenericMysteryDish
     {
-        protected override string NameTag => "Mystery Breakfast Dish";
+        protected override string NameTag => "Mystery Salad Dish";
         public override DishType Type => DishType.Base;
         public override DishCustomerChange CustomerMultiplier => DishCustomerChange.None;
         public override Unlock.RewardLevel ExpReward => Unlock.RewardLevel.None;
@@ -23,22 +23,34 @@ namespace KitchenMysteryMenu.Customs.Dishes.Breakfast
         public override int Difficulty => 1;
         public override Dictionary<Locale, string> Recipe => new()
         {
-            { Locale.English, "Knead flour to make dough, then cook to make bread. Interact to cut a slice and cook to make toast." }
+            { Locale.English, "Chop lettuce and plate. If tomato is present, also sometimes chop tomato once and add." }
         };
         public override List<(Locale, UnlockInfo)> InfoList => new()
         {
             (Locale.English, new UnlockInfo()
             {
-                Name = "Mystery - Breakfast",
-                Description = "Adds toast as a main when <b>Flour</b> is present",
-                FlavourText = "The most important meal of the day"
+                Name = "Mystery - Salad",
+                Description = "Adds salad as a main dish when <b>Lettuce</b> is present",
+                FlavourText = "No cooking, but lots of chopping!\n" +
+                            "Basic lettuce salads. If <b>Tomato</b> is present, serve salads with and without chopped tomato."
             })
         };
-
+        public override List<Dish.MenuItem> ResultingMenuItems => new()
+        {
+            new()
+            {
+                Item = (Item) GDOUtils.GetExistingGDO(ItemReferences.SaladPlated),
+                Phase = MenuPhase.Main,
+                Weight = 1
+            }
+        };
         public override List<Item> MinimumRequiredMysteryIngredients => new List<Item>()
         {
-            (Item) GDOUtils.GetExistingGDO(ItemReferences.Flour)
+            (Item) GDOUtils.GetExistingGDO(ItemReferences.Lettuce)
         };
-        public override List<Item> UnlockedOptionalMysteryIngredients => new List<Item>();
+        public override List<Item> UnlockedOptionalMysteryIngredients => new List<Item>()
+        {
+            (Item) GDOUtils.GetExistingGDO(ItemReferences.Tomato)
+        };
     }
 }

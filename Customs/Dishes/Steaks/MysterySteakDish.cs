@@ -10,10 +10,10 @@ using System.Threading.Tasks;
 
 namespace KitchenMysteryMenu.Customs.Dishes.Steaks
 {
-    public class MysterySteakDish : CustomDish
+    public class MysterySteakDish : GenericMysteryDish
     {
-        public override string UniqueNameID => Mod.MOD_NAME + " : Mystery Steak Dish";
-        public override DishType Type => DishType.Main;
+        protected override string NameTag => "Mystery Steak Dish";
+        public override DishType Type => DishType.Base;
         public override DishCustomerChange CustomerMultiplier => DishCustomerChange.None;
         public override Unlock.RewardLevel ExpReward => Unlock.RewardLevel.None;
         public override UnlockGroup UnlockGroup => UnlockGroup.Dish;
@@ -31,9 +31,14 @@ namespace KitchenMysteryMenu.Customs.Dishes.Steaks
             (Locale.English, new UnlockInfo()
             {
                 Name = "Mystery - Steak",
-                Description = "Adds steak as a main dish when <b>Meat</b> is present",
+                Description = "Adds steak as a main when <b>Meat</b> is present",
                 FlavourText = "Cook steaks multiple times to match the order"
             })
         };
+        public override List<Item> MinimumRequiredMysteryIngredients => new List<Item>()
+        {
+            (Item) GDOUtils.GetExistingGDO(ItemReferences.Meat)
+        };
+        public override List<Item> UnlockedOptionalMysteryIngredients => new List<Item>();
     }
 }

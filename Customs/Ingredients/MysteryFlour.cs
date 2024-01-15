@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace KitchenMysteryMenu.Customs.Ingredients
 {
-    public class MysteryFlour : MysteryGenericItem
+    public class MysteryFlour : GenericMysteryItem
     {
         protected override Item ExistingGDO => (Item)GDOUtils.GetExistingGDO(ItemReferences.Flour);
         protected override string NameTag => "Mystery Flour";

@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace KitchenMysteryMenu.Customs.Ingredients
 {
-    public abstract class MysteryGenericItem : CustomItem
+    public abstract class GenericMysteryItem : CustomItem
     {
         protected abstract string NameTag { get; }
         protected abstract Item ExistingGDO { get; }

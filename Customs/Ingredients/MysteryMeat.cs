@@ -12,7 +12,7 @@ using UnityEngine;
 
 namespace KitchenMysteryMenu.Customs.Ingredients
 {
-    public class MysteryMeat : MysteryGenericItem
+    public class MysteryMeat : GenericMysteryItem
     {
         protected override Item ExistingGDO => (Item)GDOUtils.GetExistingGDO(ItemReferences.Meat);
         protected override string NameTag => "Mystery Meat";

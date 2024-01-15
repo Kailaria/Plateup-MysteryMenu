@@ -3,6 +3,8 @@ using KitchenLib.Customs;
 using KitchenLib.References;
 using KitchenLib.Utils;
 using KitchenMysteryMenu;
+using KitchenMysteryMenu.Customs.Dishes.Breakfast;
+using KitchenMysteryMenu.Customs.Dishes.Pies;
 using KitchenMysteryMenu.Customs.Dishes.Steaks;
 using KitchenMysteryMenu.Customs.Ingredients;
 using System;
@@ -66,12 +68,20 @@ namespace KitchenMysteryMenu.Customs.Dishes
                 Item = (Item) GDOUtils.GetExistingGDO(ItemReferences.BreakfastPlated),
                 Phase = MenuPhase.Main,
                 Weight = 1
+            },
+            new()
+            {
+                Item = (Item) GDOUtils.GetExistingGDO(ItemReferences.PiePlated),
+                Phase = MenuPhase.Main,
+                Weight = 1
             }
         };
         public override List<Dish> AlsoAddRecipes => new()
         {
             // Add the Mystery versions of every base main
-            GDOUtils.GetCastedGDO<Dish, MysterySteakDish>()
+            GDOUtils.GetCastedGDO<Dish, MysterySteakDish>(),
+            GDOUtils.GetCastedGDO<Dish, MysteryBreakfastDish>(),
+            GDOUtils.GetCastedGDO<Dish, MysteryPiesDish>()
         };
         public override Dictionary<Locale, string> Recipe => new()
         {
