@@ -1,6 +1,7 @@
 ﻿using HarmonyLib;
 using Kitchen;
 using KitchenData;
+using KitchenLib.Logging;
 using KitchenLib.References;
 using KitchenLib.Utils;
 using KitchenMysteryMenu.Components;
@@ -20,52 +21,42 @@ namespace KitchenMysteryMenu.Patches
     [HarmonyPatch(typeof(RebuildKitchen))]
     public class RebuildKitchen_Patch
     {
+        static readonly int MYSTERY_MENU_ID = GDOUtils.GetCastedGDO<Dish, MysteryMenuDish>().ID;
+        static KitchenLogger Logger = new KitchenLogger("KitchenMysteryMenu");
+        static EntityQuery MysteryProvidersQuery = PatchController.StaticGetEntityQuery(
+                    new QueryHelper()
+                    .All(typeof(RebuildKitchen.CFranchiseKitchenAppliance),
+                        typeof(CItemProvider),
+                        typeof(CMysteryMenuProvider))
+                );
+
         [HarmonyPostfix]
         [HarmonyPatch("RecreateAppliances")]
         public static void RecreateAppliances_Postfix(Dish dish)
         {
-            if (dish.Name != GDOUtils.GetCastedGDO<Dish, MysteryMenuDish>().Name)
+            Logger.LogInfo($"dish.ID = {dish.ID}; dish.Name = {dish.Name}; MysteryMenuID = {MYSTERY_MENU_ID}");
+            if (dish.ID != MYSTERY_MENU_ID)
             {
                 return;
             }
 
-            using EntityQuery mysteryProvidersQuery = PatchController.StaticGetEntityQuery(
-                new QueryHelper()
-                .All(typeof(RebuildKitchen.CFranchiseKitchenAppliance), 
-                    typeof(CItemProvider),
-                    typeof(CMysteryMenuProvider))
-                );
-            using NativeArray<Entity> mpEntities = mysteryProvidersQuery.ToEntityArray(Allocator.Temp);
-            using NativeArray<CItemProvider> mpCItemProviders = mysteryProvidersQuery.ToComponentDataArray<CItemProvider>(Allocator.Temp);
+            NativeArray<int> itemIDs = new();
+            itemIDs.AddItem(ItemReferences.Meat);
+            itemIDs.AddItem(ItemReferences.Flour);
+            using var mpEntities = MysteryProvidersQuery.ToEntityArray(Allocator.Temp);
+            Logger.LogInfo($"mpEntities: {mpEntities}\n" +
+                $"mpEntities.Length: {mpEntities.Length}");
 
             // Compare Minimum Ingredients in the dish to the provided items by the providers. Modify the data
             // of the matching entity to use the original ingredient instead of the Mystery form.
             // TODO?: After MVP release, instead, base it off a SelectMysteryMenu-selected pair of ingredients
             //      that have been implemented, perhaps only if there's a "randomize ingredients" appliance.
-            int mysteryMeatID = GDOUtils.GetCastedGDO<Item, MysteryMeat>().ID;
-            int mysteryFlourID = GDOUtils.GetCastedGDO<Item, MysteryFlour>().ID;
-            foreach (Item minItem in new HashSet<Item>(dish.MinimumIngredients))
+            for (int i = 0; i < mpEntities.Length; i++)
             {
-                for (int i = 0; i < mpEntities.Length; i++)
-                {
-                    var ent = mpEntities[i];
-                    var cItemProvider = mpCItemProviders[i];
-                    if (minItem.ID == cItemProvider.ProvidedItem)
-                    {
-                        if (minItem.ID == mysteryMeatID)
-                        {
-                            cItemProvider.ProvidedItem = ItemReferences.Meat;
-                            PatchController.StaticAddComponentData(ent, cItemProvider);
-                            break;
-                        }
-                        if (minItem.ID == mysteryFlourID)
-                        {
-                            cItemProvider.ProvidedItem = ItemReferences.Flour;
-                            PatchController.StaticAddComponentData(ent, cItemProvider);
-                            break;
-                        }
-                    }
-                }
+                var ent = mpEntities[i];
+                var cItemProvider = CItemProvider.InfiniteItemProvider(itemIDs[i % itemIDs.Length]);
+                PatchController.StaticRemoveComponentData<CItemProvider>(ent);
+                PatchController.StaticAddComponentData(ent, cItemProvider);
             }
         }
 

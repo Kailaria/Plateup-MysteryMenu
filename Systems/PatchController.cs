@@ -1,4 +1,5 @@
 ﻿using Kitchen;
+using KitchenData;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -60,6 +61,33 @@ namespace KitchenMysteryMenu.Systems
         internal static EntityQuery StaticGetEntityQuery(params EntityQueryDesc[] queryDesc)
         {
             return _instance?.GetEntityQuery(queryDesc) ?? default;
+        }
+
+        internal static void StaticDestroyEntity(EntityQuery entityQuery)
+        {
+            if (_instance?.EntityManager != null)
+            {
+                _instance.EntityManager.DestroyEntity(entityQuery);
+            }
+        }
+
+        internal static T StaticGetComponent<T>(Entity entity) where T : struct, IComponentData
+        {
+            return _instance?.GetComponent<T>(entity) ?? default;
+        }
+
+        internal static Appliance StaticGetDefaultProvider()
+        {
+            if (_instance?.Data != null)
+            {
+                return _instance.Data.ReferableObjects.DefaultProvider;
+            }
+            return default;
+        }
+
+        internal static void StaticRemoveComponentData<T>(Entity ent)
+        {
+            _instance?.EntityManager.RemoveComponent<T>(ent);
         }
     }
 }
