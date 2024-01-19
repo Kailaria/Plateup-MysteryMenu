@@ -76,6 +76,14 @@ namespace KitchenMysteryMenu.Customs.Dishes
                 Weight = 1
             }
         };
+        public override HashSet<Dish.IngredientUnlock> IngredientsUnlocks => new()
+        {
+            new()
+            {
+                MenuItem = (ItemGroup)GDOUtils.GetExistingGDO(ItemReferences.PiePlated),
+                Ingredient = (Item) GDOUtils.GetExistingGDO(ItemReferences.PieMeatCooked)
+            }
+        };
         public override List<Dish> AlsoAddRecipes => new()
         {
             // Add the Mystery versions of every base main

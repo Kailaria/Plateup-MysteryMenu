@@ -14,7 +14,7 @@ namespace KitchenMysteryMenu.Customs.Ingredients
     public abstract class GenericMysteryItem : CustomItem
     {
         protected abstract string NameTag { get; }
-        protected abstract Item ExistingGDO { get; }
+        public abstract Item ExistingGDO { get; }
         public override string UniqueNameID => Mod.MOD_NAME + " : " + NameTag;
         public override GameObject Prefab => ExistingGDO.Prefab;
         public override ItemStorage ItemStorageFlags => ExistingGDO.ItemStorageFlags;

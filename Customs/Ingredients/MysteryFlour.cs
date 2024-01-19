@@ -12,7 +12,7 @@ namespace KitchenMysteryMenu.Customs.Ingredients
 {
     public class MysteryFlour : GenericMysteryItem
     {
-        protected override Item ExistingGDO => (Item)GDOUtils.GetExistingGDO(ItemReferences.Flour);
+        public override Item ExistingGDO => (Item)GDOUtils.GetExistingGDO(ItemReferences.Flour);
         protected override string NameTag => "Mystery Flour";
         public override Appliance DedicatedProvider => GDOUtils.GetCastedGDO<Appliance, MysteryIngredientProvider>();
         public override List<Item.ItemProcess> Processes => new List<Item.ItemProcess>()
