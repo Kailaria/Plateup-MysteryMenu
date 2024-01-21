@@ -2,6 +2,13 @@ using KitchenLib;
 using KitchenLib.Logging;
 using KitchenLib.Logging.Exceptions;
 using KitchenMods;
+using KitchenMysteryMenu.Customs.Appliances;
+using KitchenMysteryMenu.Customs.Dishes;
+using KitchenMysteryMenu.Customs.Dishes.Breakfast;
+using KitchenMysteryMenu.Customs.Dishes.Pies;
+using KitchenMysteryMenu.Customs.Dishes.Steaks;
+using KitchenMysteryMenu.Customs.Ingredients;
+using KitchenMysteryMenu.Customs.ItemGroups;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
@@ -33,9 +40,42 @@ namespace KitchenMysteryMenu
 
         protected override void OnPostActivate(KitchenMods.Mod mod)
         {
-            // Add new GDOs
-            Bundle = mod.GetPacks<AssetBundleModPack>().SelectMany(e => e.AssetBundles).FirstOrDefault() ?? throw new MissingAssetBundleException(MOD_GUID);
+            //Bundle = mod.GetPacks<AssetBundleModPack>().SelectMany(e => e.AssetBundles).FirstOrDefault() ?? throw new MissingAssetBundleException(MOD_GUID);
             Logger = InitLogger();
+
+            // Add new GDOs
+            AddApplianceGDOs();
+            AddIngredientGDOs();
+            AddItemGroupGDOs();
+            AddDishGDOs();
+        }
+
+        private void AddApplianceGDOs()
+        {
+            AddGameDataObject<MysteryIngredientProvider>();
+        }
+
+        private void AddIngredientGDOs()
+        {
+            // For the HQ Kitchen to work with minimal extra code
+            AddGameDataObject<MysteryMeat>();
+            AddGameDataObject<MysteryFlour>();
+        }
+
+        private void AddItemGroupGDOs()
+        {
+            // For the HQ Kitchen to work with minimal extra code
+            AddGameDataObject<MysteryDough>();
+            AddGameDataObject<MysteryPieMeatRaw>();
+            AddGameDataObject<MysteryPieMeatRawBlindBaked>();
+        }
+
+        private void AddDishGDOs()
+        {
+            AddGameDataObject<MysterySteakDish>();
+            AddGameDataObject<MysteryBreakfastDish>();
+            AddGameDataObject<MysteryPiesDish>();
+            AddGameDataObject<MysteryMenuDish>();
         }
     }
 }

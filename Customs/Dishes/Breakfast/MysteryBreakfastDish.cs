@@ -1,5 +1,4 @@
 ﻿using KitchenData;
-using KitchenLib.Customs;
 using KitchenLib.References;
 using KitchenLib.Utils;
 using System;
@@ -8,11 +7,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KitchenMysteryMenu.Customs.Dishes.Steaks
+namespace KitchenMysteryMenu.Customs.Dishes.Breakfast
 {
-    public class MysterySteakDish : GenericMysteryDish
+    public class MysteryBreakfastDish : GenericMysteryDish
     {
-        protected override string NameTag => "Mystery Steak Dish";
+        protected override string NameTag => "Mystery Breakfast Dish";
         public override DishType Type => DishType.Base;
         public override DishCustomerChange CustomerMultiplier => DishCustomerChange.None;
         public override Unlock.RewardLevel ExpReward => Unlock.RewardLevel.None;
@@ -24,20 +23,21 @@ namespace KitchenMysteryMenu.Customs.Dishes.Steaks
         public override int Difficulty => 1;
         public override Dictionary<Locale, string> Recipe => new()
         {
-            { Locale.English, "Cook steak once for rare, twice for medium, and thrice for well-done" }
+            { Locale.English, "Knead flour to make dough, then cook to make bread. Interact to cut a slice and cook to make toast." }
         };
         public override List<(Locale, UnlockInfo)> InfoList => new()
         {
             (Locale.English, new UnlockInfo()
             {
-                Name = "Mystery - Steak",
-                Description = "Adds steak as a main when <b>Meat</b> is present",
-                FlavourText = "Cook steaks multiple times to match the order"
+                Name = "Mystery - Breakfast",
+                Description = "Adds toast as a main when <b>Flour</b> is present",
+                FlavourText = "The most important meal of the day"
             })
         };
+
         public override List<Item> MinimumRequiredMysteryIngredients => new List<Item>()
         {
-            (Item) GDOUtils.GetExistingGDO(ItemReferences.Meat)
+            (Item) GDOUtils.GetExistingGDO(ItemReferences.Flour)
         };
         public override List<Item> UnlockedOptionalMysteryIngredients => new List<Item>();
     }

@@ -3,6 +3,8 @@ using KitchenLib.Customs;
 using KitchenLib.References;
 using KitchenLib.Utils;
 using KitchenMysteryMenu;
+using KitchenMysteryMenu.Customs.Dishes.Breakfast;
+using KitchenMysteryMenu.Customs.Dishes.Pies;
 using KitchenMysteryMenu.Customs.Dishes.Steaks;
 using KitchenMysteryMenu.Customs.Ingredients;
 using System;
@@ -44,6 +46,7 @@ namespace KitchenMysteryMenu.Customs.Dishes
         {
             // Add X Mystery Ingredients
             GDOUtils.GetCastedGDO<Item, MysteryMeat>(),
+            GDOUtils.GetCastedGDO<Item, MysteryFlour>(),
             (Item)GDOUtils.GetExistingGDO(ItemReferences.Plate),
             (Item)GDOUtils.GetExistingGDO(ItemReferences.Wok)
         };
@@ -52,10 +55,45 @@ namespace KitchenMysteryMenu.Customs.Dishes
             (Process)GDOUtils.GetExistingGDO(ProcessReferences.Chop),
             (Process)GDOUtils.GetExistingGDO(ProcessReferences.RequireOven)
         };
+        public override List<Dish.MenuItem> ResultingMenuItems => new()
+        {
+            new()
+            {
+                Item = (Item) GDOUtils.GetExistingGDO(ItemReferences.SteakPlated),
+                Phase = MenuPhase.Main,
+                Weight = 1
+            },
+            new()
+            {
+                Item = (Item) GDOUtils.GetExistingGDO(ItemReferences.BreakfastPlated),
+                Phase = MenuPhase.Main,
+                Weight = 1
+            },
+            new()
+            {
+                Item = (Item) GDOUtils.GetExistingGDO(ItemReferences.PiePlated),
+                Phase = MenuPhase.Main,
+                Weight = 1
+            }
+        };
+        public override HashSet<Dish.IngredientUnlock> IngredientsUnlocks => new()
+        {
+            new()
+            {
+                MenuItem = (ItemGroup)GDOUtils.GetExistingGDO(ItemReferences.PiePlated),
+                Ingredient = (Item) GDOUtils.GetExistingGDO(ItemReferences.PieMeatCooked)
+            }
+        };
         public override List<Dish> AlsoAddRecipes => new()
         {
             // Add the Mystery versions of every base main
-            GDOUtils.GetCastedGDO<Dish, MysterySteakDish>()
+            GDOUtils.GetCastedGDO<Dish, MysterySteakDish>(),
+            GDOUtils.GetCastedGDO<Dish, MysteryBreakfastDish>(),
+            GDOUtils.GetCastedGDO<Dish, MysteryPiesDish>()
+        };
+        public override Dictionary<Locale, string> Recipe => new()
+        {
+            { Locale.English, "Make other base main recipes with the given ingredients, then plate." }
         };
         public override List<(Locale, UnlockInfo)> InfoList => new()
         {

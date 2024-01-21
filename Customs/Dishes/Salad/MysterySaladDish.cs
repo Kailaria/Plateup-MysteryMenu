@@ -1,5 +1,4 @@
 ﻿using KitchenData;
-using KitchenLib.Customs;
 using KitchenLib.References;
 using KitchenLib.Utils;
 using System;
@@ -8,11 +7,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KitchenMysteryMenu.Customs.Dishes.Steaks
+namespace KitchenMysteryMenu.Customs.Dishes.Salad
 {
-    public class MysterySteakDish : GenericMysteryDish
+    public class MysterySaladDish : GenericMysteryDish
     {
-        protected override string NameTag => "Mystery Steak Dish";
+        protected override string NameTag => "Mystery Salad Dish";
         public override DishType Type => DishType.Base;
         public override DishCustomerChange CustomerMultiplier => DishCustomerChange.None;
         public override Unlock.RewardLevel ExpReward => Unlock.RewardLevel.None;
@@ -24,21 +23,34 @@ namespace KitchenMysteryMenu.Customs.Dishes.Steaks
         public override int Difficulty => 1;
         public override Dictionary<Locale, string> Recipe => new()
         {
-            { Locale.English, "Cook steak once for rare, twice for medium, and thrice for well-done" }
+            { Locale.English, "Chop lettuce and plate. If tomato is present, also sometimes chop tomato once and add." }
         };
         public override List<(Locale, UnlockInfo)> InfoList => new()
         {
             (Locale.English, new UnlockInfo()
             {
-                Name = "Mystery - Steak",
-                Description = "Adds steak as a main when <b>Meat</b> is present",
-                FlavourText = "Cook steaks multiple times to match the order"
+                Name = "Mystery - Salad",
+                Description = "Adds salad as a main dish when <b>Lettuce</b> is present",
+                FlavourText = "No cooking, but lots of chopping!\n" +
+                            "Basic lettuce salads. If <b>Tomato</b> is present, serve salads with and without chopped tomato."
             })
+        };
+        public override List<Dish.MenuItem> ResultingMenuItems => new()
+        {
+            new()
+            {
+                Item = (Item) GDOUtils.GetExistingGDO(ItemReferences.SaladPlated),
+                Phase = MenuPhase.Main,
+                Weight = 1
+            }
         };
         public override List<Item> MinimumRequiredMysteryIngredients => new List<Item>()
         {
-            (Item) GDOUtils.GetExistingGDO(ItemReferences.Meat)
+            (Item) GDOUtils.GetExistingGDO(ItemReferences.Lettuce)
         };
-        public override List<Item> UnlockedOptionalMysteryIngredients => new List<Item>();
+        public override List<Item> UnlockedOptionalMysteryIngredients => new List<Item>()
+        {
+            (Item) GDOUtils.GetExistingGDO(ItemReferences.Tomato)
+        };
     }
 }
