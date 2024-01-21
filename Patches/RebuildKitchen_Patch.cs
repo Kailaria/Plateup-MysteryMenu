@@ -18,47 +18,47 @@ using Unity.Entities;
 
 namespace KitchenMysteryMenu.Patches
 {
-    [HarmonyPatch(typeof(RebuildKitchen))]
-    public class RebuildKitchen_Patch
-    {
-        static readonly int MYSTERY_MENU_ID = GDOUtils.GetCastedGDO<Dish, MysteryMenuDish>().ID;
-        static KitchenLogger Logger = new KitchenLogger("KitchenMysteryMenu");
-        static EntityQuery MysteryProvidersQuery = PatchController.StaticGetEntityQuery(
-                    new QueryHelper()
-                    .All(typeof(RebuildKitchen.CFranchiseKitchenAppliance),
-                        typeof(CItemProvider),
-                        typeof(CMysteryMenuProvider))
-                );
+    //[HarmonyPatch(typeof(RebuildKitchen))]
+    //public class RebuildKitchen_Patch
+    //{
+    //    static readonly int MYSTERY_MENU_ID = GDOUtils.GetCastedGDO<Dish, MysteryMenuDish>().ID;
+    //    static KitchenLogger Logger = new KitchenLogger("KitchenMysteryMenu");
+    //    static EntityQuery MysteryProvidersQuery = PatchController.StaticGetEntityQuery(
+    //                new QueryHelper()
+    //                .All(typeof(RebuildKitchen.CFranchiseKitchenAppliance),
+    //                    typeof(CItemProvider),
+    //                    typeof(CMysteryMenuProvider))
+    //            );
 
-        [HarmonyPostfix]
-        [HarmonyPatch("RecreateAppliances")]
-        public static void RecreateAppliances_Postfix(Dish dish)
-        {
-            Logger.LogInfo($"dish.ID = {dish.ID}; dish.Name = {dish.Name}; MysteryMenuID = {MYSTERY_MENU_ID}");
-            if (dish.ID != MYSTERY_MENU_ID)
-            {
-                return;
-            }
+    //    [HarmonyPostfix]
+    //    [HarmonyPatch("RecreateAppliances")]
+    //    public static void RecreateAppliances_Postfix(Dish dish)
+    //    {
+    //        Logger.LogInfo($"dish.ID = {dish.ID}; dish.Name = {dish.Name}; MysteryMenuID = {MYSTERY_MENU_ID}");
+    //        if (dish.ID != MYSTERY_MENU_ID)
+    //        {
+    //            return;
+    //        }
 
-            NativeArray<int> itemIDs = new();
-            itemIDs.AddItem(ItemReferences.Meat);
-            itemIDs.AddItem(ItemReferences.Flour);
-            using var mpEntities = MysteryProvidersQuery.ToEntityArray(Allocator.Temp);
-            Logger.LogInfo($"mpEntities: {mpEntities}\n" +
-                $"mpEntities.Length: {mpEntities.Length}");
+    //        NativeArray<int> itemIDs = new();
+    //        itemIDs.AddItem(ItemReferences.Meat);
+    //        itemIDs.AddItem(ItemReferences.Flour);
+    //        using var mpEntities = MysteryProvidersQuery.ToEntityArray(Allocator.Temp);
+    //        Logger.LogInfo($"mpEntities: {mpEntities}\n" +
+    //            $"mpEntities.Length: {mpEntities.Length}");
 
-            // Compare Minimum Ingredients in the dish to the provided items by the providers. Modify the data
-            // of the matching entity to use the original ingredient instead of the Mystery form.
-            // TODO?: After MVP release, instead, base it off a SelectMysteryMenu-selected pair of ingredients
-            //      that have been implemented, perhaps only if there's a "randomize ingredients" appliance.
-            for (int i = 0; i < mpEntities.Length; i++)
-            {
-                var ent = mpEntities[i];
-                var cItemProvider = CItemProvider.InfiniteItemProvider(itemIDs[i % itemIDs.Length]);
-                PatchController.StaticRemoveComponentData<CItemProvider>(ent);
-                PatchController.StaticAddComponentData(ent, cItemProvider);
-            }
-        }
+    //        // Compare Minimum Ingredients in the dish to the provided items by the providers. Modify the data
+    //        // of the matching entity to use the original ingredient instead of the Mystery form.
+    //        // TODO?: After MVP release, instead, base it off a SelectMysteryMenu-selected pair of ingredients
+    //        //      that have been implemented, perhaps only if there's a "randomize ingredients" appliance.
+    //        for (int i = 0; i < mpEntities.Length; i++)
+    //        {
+    //            var ent = mpEntities[i];
+    //            var cItemProvider = CItemProvider.InfiniteItemProvider(itemIDs[i % itemIDs.Length]);
+    //            PatchController.StaticRemoveComponentData<CItemProvider>(ent);
+    //            PatchController.StaticAddComponentData(ent, cItemProvider);
+    //        }
+    //    }
 
         /* TODO: After providing a lobby button to swap available ingredients, need to make sure the cats order
          *      the right menu. Down-the-line feature. */
@@ -135,5 +135,5 @@ namespace KitchenMysteryMenu.Patches
         // Need to patch over RebuildKitchen to remove menu item entities that can't be ordered
         // Might not be necessary depending on if AlsoAddRecipes adding the cards also adds the dishes *in the restaurant*,
         //  unlike with the kitchen
-    }
+    //}
 }
