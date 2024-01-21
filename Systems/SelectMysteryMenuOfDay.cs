@@ -18,18 +18,9 @@ namespace KitchenMysteryMenu.Systems
         protected override void Initialise()
         {
             base.Initialise();
-            ItemProviders = GetEntityQuery(
-                new QueryHelper()
-                    .All(typeof(CItemProvider),typeof(CMysteryMenuProvider),typeof(CPosition))
-                );
-            MenuItems = GetEntityQuery(
-                new QueryHelper()
-                    .All(typeof(CMenuItem), typeof(CMysteryMenuItem))
-                );
-            DisabledMenuItems = GetEntityQuery(
-                new QueryHelper()
-                    .All(typeof(CMysteryMenuItem), typeof(CDisabledMysteryMenu))
-                );
+            ItemProviders = GetEntityQuery(typeof(CItemProvider), typeof(CMysteryMenuProvider));
+            MenuItems = GetEntityQuery(typeof(CMenuItem), typeof(CMysteryMenuItem));
+            DisabledMenuItems = GetEntityQuery(typeof(CMysteryMenuItem), typeof(CDisabledMysteryMenu));
         }
 
         protected override void OnUpdate()
