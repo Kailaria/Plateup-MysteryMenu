@@ -8,8 +8,8 @@ namespace KitchenMysteryMenu.Utils
 {
     public enum MysteryMenuType
     {
-        Static,
-        Fish,
-        Mystery
+        Static = 0,
+        Fish = 1,
+        Mystery = 2
     }
 }

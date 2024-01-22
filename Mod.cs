@@ -53,6 +53,7 @@ namespace KitchenMysteryMenu
         private void AddApplianceGDOs()
         {
             AddGameDataObject<MysteryIngredientProvider>();
+            AddGameDataObject<MysteryIngredientProvider2>();
         }
 
         private void AddIngredientGDOs()

@@ -48,7 +48,7 @@ namespace KitchenMysteryMenu.Systems
             // Update the Prev Dish, then check if we need to update the Item Providers
             sRebuildMysteryKitchen.PrevDish = currentDish;
             SetSingleton(sRebuildMysteryKitchen);
-            if (currentDish != References.MYSTERY_MENU_ID)
+            if (currentDish != References.MysteryMenuDish.ID)
             {
                 return;
             }
@@ -67,14 +67,10 @@ namespace KitchenMysteryMenu.Systems
             using var itemProviders = HqItemProviders.ToEntityArray(Allocator.Temp);
             using var existingCItemProviders = HqItemProviders.ToComponentDataArray<CItemProvider>(Allocator.Temp);
             Mod.Logger.LogInfo("RebuildMysteryKitchen - Updating ingredients");
-            Mod.Logger.LogInfo($"itemproviders: {itemProviders}; itemproviders.Length: {itemProviders.Length}");
-            Mod.Logger.LogInfo($"existingComp: {existingCItemProviders}; existing.Length: {existingCItemProviders.Length}");
             for (int i = 0; i < itemProviders.Length; i++)
             {
-                Mod.Logger.LogInfo($"looping: {i}");
                 var entity = itemProviders[i];
                 var cItemProvider = existingCItemProviders[i];
-                Mod.Logger.LogInfo($"entity = {entity}; comp = {cItemProvider}");
 
                 // Plate & Wok Stacks are also Item Providers, so don't change those.
                 if (cItemProvider.ProvidedItem == ItemReferences.Plate
@@ -83,12 +79,6 @@ namespace KitchenMysteryMenu.Systems
                     continue;
                 }
 
-                Mod.Logger.LogInfo($"It's an ingredient!");
-                Mod.Logger.LogInfo($"Setting to index: {ingredientIndex}");
-                Mod.Logger.LogInfo($"before itemID = {cItemProvider.ProvidedItem}");
-                Mod.Logger.LogInfo($"itemIDs = {itemIDs}; itemIDs.Length = {itemIDs.Count}");
-                Mod.Logger.LogInfo($"after itemID? = {itemIDs[ingredientIndex]}");
-                /*CItemProvider newComponentData = CItemProvider.InfiniteItemProvider(itemIDs[ingredientIndex])*/;
                 cItemProvider.ProvidedItem = itemIDs[ingredientIndex];
                 EntityManager.SetComponentData(entity, cItemProvider);
                 Mod.Logger.LogInfo("Component Data Set! Cyclically increment ingredientIndex.");

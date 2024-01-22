@@ -7,6 +7,7 @@ using KitchenMysteryMenu.Customs.Dishes.Breakfast;
 using KitchenMysteryMenu.Customs.Dishes.Pies;
 using KitchenMysteryMenu.Customs.Dishes.Steaks;
 using KitchenMysteryMenu.Customs.Ingredients;
+using KitchenMysteryMenu.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,7 @@ namespace KitchenMysteryMenu.Customs.Dishes
 {
     public class MysteryMenuDish : CustomDish
     {
-        public override string UniqueNameID => Mod.MOD_GUID + ":MysteryMenuDish";
+        public override string UniqueNameID => "Mystery Menu Dish";
         public override DishType Type => DishType.Base;
         public override DishCustomerChange CustomerMultiplier => DishCustomerChange.SmallDecrease;
         //public override GameObject DisplayPrefab => 
@@ -61,19 +62,22 @@ namespace KitchenMysteryMenu.Customs.Dishes
             {
                 Item = (Item) GDOUtils.GetExistingGDO(ItemReferences.SteakPlated),
                 Phase = MenuPhase.Main,
-                Weight = 1
+                Weight = 1,
+                DynamicMenuType = References.DynamicMenuTypeMystery
             },
             new()
             {
                 Item = (Item) GDOUtils.GetExistingGDO(ItemReferences.BreakfastPlated),
                 Phase = MenuPhase.Main,
-                Weight = 1
+                Weight = 1,
+                DynamicMenuType = References.DynamicMenuTypeMystery
             },
             new()
             {
                 Item = (Item) GDOUtils.GetExistingGDO(ItemReferences.PiePlated),
                 Phase = MenuPhase.Main,
-                Weight = 1
+                Weight = 1,
+                DynamicMenuType = References.DynamicMenuTypeMystery
             }
         };
         public override HashSet<Dish.IngredientUnlock> IngredientsUnlocks => new()
@@ -101,8 +105,8 @@ namespace KitchenMysteryMenu.Customs.Dishes
             {
                 Name = "Mystery Menu",
                 Description = "Adds all default base mains as mains",
-                FlavourText = "Available ingredients will vary each day." +
-                    "Make sure you're ready for everything that those ingredients can make!"
+                FlavourText = "Available ingredients will vary each day.\n" +
+                    "Make sure you're ready for any and every recipe you have that those ingredients can make!"
             })
         };
     }

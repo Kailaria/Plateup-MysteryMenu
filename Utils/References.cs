@@ -11,6 +11,7 @@ namespace KitchenMysteryMenu.Utils
 {
     internal class References
     {
-        public static readonly int MYSTERY_MENU_ID = GDOUtils.GetCastedGDO<Dish, MysteryMenuDish>().ID;
+        public static readonly GameDataObject MysteryMenuDish = GDOUtils.GetCastedGDO<Dish, MysteryMenuDish>();
+        public static readonly DynamicMenuType DynamicMenuTypeMystery = (DynamicMenuType)VariousUtils.GetID($"{Mod.MOD_GUID}:{((Dish)MysteryMenuDish).Name}");
     }
 }
