@@ -9,9 +9,10 @@ using System.Threading.Tasks;
 
 namespace KitchenMysteryMenu.Utils
 {
-    internal class References
+    internal static class References
     {
         public static readonly GameDataObject MysteryMenuDish = GDOUtils.GetCastedGDO<Dish, MysteryMenuDish>();
         public static readonly DynamicMenuType DynamicMenuTypeMystery = (DynamicMenuType)VariousUtils.GetID($"{Mod.MOD_GUID}:{((Dish)MysteryMenuDish).Name}");
+        public static readonly int MaxIngredientCountForMinimumRecipe = 5;
     }
 }

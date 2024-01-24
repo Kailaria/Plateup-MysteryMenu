@@ -56,6 +56,8 @@ namespace KitchenMysteryMenu.Customs.Dishes
             (Process)GDOUtils.GetExistingGDO(ProcessReferences.Chop),
             (Process)GDOUtils.GetExistingGDO(ProcessReferences.RequireOven)
         };
+
+        // Provide DynamiceMenuIngredient (Item) to not crash HandleNewDish()
         public override List<Dish.MenuItem> ResultingMenuItems => new()
         {
             new()
@@ -63,21 +65,24 @@ namespace KitchenMysteryMenu.Customs.Dishes
                 Item = (Item) GDOUtils.GetExistingGDO(ItemReferences.SteakPlated),
                 Phase = MenuPhase.Main,
                 Weight = 1,
-                DynamicMenuType = References.DynamicMenuTypeMystery
+                DynamicMenuType = References.DynamicMenuTypeMystery,
+                DynamicMenuIngredient = (Item) GDOUtils.GetExistingGDO(ItemReferences.Meat)
             },
             new()
             {
                 Item = (Item) GDOUtils.GetExistingGDO(ItemReferences.BreakfastPlated),
                 Phase = MenuPhase.Main,
                 Weight = 1,
-                DynamicMenuType = References.DynamicMenuTypeMystery
+                DynamicMenuType = References.DynamicMenuTypeMystery,
+                DynamicMenuIngredient = (Item)GDOUtils.GetExistingGDO(ItemReferences.Flour)
             },
             new()
             {
                 Item = (Item) GDOUtils.GetExistingGDO(ItemReferences.PiePlated),
                 Phase = MenuPhase.Main,
                 Weight = 1,
-                DynamicMenuType = References.DynamicMenuTypeMystery
+                DynamicMenuType = References.DynamicMenuTypeMystery,
+                DynamicMenuIngredient = (Item)GDOUtils.GetExistingGDO(ItemReferences.PieMeatRaw)
             }
         };
         public override HashSet<Dish.IngredientUnlock> IngredientsUnlocks => new()
@@ -91,9 +96,9 @@ namespace KitchenMysteryMenu.Customs.Dishes
         public override List<Dish> AlsoAddRecipes => new()
         {
             // Add the Mystery versions of every base main
-            GDOUtils.GetCastedGDO<Dish, MysterySteakDish>(),
-            GDOUtils.GetCastedGDO<Dish, MysteryBreakfastDish>(),
-            GDOUtils.GetCastedGDO<Dish, MysteryPiesDish>()
+            GDOUtils.GetCastedGDO<Dish, MysterySteakBaseDish>(),
+            GDOUtils.GetCastedGDO<Dish, MysteryBreakfastBaseDish>(),
+            GDOUtils.GetCastedGDO<Dish, MysteryPiesBaseDish>()
         };
         public override Dictionary<Locale, string> Recipe => new()
         {

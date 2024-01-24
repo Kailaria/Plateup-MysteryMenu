@@ -73,9 +73,9 @@ namespace KitchenMysteryMenu
 
         private void AddDishGDOs()
         {
-            AddGameDataObject<MysterySteakDish>();
-            AddGameDataObject<MysteryBreakfastDish>();
-            AddGameDataObject<MysteryPiesDish>();
+            AddGameDataObject<MysterySteakBaseDish>();
+            AddGameDataObject<MysteryBreakfastBaseDish>();
+            AddGameDataObject<MysteryPiesBaseDish>();
             AddGameDataObject<MysteryMenuDish>();
         }
     }
