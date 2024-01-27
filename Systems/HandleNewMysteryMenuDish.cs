@@ -1,9 +1,11 @@
 ﻿using Kitchen;
 using KitchenData;
 using KitchenLib.References;
+using KitchenLib.Utils;
 using KitchenMysteryMenu.Components;
 using KitchenMysteryMenu.Customs.Dishes;
 using KitchenMysteryMenu.Utils;
+using MysteryMenu.Components;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +20,9 @@ namespace KitchenMysteryMenu.Systems
     {
         private EntityQuery MysteryProviders;
         private EntityQuery NonHandledMenuItems;
+        private EntityQuery NonHandledMenuOptions;
+        private EntityQuery NonHandledPossibleExtras;
+        private EntityQuery AnythingNotHandled;
 
         protected override void Initialise()
         {
@@ -26,8 +31,19 @@ namespace KitchenMysteryMenu.Systems
             NonHandledMenuItems = GetEntityQuery(new QueryHelper()
                 .All(typeof(CMenuItem), typeof(CDynamicMenuItem))
                 .None(typeof(CMysteryMenuItem)));
+            // Don't care about entities that are both a CMenuItem & CAvailableIngredient as those are handled above
+            NonHandledMenuOptions = GetEntityQuery(new QueryHelper()
+                .All(typeof(CAvailableIngredient))
+                .None(typeof(CMenuItem), typeof(CMysteryMenuItemOption), typeof(CNonMysteryAvailableIngredient)));
+            NonHandledPossibleExtras = GetEntityQuery(new QueryHelper()
+                .All(typeof(CPossibleExtra))
+                .None(typeof(CMysteryMenuItemOption), typeof(CNonMysteryExtra)));
+            AnythingNotHandled = GetEntityQuery(new QueryHelper()
+                .Any(typeof(CMenuItem), typeof(CAvailableIngredient), typeof(CPossibleExtra))
+                .None(typeof(CMysteryMenuItem), typeof(CNonMysteryAvailableIngredient), 
+                    typeof(CMysteryMenuItemOption), typeof(CNonMysteryExtra)));
             RequireForUpdate(MysteryProviders);
-            RequireForUpdate(NonHandledMenuItems);
+            RequireForUpdate(AnythingNotHandled);
         }
 
         protected override void OnUpdate()
@@ -80,13 +96,18 @@ namespace KitchenMysteryMenu.Systems
                 else if (dynamicMenuItem.Type == DynamicMenuType.Fish)
                 {
                     ingredients[0] = dynamicMenuItem.Ingredient;
+                    if (dynamicMenuItem.Ingredient == ItemReferences.CrabRaw)
+                    {
+                        ingredients[1] = ItemReferences.Flour;
+                        ingredients[2] = ItemReferences.Egg;
+                    }
                     type = MysteryMenuType.Fish;
                 }
                 else if (dynamicMenuItem.Type == References.DynamicMenuTypeMystery)
                 {
                     // Most dishes coming here will be GenericMysteryDishCards, which comprise multiple GenericMysteryDishes.
-                    GenericMysteryDishCard mysteryCard = ;
-                    GenericMysteryDish mysteryDish = MysteryDishCrossReference.GetMysteryDishById(menuItem.SourceDish);
+                    GenericMysteryDishCard mysteryCard = MysteryDishCrossReference.GetMysteryCardById(menuItem.SourceDish);
+                    GenericMysteryDish mysteryDish = MysteryDishCrossReference.GetMysteryDishById(menuItem.i);
                     int iIndex = 0;
                     foreach(Item ingredient in mysteryDish.MinimumRequiredMysteryIngredients)
                     {

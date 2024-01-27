@@ -48,7 +48,7 @@ namespace KitchenMysteryMenu.Systems
             // Update the Prev Dish, then check if we need to update the Item Providers
             sRebuildMysteryKitchen.PrevDish = currentDish;
             SetSingleton(sRebuildMysteryKitchen);
-            if (currentDish != References.MysteryMenuDish.ID)
+            if (currentDish != References.MysteryMenuBaseDish.ID)
             {
                 return;
             }

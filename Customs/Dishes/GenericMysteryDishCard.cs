@@ -19,5 +19,10 @@ namespace KitchenMysteryMenu.Customs.Dishes
             ContainedMysteryRecipes.SelectMany(r => r.IngredientsUnlocks).ToHashSet();
         public override List<Dish> AlsoAddRecipes => 
             ContainedMysteryRecipes.Select(r => r.GameDataObject).ToList();
+
+        public override void OnRegister(Dish gameDataObject)
+        {
+            base.OnRegister(gameDataObject);
+        }
     }
 }
