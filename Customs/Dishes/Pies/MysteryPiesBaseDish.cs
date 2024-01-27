@@ -1,6 +1,7 @@
 ﻿using KitchenData;
 using KitchenLib.References;
 using KitchenLib.Utils;
+using KitchenMysteryMenu.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,6 +36,26 @@ namespace KitchenMysteryMenu.Customs.Dishes.Pies
                 FlavourText = "Are you ready for the best pies in PlateUp!?"
             })
         };
+
+        public override List<Dish.MenuItem> ResultingMenuItems => new()
+        {
+            new()
+            {
+                Item = (Item)GDOUtils.GetExistingGDO(ItemReferences.PiePlated),
+                Phase = MenuPhase.Main,
+                Weight = 1,
+                DynamicMenuType = References.DynamicMenuTypeMystery,
+                DynamicMenuIngredient = (Item)GDOUtils.GetExistingGDO(ItemReferences.PieMeatRaw)
+            }
+        };
+        public override HashSet<Dish.IngredientUnlock> IngredientsUnlocks => new()
+        {
+            new()
+            {
+                MenuItem = (ItemGroup)GDOUtils.GetExistingGDO(ItemReferences.PiePlated),
+                Ingredient = (Item)GDOUtils.GetExistingGDO(ItemReferences.PieMeatCooked)
+            }
+        }
         public override List<Item> MinimumRequiredMysteryIngredients => new List<Item>()
         {
             (Item) GDOUtils.GetExistingGDO(ItemReferences.Flour),

@@ -17,9 +17,9 @@ using UnityEngine;
 
 namespace KitchenMysteryMenu.Customs.Dishes
 {
-    public class MysteryMenuDish : CustomDish
+    public class MysteryMenuBaseMainsDish : GenericMysteryDishCard
     {
-        public override string UniqueNameID => "Mystery Menu Dish";
+        protected override string NameTag => "Base Mains";
         public override DishType Type => DishType.Base;
         public override DishCustomerChange CustomerMultiplier => DishCustomerChange.SmallDecrease;
         //public override GameObject DisplayPrefab => 
@@ -57,48 +57,12 @@ namespace KitchenMysteryMenu.Customs.Dishes
             (Process)GDOUtils.GetExistingGDO(ProcessReferences.RequireOven)
         };
 
-        // Provide DynamiceMenuIngredient (Item) to not crash HandleNewDish()
-        public override List<Dish.MenuItem> ResultingMenuItems => new()
-        {
-            new()
-            {
-                Item = (Item) GDOUtils.GetExistingGDO(ItemReferences.SteakPlated),
-                Phase = MenuPhase.Main,
-                Weight = 1,
-                DynamicMenuType = References.DynamicMenuTypeMystery,
-                DynamicMenuIngredient = (Item) GDOUtils.GetExistingGDO(ItemReferences.Meat)
-            },
-            new()
-            {
-                Item = (Item) GDOUtils.GetExistingGDO(ItemReferences.BreakfastPlated),
-                Phase = MenuPhase.Main,
-                Weight = 1,
-                DynamicMenuType = References.DynamicMenuTypeMystery,
-                DynamicMenuIngredient = (Item)GDOUtils.GetExistingGDO(ItemReferences.Flour)
-            },
-            new()
-            {
-                Item = (Item) GDOUtils.GetExistingGDO(ItemReferences.PiePlated),
-                Phase = MenuPhase.Main,
-                Weight = 1,
-                DynamicMenuType = References.DynamicMenuTypeMystery,
-                DynamicMenuIngredient = (Item)GDOUtils.GetExistingGDO(ItemReferences.PieMeatRaw)
-            }
-        };
-        public override HashSet<Dish.IngredientUnlock> IngredientsUnlocks => new()
-        {
-            new()
-            {
-                MenuItem = (ItemGroup)GDOUtils.GetExistingGDO(ItemReferences.PiePlated),
-                Ingredient = (Item) GDOUtils.GetExistingGDO(ItemReferences.PieMeatCooked)
-            }
-        };
-        public override List<Dish> AlsoAddRecipes => new()
+        public override HashSet<GenericMysteryDish> ContainedMysteryRecipes => new()
         {
             // Add the Mystery versions of every base main
-            GDOUtils.GetCastedGDO<Dish, MysterySteakBaseDish>(),
-            GDOUtils.GetCastedGDO<Dish, MysteryBreakfastBaseDish>(),
-            GDOUtils.GetCastedGDO<Dish, MysteryPiesBaseDish>()
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysterySteakBaseDish>(),
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryBreakfastBaseDish>(),
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryPiesBaseDish>()
         };
         public override Dictionary<Locale, string> Recipe => new()
         {

@@ -76,7 +76,7 @@ namespace KitchenMysteryMenu
             AddGameDataObject<MysterySteakBaseDish>();
             AddGameDataObject<MysteryBreakfastBaseDish>();
             AddGameDataObject<MysteryPiesBaseDish>();
-            AddGameDataObject<MysteryMenuDish>();
+            AddGameDataObject<MysteryMenuBaseMainsDish>();
         }
     }
 }

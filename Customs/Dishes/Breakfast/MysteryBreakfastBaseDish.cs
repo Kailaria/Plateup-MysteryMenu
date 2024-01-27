@@ -1,6 +1,7 @@
 ﻿using KitchenData;
 using KitchenLib.References;
 using KitchenLib.Utils;
+using KitchenMysteryMenu.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,6 +37,17 @@ namespace KitchenMysteryMenu.Customs.Dishes.Breakfast
             })
         };
 
+        public override List<Dish.MenuItem> ResultingMenuItems => new()
+        {
+            new()
+            {
+                Item = (Item)GDOUtils.GetExistingGDO(ItemReferences.BreakfastPlated),
+                Phase = MenuPhase.Main,
+                Weight = 1,
+                DynamicMenuType = References.DynamicMenuTypeMystery,
+                DynamicMenuIngredient = (Item)GDOUtils.GetExistingGDO(ItemReferences.Flour)
+            }
+        };
         public override List<Item> MinimumRequiredMysteryIngredients => new List<Item>()
         {
             (Item) GDOUtils.GetExistingGDO(ItemReferences.Flour)

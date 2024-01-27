@@ -84,7 +84,8 @@ namespace KitchenMysteryMenu.Systems
                 }
                 else if (dynamicMenuItem.Type == References.DynamicMenuTypeMystery)
                 {
-                    // Need to gather all Menu Items and their corresponding minimum ingredients
+                    // Most dishes coming here will be GenericMysteryDishCards, which comprise multiple GenericMysteryDishes.
+                    GenericMysteryDishCard mysteryCard = ;
                     GenericMysteryDish mysteryDish = MysteryDishCrossReference.GetMysteryDishById(menuItem.SourceDish);
                     int iIndex = 0;
                     foreach(Item ingredient in mysteryDish.MinimumRequiredMysteryIngredients)
@@ -103,6 +104,9 @@ namespace KitchenMysteryMenu.Systems
                         continue;
                     }
                     type = MysteryMenuType.Mystery;
+                    // We'll handle provider and menu item stuff in SelectMysteryMenuOfDay, and don't want CDisabledMenuItem being
+                    //  placed on Mystery Menu Items.
+                    EntityManager.RemoveChunkComponent<CDynamicMenuItem>(entity);
                 }
                 else
                 {

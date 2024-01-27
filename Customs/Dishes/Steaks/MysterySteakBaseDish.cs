@@ -2,6 +2,7 @@
 using KitchenLib.Customs;
 using KitchenLib.References;
 using KitchenLib.Utils;
+using KitchenMysteryMenu.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,6 +37,17 @@ namespace KitchenMysteryMenu.Customs.Dishes.Steaks
                 FlavourText = "Cook steaks multiple times to match the order"
             })
         };
+        public override List<Dish.MenuItem> ResultingMenuItems => new()
+        {
+            new()
+            {
+                Item = (Item)GDOUtils.GetExistingGDO(ItemReferences.SteakPlated),
+                Phase = MenuPhase.Main,
+                Weight = 1,
+                DynamicMenuType = References.DynamicMenuTypeMystery,
+                DynamicMenuIngredient = (Item)GDOUtils.GetExistingGDO(ItemReferences.Meat)
+            }
+        }
         public override List<Item> MinimumRequiredMysteryIngredients => new List<Item>()
         {
             (Item) GDOUtils.GetExistingGDO(ItemReferences.Meat)
