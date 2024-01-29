@@ -52,6 +52,5 @@ namespace KitchenMysteryMenu.Customs.Dishes.Breakfast
         {
             (Item) GDOUtils.GetExistingGDO(ItemReferences.Flour)
         };
-        public override List<Item> UnlockedOptionalMysteryIngredients => new List<Item>();
     }
 }

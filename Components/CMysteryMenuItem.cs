@@ -14,6 +14,8 @@ namespace KitchenMysteryMenu.Components
         [NativeFixedLength(5)]
         public NativeArray<int> Ingredients;
 
+        public bool RequiresVariant;
+
         public MysteryMenuType Type;
 
         public bool HasBeenProvided;

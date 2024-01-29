@@ -48,19 +48,20 @@ namespace KitchenMysteryMenu.Customs.Dishes.Pies
                 DynamicMenuIngredient = (Item)GDOUtils.GetExistingGDO(ItemReferences.PieMeatRaw)
             }
         };
-        public override HashSet<Dish.IngredientUnlock> IngredientsUnlocks => new()
-        {
-            new()
-            {
-                MenuItem = (ItemGroup)GDOUtils.GetExistingGDO(ItemReferences.PiePlated),
-                Ingredient = (Item)GDOUtils.GetExistingGDO(ItemReferences.PieMeatCooked)
-            }
-        }
+        //TODO: Might need to keep this for the lobby at least..? Or perhaps not if it'll just be moved to a MysteryPieMeatDish anyway
+        //     and *that* will get included in MysteryMenuBaseMainsDish...
+        //public override HashSet<Dish.IngredientUnlock> IngredientsUnlocks => new()
+        //{
+        //    new()
+        //    {
+        //        MenuItem = (ItemGroup)GDOUtils.GetExistingGDO(ItemReferences.PiePlated),
+        //        Ingredient = (Item)GDOUtils.GetExistingGDO(ItemReferences.PieMeatCooked)
+        //    }
+        //};
         public override List<Item> MinimumRequiredMysteryIngredients => new List<Item>()
         {
-            (Item) GDOUtils.GetExistingGDO(ItemReferences.Flour),
-            (Item) GDOUtils.GetExistingGDO(ItemReferences.Meat)
+            (Item) GDOUtils.GetExistingGDO(ItemReferences.Flour)
         };
-        public override List<Item> UnlockedOptionalMysteryIngredients => new List<Item>();
+        public override bool RequiresVariant => true;
     }
 }

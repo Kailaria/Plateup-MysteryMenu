@@ -12,6 +12,7 @@ namespace KitchenMysteryMenu.Customs.Dishes.Salad
     public class MysterySaladDish : GenericMysteryDish
     {
         protected override string NameTag => "Mystery Salad Dish";
+        public override Dish OrigDish => (Dish)GDOUtils.GetExistingGDO(DishReferences.SaladBase);
         public override DishType Type => DishType.Base;
         public override DishCustomerChange CustomerMultiplier => DishCustomerChange.None;
         public override Unlock.RewardLevel ExpReward => Unlock.RewardLevel.None;
@@ -48,9 +49,10 @@ namespace KitchenMysteryMenu.Customs.Dishes.Salad
         {
             (Item) GDOUtils.GetExistingGDO(ItemReferences.Lettuce)
         };
-        public override List<Item> UnlockedOptionalMysteryIngredients => new List<Item>()
-        {
-            (Item) GDOUtils.GetExistingGDO(ItemReferences.Tomato)
-        };
+        // TODO: separate this into a separate Dish/recipe and only use MinimumRequiredMysteryIngredients
+        //public override List<Item> UnlockedOptionalMysteryIngredients => new List<Item>()
+        //{
+        //    (Item) GDOUtils.GetExistingGDO(ItemReferences.Tomato)
+        //};
     }
 }
