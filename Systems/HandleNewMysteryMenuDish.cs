@@ -52,10 +52,16 @@ namespace KitchenMysteryMenu.Systems
             // TODO: Refer to HandleNewDish system
             // Check for DynamicMenuType = References.DynamicMenuTypeMystery
             // Add CMysteryMenuItem to whatever has CDynamicMenuItem and is actually of type Mystery
+            HandleNewMenuItems();
+            HandleNewMenuOptions();
+            HandleNewExtras();
+        }
+
+        private void HandleNewMenuItems()
+        {
             using var newMenuEntities = NonHandledMenuItems.ToEntityArray(Allocator.Temp);
             using var cMenuItems = NonHandledMenuItems.ToComponentDataArray<CMenuItem>(Allocator.Temp);
             using var cDynamicMenuItems = NonHandledMenuItems.ToComponentDataArray<CDynamicMenuItem>(Allocator.Temp);
-
             for (int i = 0; i < newMenuEntities.Length; i++)
             {
                 var entity = newMenuEntities[i];
@@ -107,9 +113,16 @@ namespace KitchenMysteryMenu.Systems
                 {
                     // Most dishes coming here will be GenericMysteryDishCards, which comprise multiple GenericMysteryDishes.
                     GenericMysteryDishCard mysteryCard = MysteryDishCrossReference.GetMysteryCardById(menuItem.SourceDish);
-                    GenericMysteryDish mysteryDish = MysteryDishCrossReference.GetMysteryDishById(menuItem.i);
+                    GenericMysteryDish mysteryDish = mysteryCard.ContainedMysteryRecipes
+                        .Where(cmr => cmr.ResultingMenuItems.Any(cmrrmi => cmrrmi.Item.ID == menuItem.Item))
+                        .FirstOrDefault();
+                    if (mysteryDish == default)
+                    {
+                        Mod.Logger.LogWarning($"Mystery Card ({mysteryCard.UniqueNameID}) does not seem to contain CMenuItem with ItemID = {menuItem.Item}");
+                        continue;
+                    }
                     int iIndex = 0;
-                    foreach(Item ingredient in mysteryDish.MinimumRequiredMysteryIngredients)
+                    foreach (Item ingredient in mysteryDish.MinimumRequiredMysteryIngredients)
                     {
                         ingredients[iIndex] = ingredient.ID;
                         iIndex++;
@@ -144,6 +157,17 @@ namespace KitchenMysteryMenu.Systems
                 };
                 EntityManager.AddComponentData(entity, cMysteryMenuItem);
             }
+        }
+
+        private void HandleNewMenuOptions()
+        {
+            using var menuOptionEntities = NonHandledMenuOptions.ToEntityArray(Allocator.Temp);
+            using var availableIngredients = NonHandledMenuOptions.ToComponentDataArray<CAvailableIngredient>(Allocator.Temp);
+        }
+
+        private void HandleNewExtras()
+        {
+
         }
     }
 }

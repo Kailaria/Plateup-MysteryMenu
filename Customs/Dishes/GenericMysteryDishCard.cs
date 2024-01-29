@@ -1,5 +1,6 @@
 ﻿using KitchenData;
 using KitchenLib.Customs;
+using KitchenMysteryMenu.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +24,7 @@ namespace KitchenMysteryMenu.Customs.Dishes
         public override void OnRegister(Dish gameDataObject)
         {
             base.OnRegister(gameDataObject);
+            MysteryDishCrossReference.RegisterDishCard(gameDataObject, this);
         }
     }
 }
