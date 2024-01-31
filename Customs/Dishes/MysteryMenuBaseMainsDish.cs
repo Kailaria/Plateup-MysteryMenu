@@ -62,7 +62,8 @@ namespace KitchenMysteryMenu.Customs.Dishes
             // Add the Mystery versions of every base main
             (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysterySteakBaseDish>(),
             (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryBreakfastBaseDish>(),
-            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryPiesBaseDish>()
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryPiesBaseDish>(),
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryPiesMeatDish>()
         };
         public override Dictionary<Locale, string> Recipe => new()
         {

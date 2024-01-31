@@ -18,14 +18,14 @@ namespace KitchenMysteryMenu.Customs.Dishes
         public override bool IsUnlockable => false;
         public override bool IsAvailableAsLobbyOption => false;
 
-        public abstract List<Item> MinimumRequiredMysteryIngredients { get; }
+        public abstract HashSet<Item> MinimumRequiredMysteryIngredients { get; }
         /**
          * RequiresVariant
          * Override as true if the base dish is not enough to be ordered on its own. Especially useful for plated dishes
          *   like Pies and Stir Fry to ensure that their normal bases aren't needed to be available in order to be served.
          */
         public virtual bool RequiresVariant => false;
-        public GenericMysteryDish BaseMysteryDish => default;
+        public virtual GenericMysteryDish BaseMysteryDish => default;
 
         public override void OnRegister(Dish gameDataObject)
         {

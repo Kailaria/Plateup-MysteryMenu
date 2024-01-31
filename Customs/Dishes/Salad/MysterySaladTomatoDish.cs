@@ -8,13 +8,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KitchenMysteryMenu.Customs.Dishes.Breakfast
+namespace KitchenMysteryMenu.Customs.Dishes.Salad
 {
-    public class MysteryBreakfastBaseDish : GenericMysteryDish
+    public class MysterySaladTomatoDish : GenericMysteryDish
     {
-        protected override string NameTag => "Mystery Breakfast Dish";
-        public override Dish OrigDish => (Dish)GDOUtils.GetExistingGDO(DishReferences.BreakfastBase);
-        public override DishType Type => DishType.Base;
+        protected override string NameTag => "Mystery Salad Tomato Dish";
+        public override Dish OrigDish => (Dish)GDOUtils.GetExistingGDO(DishReferences.SaladBase);
+        public override DishType Type => DishType.Main;
         public override DishCustomerChange CustomerMultiplier => DishCustomerChange.None;
         public override Unlock.RewardLevel ExpReward => Unlock.RewardLevel.None;
         public override UnlockGroup UnlockGroup => UnlockGroup.Dish;
@@ -25,32 +25,30 @@ namespace KitchenMysteryMenu.Customs.Dishes.Breakfast
         public override int Difficulty => 1;
         public override Dictionary<Locale, string> Recipe => new()
         {
-            { Locale.English, "Knead flour to make dough, then cook to make bread. Interact to cut a slice and cook to make toast." }
+            { Locale.English, "Chop tomato once and serve when ordered with salad." }
         };
         public override List<(Locale, UnlockInfo)> InfoList => new()
         {
             (Locale.English, new UnlockInfo()
             {
-                Name = "Mystery - Breakfast",
-                Description = "Adds toast as a main when <b>Flour</b> is present",
-                FlavourText = "The most important meal of the day"
+                Name = "Mystery Salad - Tomato Topping",
+                Description = "Adds chopped tomato as a topping option when <b>Tomato</b> is present",
+                FlavourText = "Serve salads with and without chopped tomato."
             })
         };
-
-        public override List<Dish.MenuItem> ResultingMenuItems => new()
-        {
-            new()
+        public override HashSet<Dish.IngredientUnlock> IngredientsUnlocks => new()
+        { 
+            new Dish.IngredientUnlock()
             {
-                Item = (Item)GDOUtils.GetExistingGDO(ItemReferences.BreakfastPlated),
-                Phase = MenuPhase.Main,
-                Weight = 1,
-                DynamicMenuType = References.DynamicMenuTypeMystery,
-                DynamicMenuIngredient = (Item)GDOUtils.GetExistingGDO(ItemReferences.Flour)
+                MenuItem = (ItemGroup) GDOUtils.GetExistingGDO(ItemGroupReferences.SaladPlated),
+                Ingredient = (Item) GDOUtils.GetExistingGDO(ItemReferences.TomatoChopped)
             }
         };
         public override HashSet<Item> MinimumRequiredMysteryIngredients => new HashSet<Item>()
         {
-            (Item) GDOUtils.GetExistingGDO(ItemReferences.Flour)
+            (Item) GDOUtils.GetExistingGDO(ItemReferences.Tomato)
         };
+        public override GenericMysteryDish BaseMysteryDish => 
+            (GenericMysteryDish) GDOUtils.GetCustomGameDataObject<MysterySaladBaseDish>();
     }
 }

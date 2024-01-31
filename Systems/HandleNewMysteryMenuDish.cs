@@ -194,6 +194,7 @@ namespace KitchenMysteryMenu.Systems
                     Mod.Logger.LogError($"Mystery Dish ({genericMysteryDish.UniqueNameID}) has more minimum ingredients (count = {iIndex}) than expected. " +
                         $"Expected max ingredient count = {References.MaxIngredientCountForMinimumRecipe}");
                 }
+
                 CMysteryMenuItem mysteryOptionRecipe = new CMysteryMenuItem()
                 {
                     Type = MysteryMenuType.Mystery,
@@ -201,7 +202,8 @@ namespace KitchenMysteryMenu.Systems
                     HasBeenProvided = false,
                     RequiresVariant = genericMysteryDish.RequiresVariant
                 };
-                
+                EntityManager.AddComponentData(entity, mysteryOptionRecipe);
+                EntityManager.AddComponent<CMysteryMenuItemOption>(entity);
             }
         }
 

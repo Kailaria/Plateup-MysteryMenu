@@ -48,7 +48,7 @@ namespace KitchenMysteryMenu.Customs.Dishes.Steaks
                 DynamicMenuIngredient = (Item)GDOUtils.GetExistingGDO(ItemReferences.Meat)
             }
         };
-        public override List<Item> MinimumRequiredMysteryIngredients => new List<Item>()
+        public override HashSet<Item> MinimumRequiredMysteryIngredients => new HashSet<Item>()
         {
             (Item) GDOUtils.GetExistingGDO(ItemReferences.Meat)
         };

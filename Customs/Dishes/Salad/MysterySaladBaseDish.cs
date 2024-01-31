@@ -1,6 +1,7 @@
 ﻿using KitchenData;
 using KitchenLib.References;
 using KitchenLib.Utils;
+using KitchenMysteryMenu.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,11 +10,11 @@ using System.Threading.Tasks;
 
 namespace KitchenMysteryMenu.Customs.Dishes.Salad
 {
-    public class MysterySaladDish : GenericMysteryDish
+    public class MysterySaladBaseDish : GenericMysteryDish
     {
-        protected override string NameTag => "Mystery Salad Dish";
+        protected override string NameTag => "Mystery Salad Base Dish";
         public override Dish OrigDish => (Dish)GDOUtils.GetExistingGDO(DishReferences.SaladBase);
-        public override DishType Type => DishType.Base;
+        public override DishType Type => DishType.Main;
         public override DishCustomerChange CustomerMultiplier => DishCustomerChange.None;
         public override Unlock.RewardLevel ExpReward => Unlock.RewardLevel.None;
         public override UnlockGroup UnlockGroup => UnlockGroup.Dish;
@@ -24,7 +25,7 @@ namespace KitchenMysteryMenu.Customs.Dishes.Salad
         public override int Difficulty => 1;
         public override Dictionary<Locale, string> Recipe => new()
         {
-            { Locale.English, "Chop lettuce and plate. If tomato is present, also sometimes chop tomato once and add." }
+            { Locale.English, "Chop lettuce and plate." }
         };
         public override List<(Locale, UnlockInfo)> InfoList => new()
         {
@@ -42,17 +43,14 @@ namespace KitchenMysteryMenu.Customs.Dishes.Salad
             {
                 Item = (Item) GDOUtils.GetExistingGDO(ItemReferences.SaladPlated),
                 Phase = MenuPhase.Main,
-                Weight = 1
+                Weight = 1,
+                DynamicMenuType = References.DynamicMenuTypeMystery,
+                DynamicMenuIngredient = (Item) GDOUtils.GetExistingGDO(ItemReferences.Lettuce)
             }
         };
-        public override List<Item> MinimumRequiredMysteryIngredients => new List<Item>()
+        public override HashSet<Item> MinimumRequiredMysteryIngredients => new HashSet<Item>()
         {
             (Item) GDOUtils.GetExistingGDO(ItemReferences.Lettuce)
         };
-        // TODO: separate this into a separate Dish/recipe and only use MinimumRequiredMysteryIngredients
-        //public override List<Item> UnlockedOptionalMysteryIngredients => new List<Item>()
-        //{
-        //    (Item) GDOUtils.GetExistingGDO(ItemReferences.Tomato)
-        //};
     }
 }
