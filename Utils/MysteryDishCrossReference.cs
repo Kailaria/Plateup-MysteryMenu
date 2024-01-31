@@ -11,42 +11,47 @@ namespace KitchenMysteryMenu.Utils
 {
     public static class MysteryDishCrossReference
     {
-        public static Dictionary<int, GenericMysteryDish> DishDictionary = new();
-        public static Dictionary<int, GenericMysteryDishCard> DishCardDictionary = new();
+        public static HashSet<GenericMysteryDish> MysteryDishes = new();
+        public static HashSet<GenericMysteryDishCard> MysteryDishCards = new();
 
-        public static void RegisterDish(Dish dish, GenericMysteryDish mysteryDish)
+        public static void RegisterDish(GenericMysteryDish mysteryDish)
         {
-            DishDictionary.Add(dish.ID, mysteryDish);
+            MysteryDishes.Add(mysteryDish);
         }
 
-        public static void RegisterDishCard(Dish dish, GenericMysteryDishCard mysteryDishCard)
+        public static void RegisterDishCard(GenericMysteryDishCard mysteryDishCard)
         {
-            DishCardDictionary.Add(dish.ID, mysteryDishCard);
+            MysteryDishCards.Add(mysteryDishCard);
         }
 
         public static GenericMysteryDish GetRelatedMysteryDish(Dish dish)
         {
-            return GetRelatedMysteryDish(dish.ID);
+            return GetRelatedMysteryMainDish(dish.ID);
         }
 
-        public static GenericMysteryDish GetRelatedMysteryDish(int id)
+        public static GenericMysteryDish GetRelatedMysteryMainDish(int id)
         {
-            return DishDictionary[id];
+            return MysteryDishes.Where(gmd => gmd.OrigDish.ID == id && gmd.ResultingMenuItems.Count > 0).FirstOrDefault();
+        }
+
+        public static GenericMysteryDish GetRelatedMysteryOptionDish(int id)
+        {
+            return MysteryDishes.Where(gmd => gmd.OrigDish.ID == id && gmd.IngredientsUnlocks.Count > 0).FirstOrDefault();
         }
 
         public static GenericMysteryDish GetMysteryDishById(int id)
         {
-            return DishDictionary.Values.Where(gmd => gmd.BaseGameDataObjectID == id).FirstOrDefault();
+            return MysteryDishes.Where(gmd => gmd.BaseGameDataObjectID == id).FirstOrDefault();
         }
 
         public static GenericMysteryDishCard GetMysteryCardById(int id)
         {
-            return DishCardDictionary.Values.Where(gmdc => gmdc.BaseGameDataObjectID == id).FirstOrDefault();
+            return MysteryDishCards.Where(gmdc => gmdc.BaseGameDataObjectID == id).FirstOrDefault();
         }
 
         public static GenericMysteryDish GetMysteryDishByMenuItem(int menuItem)
         {
-            return DishDictionary.Values
+            return MysteryDishes
                 .Where(gmd => gmd.ResultingMenuItems.Select(mi => mi.Item.ID).Contains(menuItem))
                 .FirstOrDefault();
         }

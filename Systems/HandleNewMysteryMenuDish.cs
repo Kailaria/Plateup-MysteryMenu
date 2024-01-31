@@ -74,7 +74,7 @@ namespace KitchenMysteryMenu.Systems
                 if (dynamicMenuItem.Type == DynamicMenuType.Static)
                 {
                     // Utilize the related Mystery Dish to get the Static Dish and compare
-                    Dish staticDish = MysteryDishCrossReference.GetRelatedMysteryDish(menuItem.SourceDish).OrigDish;
+                    Dish staticDish = MysteryDishCrossReference.GetRelatedMysteryMainDish(menuItem.SourceDish).OrigDish;
                     int iIndex = 0;
                     foreach (Item ingredient in staticDish.MinimumIngredients)
                     {
@@ -138,9 +138,15 @@ namespace KitchenMysteryMenu.Systems
                     }
                     type = MysteryMenuType.Mystery;
                     requiresVariant = mysteryDish.RequiresVariant;
+                    
                     // We'll handle provider and menu item stuff in SelectMysteryMenuOfDay, and don't want CDisabledMenuItem being
                     //  placed on Mystery Menu Items.
-                    EntityManager.RemoveChunkComponent<CDynamicMenuItem>(entity);
+                    EntityManager.RemoveComponent<CDynamicMenuItem>(entity);
+
+                    // Point the CMenuItem's SourceDish to the MysteryDish's ID instead of its parent MysteryDishCard's ID
+                    menuItem.SourceDish = mysteryDish.BaseGameDataObjectID;
+                    EntityManager.RemoveComponent<CMenuItem>(entity);
+                    EntityManager.AddComponentData(entity, menuItem);
                 }
                 else
                 {

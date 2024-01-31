@@ -24,7 +24,7 @@ namespace KitchenMysteryMenu.Customs.Dishes
         public override void OnRegister(Dish gameDataObject)
         {
             base.OnRegister(gameDataObject);
-            MysteryDishCrossReference.RegisterDishCard(gameDataObject, this);
+            MysteryDishCrossReference.RegisterDishCard(this);
         }
     }
 }

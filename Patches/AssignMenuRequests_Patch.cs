@@ -2,6 +2,7 @@
 using Kitchen;
 using KitchenLib.Utils;
 using KitchenMysteryMenu.Components;
+using Sirenix.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,38 +18,52 @@ namespace KitchenMysteryMenu.Patches
     {
         private static object[] MenuItemsParameters = new object[]
         {
-            new QueryHelper().All(typeof(CMenuItem))
-                .None(typeof(CDisabledMenuItem),typeof(CDisabledMysteryMenu))
+            new [] { new QueryHelper().All(typeof(CMenuItem))
+                .None(typeof(CDisabledMenuItem),typeof(CDisabledMysteryMenu)).Build() }
         };
         private static object[] IngredientsParameters = new object[]
         {
-            new QueryHelper().All(typeof(CAvailableIngredient))
-                .None(typeof(CDisabledMysteryOption))
+            new [] { new QueryHelper().All(typeof(CAvailableIngredient))
+                .None(typeof(CDisabledMysteryOption)).Build() }
         };
         private static object[] ExtrasParameters = new object[]
         {
-            new QueryHelper().All(typeof(CPossibleExtra))
-                .None(typeof(CDisabledMysteryExtra))
+            new [] { new QueryHelper().All(typeof(CPossibleExtra))
+                .None(typeof(CDisabledMysteryExtra)).Build() }
         };
 
         [HarmonyPostfix]
-        [HarmonyPatch("Initialize")]
-        public static void Initialize_Postfix(ref AssignMenuRequests __instance)
+        [HarmonyPatch("Initialise")]
+        public static void Initialise_Postfix(ref AssignMenuRequests __instance)
         {
             // Add CDisabled components to ensure only truly available mystery .
-            MethodInfo getEntityQueryMethod = ReflectionUtils.GetMethod<ComponentSystemBase>("GetEntityQuery");
-            
-            var MenuItemsQuery = getEntityQueryMethod.Invoke(__instance, MenuItemsParameters);
-            ReflectionUtils.GetField<AssignMenuRequests>("MenuItems", BindingFlags.NonPublic | BindingFlags.Instance)
-                .SetValue(__instance, MenuItemsQuery);
+            Type t_CSB = typeof(ComponentSystemBase);
+            MethodInfo m_GetEntityQuery = t_CSB.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance)
+                .Where(mi => mi.Name.Equals("GetEntityQuery") && mi.GetParameters().Any(p => p.ParameterType == typeof(EntityQueryDesc[])))
+                .FirstOrDefault();
+            var methods = t_CSB.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance).Where(mi => mi.Name.Equals("GetEntityQuery")).ToList();
+            Mod.Logger.LogInfo($"Method match count: {methods.Count}");
+            foreach ( MethodInfo mi in methods ) { Mod.Logger.LogInfo($"t_CSB method: \"{mi}\""); }
 
-            var IngredientsQuery = getEntityQueryMethod.Invoke(__instance, IngredientsParameters);
-            ReflectionUtils.GetField<AssignMenuRequests>("Ingredients", BindingFlags.NonPublic | BindingFlags.Instance)
-                .SetValue(__instance, IngredientsQuery);
+            try
+            {
+                var MenuItemsQuery = m_GetEntityQuery.Invoke(__instance, MenuItemsParameters);
+                ReflectionUtils.GetField<AssignMenuRequests>("MenuItems", BindingFlags.NonPublic | BindingFlags.Instance)
+                    .SetValue(__instance, MenuItemsQuery);
 
-            var ExtrasQuery = getEntityQueryMethod.Invoke(__instance, ExtrasParameters);
-            ReflectionUtils.GetField<AssignMenuRequests>("Extras", BindingFlags.NonPublic | BindingFlags.Instance)
-                .SetValue(__instance, ExtrasQuery);
+                var IngredientsQuery = m_GetEntityQuery.Invoke(__instance, IngredientsParameters);
+                ReflectionUtils.GetField<AssignMenuRequests>("Ingredients", BindingFlags.NonPublic | BindingFlags.Instance)
+                    .SetValue(__instance, IngredientsQuery);
+
+                var ExtrasQuery = m_GetEntityQuery.Invoke(__instance, ExtrasParameters);
+                ReflectionUtils.GetField<AssignMenuRequests>("Extras", BindingFlags.NonPublic | BindingFlags.Instance)
+                    .SetValue(__instance, ExtrasQuery);
+            } catch (Exception e)
+            {
+                Mod.Logger.LogError("AssignMenuRequests_Initialise_Postfix failed");
+                Mod.Logger.LogError($"m_GetEntityQuery = {m_GetEntityQuery}");
+                Mod.Logger.LogException(e);
+            }
         }
     }
 }

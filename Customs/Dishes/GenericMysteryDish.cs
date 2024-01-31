@@ -12,6 +12,7 @@ namespace KitchenMysteryMenu.Customs.Dishes
     public abstract class GenericMysteryDish : CustomDish
     {
         protected abstract string NameTag { get; }
+        // Make sure OrigDish is a unique ID
         public abstract Dish OrigDish { get; }
         public override UnlockGroup UnlockGroup => UnlockGroup.Dish;
         public override string UniqueNameID => "Mystery : " + NameTag;
@@ -30,7 +31,7 @@ namespace KitchenMysteryMenu.Customs.Dishes
         public override void OnRegister(Dish gameDataObject)
         {
             base.OnRegister(gameDataObject);
-            MysteryDishCrossReference.RegisterDish(OrigDish, this);
+            MysteryDishCrossReference.RegisterDish(this);
         }
     }
 }
