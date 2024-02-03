@@ -8,8 +8,9 @@ using Unity.Entities;
 
 namespace KitchenMysteryMenu.Components
 {
-    [StructLayout(LayoutKind.Sequential, Size = 1)]
-    public struct CMysteryMenuItemOption : IComponentData
+    public struct CNewMysteryDish : IComponentData
     {
+        public int ID;
+        public bool ShowRecipe;
     }
 }

@@ -63,6 +63,7 @@ namespace KitchenMysteryMenu.Patches
                 Mod.Logger.LogError("AssignMenuRequests_Initialise_Postfix failed");
                 Mod.Logger.LogError($"m_GetEntityQuery = {m_GetEntityQuery}");
                 Mod.Logger.LogException(e);
+                throw e;
             }
         }
     }
