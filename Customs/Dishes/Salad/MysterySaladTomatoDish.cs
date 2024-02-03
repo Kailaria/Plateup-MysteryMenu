@@ -48,6 +48,10 @@ namespace KitchenMysteryMenu.Customs.Dishes.Salad
         {
             (Item) GDOUtils.GetExistingGDO(ItemReferences.Tomato)
         };
+        public override List<Unlock> HardcodedRequirements => new()
+        {
+            BaseMysteryDish.GameDataObject
+        };
         public override GenericMysteryDish BaseMysteryDish => 
             (GenericMysteryDish) GDOUtils.GetCustomGameDataObject<MysterySaladBaseDish>();
     }

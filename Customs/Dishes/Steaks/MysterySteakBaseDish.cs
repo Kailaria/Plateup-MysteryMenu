@@ -52,5 +52,9 @@ namespace KitchenMysteryMenu.Customs.Dishes.Steaks
         {
             (Item) GDOUtils.GetExistingGDO(ItemReferences.Meat)
         };
+        public override List<Unlock> HardcodedRequirements => new()
+        {
+            GDOUtils.GetCastedGDO<Dish, MysteryMenuBaseMainsDish>()
+        };
     }
 }

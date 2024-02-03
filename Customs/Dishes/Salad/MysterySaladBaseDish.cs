@@ -52,5 +52,9 @@ namespace KitchenMysteryMenu.Customs.Dishes.Salad
         {
             (Item) GDOUtils.GetExistingGDO(ItemReferences.Lettuce)
         };
+        public override List<Unlock> HardcodedRequirements => new()
+        {
+            GDOUtils.GetCastedGDO<Dish, MysteryMenuBaseMainsDish>()
+        };
     }
 }

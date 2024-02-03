@@ -63,5 +63,9 @@ namespace KitchenMysteryMenu.Customs.Dishes.Pies
             (Item) GDOUtils.GetExistingGDO(ItemReferences.Flour)
         };
         public override bool RequiresVariant => true;
+        public override List<Unlock> HardcodedRequirements => new()
+        {
+            GDOUtils.GetCastedGDO<Dish, MysteryMenuBaseMainsDish>()
+        };
     }
 }

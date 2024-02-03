@@ -52,5 +52,9 @@ namespace KitchenMysteryMenu.Customs.Dishes.Breakfast
         {
             (Item) GDOUtils.GetExistingGDO(ItemReferences.Flour)
         };
+        public override List<Unlock> HardcodedRequirements => new()
+        {
+            GDOUtils.GetCastedGDO<Dish, MysteryMenuBaseMainsDish>()
+        };
     }
 }
