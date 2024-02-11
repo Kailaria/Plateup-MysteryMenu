@@ -19,15 +19,16 @@ namespace KitchenMysteryMenu.Systems
     public class HandleNewMysteryMenuDish : RestaurantSystem
     {
         private EntityQuery MysteryProviders;
+        private EntityQuery NewPendingMysteryDishes;
         private EntityQuery NonHandledMenuItems;
         private EntityQuery NonHandledMenuOptions;
         private EntityQuery NonHandledPossibleExtras;
-        private EntityQuery AnythingNotHandled;
 
         protected override void Initialise()
         {
             base.Initialise();
             MysteryProviders = GetEntityQuery(typeof(CItemProvider), typeof(CMysteryMenuProvider));
+            NewPendingMysteryDishes = GetEntityQuery(typeof(CNewMysteryRecipe));
             NonHandledMenuItems = GetEntityQuery(new QueryHelper()
                 .All(typeof(CMenuItem), typeof(CDynamicMenuItem))
                 .None(typeof(CMysteryMenuItem)));
@@ -38,39 +39,62 @@ namespace KitchenMysteryMenu.Systems
             NonHandledPossibleExtras = GetEntityQuery(new QueryHelper()
                 .All(typeof(CPossibleExtra))
                 .None(typeof(CMysteryMenuItemOption), typeof(CNonMysteryExtra)));
-            AnythingNotHandled = GetEntityQuery(new QueryHelper()
-                .Any(typeof(CMenuItem), typeof(CAvailableIngredient), typeof(CPossibleExtra))
-                .None(typeof(CMysteryMenuItem), typeof(CNonMysteryAvailableIngredient), 
-                    typeof(CMysteryMenuItemOption), typeof(CNonMysteryExtra)));
             RequireForUpdate(MysteryProviders);
-            RequireForUpdate(AnythingNotHandled);
+            RequireForUpdate(NewPendingMysteryDishes);
         }
 
         protected override void OnUpdate()
         {
             Mod.Logger.LogInfo("HandleNewMysteryMenuDish updating");
+            NativeArray<Entity> newMysteryRecipes = NewPendingMysteryDishes.ToEntityArray(Allocator.Temp);
+            if (newMysteryRecipes.Length <= 0)
+            {
+                return; // This shouldn't happen with RequireForUpdate, but best to be safe.
+            }
+
+            CNewMysteryRecipe newMysteryRecipe = GetComponent<CNewMysteryRecipe>(newMysteryRecipes[0]);
+            Dish dishData = GameData.Main.Get<Dish>(newMysteryRecipe.DishID);
+            GenericMysteryDish genericMysteryDish = MysteryDishCrossReference.GetMysteryDishById(newMysteryRecipe.DishID);
+            GenericMysteryDishCard genericMysteryDishCard = MysteryDishCrossReference.GetMysteryCardById(newMysteryRecipe.CardID);
+            EntityManager.DestroyEntity(newMysteryRecipes[0]);
+
             // TODO: Refer to HandleNewDish system
             // Check for DynamicMenuType = References.DynamicMenuTypeMystery
             // Add CMysteryMenuItem to whatever has CDynamicMenuItem and is actually of type Mystery
-            HandleNewMenuItems();
-            HandleNewMenuOptions();
-            HandleNewExtras();
+            if (dishData.UnlocksMenuItems.Count > 0)
+            {
+                HandleNewMenuItems(dishData, genericMysteryDish, genericMysteryDishCard);
+            }
+            if (dishData.UnlocksIngredients.Count > 0)
+            {
+                HandleNewMenuOptions(dishData, genericMysteryDish, genericMysteryDishCard);
+            }
+            if (dishData.ExtraOrderUnlocks.Count > 0)
+            {
+                HandleNewExtras(dishData, genericMysteryDish, genericMysteryDishCard);
+            }
         }
 
-        private void HandleNewMenuItems()
+        private void HandleNewMenuItems(Dish dishData, GenericMysteryDish genericMysteryDish, GenericMysteryDishCard mysteryDishCard)
         {
-            using var newMenuEntities = NonHandledMenuItems.ToEntityArray(Allocator.Temp);
+            using var nonHandledMenuItems = NonHandledMenuItems.ToEntityArray(Allocator.Temp);
             using var cMenuItems = NonHandledMenuItems.ToComponentDataArray<CMenuItem>(Allocator.Temp);
             using var cDynamicMenuItems = NonHandledMenuItems.ToComponentDataArray<CDynamicMenuItem>(Allocator.Temp);
-            for (int i = 0; i < newMenuEntities.Length; i++)
+            for (int i = 0; i < nonHandledMenuItems.Length; i++)
             {
-                var entity = newMenuEntities[i];
+                var entity = nonHandledMenuItems[i];
                 var menuItem = cMenuItems[i];
                 var dynamicMenuItem = cDynamicMenuItems[i];
+
+                if (menuItem.SourceDish != dishData.ID)
+                {
+                    continue;
+                }
 
                 NativeArray<int> ingredients = new NativeArray<int>(References.MaxIngredientCountForMinimumRecipe, Allocator.Temp);
                 MysteryMenuType type;
                 bool requiresVariant = false;
+                // TODO: Instead, check for mystery dish & card defaultness..?
                 if (dynamicMenuItem.Type == DynamicMenuType.Static)
                 {
                     // Utilize the related Mystery Dish to get the Static Dish and compare
@@ -112,18 +136,14 @@ namespace KitchenMysteryMenu.Systems
                 }
                 else if (dynamicMenuItem.Type == References.DynamicMenuTypeMystery)
                 {
-                    // Most dishes coming here will be GenericMysteryDishCards, which comprise multiple GenericMysteryDishes.
-                    GenericMysteryDishCard mysteryCard = MysteryDishCrossReference.GetMysteryCardById(menuItem.SourceDish);
-                    GenericMysteryDish mysteryDish = mysteryCard.ContainedMysteryRecipes
-                        .Where(cmr => cmr.ResultingMenuItems.Any(cmrrmi => cmrrmi.Item.ID == menuItem.Item))
-                        .FirstOrDefault();
-                    if (mysteryDish == default)
+                    // check if the genericMysteryDish matches
+                    if (genericMysteryDish == default)
                     {
-                        Mod.Logger.LogWarning($"Mystery Card ({mysteryCard.UniqueNameID}) does not seem to contain CMenuItem with ItemID = {menuItem.Item}");
+                        Mod.Logger.LogWarning($"Mystery Card ({mysteryDishCard.UniqueNameID}) does not seem to contain CMenuItem with ItemID = {menuItem.Item}");
                         continue;
                     }
                     int iIndex = 0;
-                    foreach (Item ingredient in mysteryDish.MinimumRequiredMysteryIngredients)
+                    foreach (Item ingredient in genericMysteryDish.MinimumRequiredMysteryIngredients)
                     {
                         if (iIndex < References.MaxIngredientCountForMinimumRecipe)
                         {
@@ -133,18 +153,18 @@ namespace KitchenMysteryMenu.Systems
                     }
                     if (iIndex >= References.MaxIngredientCountForMinimumRecipe)
                     {
-                        Mod.Logger.LogError($"Mystery Dish ({mysteryDish.UniqueNameID}) has more minimum ingredients (count = {iIndex}) than expected. " +
+                        Mod.Logger.LogError($"Mystery Dish ({genericMysteryDish.UniqueNameID}) has more minimum ingredients (count = {iIndex}) than expected. " +
                             $"Expected max ingredient count = {References.MaxIngredientCountForMinimumRecipe}");
                     }
                     type = MysteryMenuType.Mystery;
-                    requiresVariant = mysteryDish.RequiresVariant;
+                    requiresVariant = genericMysteryDish.RequiresVariant;
                     
                     // We'll handle provider and menu item stuff in SelectMysteryMenuOfDay, and don't want CDisabledMenuItem being
                     //  placed on Mystery Menu Items.
                     EntityManager.RemoveComponent<CDynamicMenuItem>(entity);
 
                     // Point the CMenuItem's SourceDish to the MysteryDish's ID instead of its parent MysteryDishCard's ID
-                    menuItem.SourceDish = mysteryDish.BaseGameDataObjectID;
+                    menuItem.SourceDish = genericMysteryDish.BaseGameDataObjectID;
                     EntityManager.RemoveComponent<CMenuItem>(entity);
                     EntityManager.AddComponentData(entity, menuItem);
                 }
@@ -166,7 +186,7 @@ namespace KitchenMysteryMenu.Systems
             }
         }
 
-        private void HandleNewMenuOptions()
+        private void HandleNewMenuOptions(Dish dishData, GenericMysteryDish genericMysteryDish, GenericMysteryDishCard genericMysteryDishCard)
         {
             using var menuOptionEntities = NonHandledMenuOptions.ToEntityArray(Allocator.Temp);
             using var availableIngredients = NonHandledMenuOptions.ToComponentDataArray<CAvailableIngredient>(Allocator.Temp);
@@ -175,8 +195,8 @@ namespace KitchenMysteryMenu.Systems
                 var entity = menuOptionEntities[i];
                 var availableIngredient = availableIngredients[i];
 
-                var genericMysteryDish = MysteryDishCrossReference.GetMysteryDishByMenuItem(availableIngredient.MenuItem);
-                if (genericMysteryDish == default)
+                var mysteryDish = MysteryDishCrossReference.GetMysteryDishByMenuItem(availableIngredient.MenuItem);
+                if (mysteryDish == default)
                 {
                     // This is not a mystery dish, so give the entity the appropriate component to prevent it from showing up here again
                     EntityManager.AddComponent<CNonMysteryAvailableIngredient>(entity);
@@ -187,7 +207,7 @@ namespace KitchenMysteryMenu.Systems
                 //  know what ingredients will trigger this to be available.
                 NativeArray<int> ingredients = new NativeArray<int>(References.MaxIngredientCountForMinimumRecipe, Allocator.Temp);
                 int iIndex = 0;
-                foreach (Item ingredient in genericMysteryDish.MinimumRequiredMysteryIngredients)
+                foreach (Item ingredient in mysteryDish.MinimumRequiredMysteryIngredients)
                 {
                     if (iIndex < References.MaxIngredientCountForMinimumRecipe)
                     {
@@ -197,7 +217,7 @@ namespace KitchenMysteryMenu.Systems
                 }
                 if (iIndex >= References.MaxIngredientCountForMinimumRecipe)
                 {
-                    Mod.Logger.LogError($"Mystery Dish ({genericMysteryDish.UniqueNameID}) has more minimum ingredients (count = {iIndex}) than expected. " +
+                    Mod.Logger.LogError($"Mystery Dish ({mysteryDish.UniqueNameID}) has more minimum ingredients (count = {iIndex}) than expected. " +
                         $"Expected max ingredient count = {References.MaxIngredientCountForMinimumRecipe}");
                 }
 
@@ -206,14 +226,14 @@ namespace KitchenMysteryMenu.Systems
                     Type = MysteryMenuType.Mystery,
                     Ingredients = ingredients,
                     HasBeenProvided = false,
-                    RequiresVariant = genericMysteryDish.RequiresVariant
+                    RequiresVariant = mysteryDish.RequiresVariant
                 };
                 EntityManager.AddComponentData(entity, mysteryOptionRecipe);
                 EntityManager.AddComponent<CMysteryMenuItemOption>(entity);
             }
         }
 
-        private void HandleNewExtras()
+        private void HandleNewExtras(Dish dishData, GenericMysteryDish genericMysteryDish, GenericMysteryDishCard genericMysteryDishCard)
         {
 
         }
