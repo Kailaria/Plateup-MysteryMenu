@@ -43,9 +43,7 @@ namespace KitchenMysteryMenu.Customs.Dishes.Salad
             {
                 Item = (Item) GDOUtils.GetExistingGDO(ItemReferences.SaladPlated),
                 Phase = MenuPhase.Main,
-                Weight = 1,
-                DynamicMenuType = References.DynamicMenuTypeMystery,
-                DynamicMenuIngredient = (Item) GDOUtils.GetExistingGDO(ItemReferences.Lettuce)
+                Weight = 1
             }
         };
         public override HashSet<Item> MinimumRequiredMysteryIngredients => new HashSet<Item>()

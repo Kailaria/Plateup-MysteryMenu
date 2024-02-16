@@ -41,8 +41,6 @@ namespace KitchenMysteryMenu.Customs.Dishes.Pies
             BaseMysteryDish.GameDataObject
         };
 
-        //TODO: Might need to keep this for the lobby at least..? Or perhaps not if it'll just be moved to a MysteryPieMeatDish anyway
-        //     and *that* will get included in MysteryMenuBaseMainsDish...
         public override HashSet<Dish.IngredientUnlock> IngredientsUnlocks => new()
         {
             new()

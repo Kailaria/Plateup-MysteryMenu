@@ -43,9 +43,7 @@ namespace KitchenMysteryMenu.Customs.Dishes.Steaks
             {
                 Item = (Item)GDOUtils.GetExistingGDO(ItemReferences.SteakPlated),
                 Phase = MenuPhase.Main,
-                Weight = 1,
-                DynamicMenuType = References.DynamicMenuTypeMystery,
-                DynamicMenuIngredient = (Item)GDOUtils.GetExistingGDO(ItemReferences.Meat)
+                Weight = 1
             }
         };
         public override HashSet<Item> MinimumRequiredMysteryIngredients => new HashSet<Item>()

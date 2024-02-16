@@ -43,9 +43,7 @@ namespace KitchenMysteryMenu.Customs.Dishes.Pies
             {
                 Item = (Item)GDOUtils.GetExistingGDO(ItemReferences.PiePlated),
                 Phase = MenuPhase.Main,
-                Weight = 1,
-                DynamicMenuType = References.DynamicMenuTypeMystery,
-                DynamicMenuIngredient = (Item)GDOUtils.GetExistingGDO(ItemReferences.PieMeatRaw)
+                Weight = 1
             }
         };
         //TODO: Might need to keep this for the lobby at least..? Or perhaps not if it'll just be moved to a MysteryPieMeatDish anyway
