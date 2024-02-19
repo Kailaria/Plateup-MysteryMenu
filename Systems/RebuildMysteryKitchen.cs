@@ -26,7 +26,7 @@ namespace KitchenMysteryMenu.Systems
 
         protected override void OnUpdate()
         {
-            Mod.Logger.LogInfo("RebuildMysteryKitchen Updating");
+            //Mod.Logger.LogInfo("RebuildMysteryKitchen Updating");
             var sRebuildMysteryKitchen = GetOrCreate<SRebuildMysteryKitchen>();
 
             if (!TryGetSingleton<RebuildKitchen.SCurrentKitchen>(out var sCurrentKitchen))

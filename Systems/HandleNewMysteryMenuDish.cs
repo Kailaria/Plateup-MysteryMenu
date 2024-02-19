@@ -13,7 +13,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Unity.Collections;
 using Unity.Entities;
-using static Steamworks.InventoryRecipe;
 
 namespace KitchenMysteryMenu.Systems
 {
@@ -95,8 +94,6 @@ namespace KitchenMysteryMenu.Systems
                     continue;
                 }
 
-                //TODO: remove Ingredients due to throwing ArgumentException for "pointers", likely to do w/ the Ingredients NativeArray?
-                //NativeArray<int> ingredients = new NativeArray<int>(References.MaxIngredientCountForMinimumRecipe, Allocator.Temp);
                 MysteryMenuType type;
                 bool requiresVariant = false;
 
@@ -106,31 +103,8 @@ namespace KitchenMysteryMenu.Systems
                     Mod.Logger.LogInfo($"Handling non-mystery menu item");
                     // Utilize the related Mystery Dish to get the Static Dish and compare
                     GenericMysteryDish relatedMysteryDish = MysteryDishCrossReference.GetRelatedMysteryMainDish(dishData.ID);
-                    //int iIndex = 0;
-                    //foreach (Item ingredient in dishData.MinimumIngredients)
-                    //{
-                    //    if (ingredient.ID == ItemReferences.Plate || ingredient.ID == ItemReferences.Water ||
-                    //        ingredient.ID == ItemReferences.Wok || ingredient.ID == ItemReferences.MixingBowlEmpty ||
-                    //        ingredient.ID == ItemReferences.Pot)
-                    //    {
-                    //        // Containers and water don't count. Baking tins will, but will also be a unique Mystery Appliance.
-                    //        continue;
-                    //    }
-                    //    iIndex++;
-                    //    if (iIndex >= References.MaxIngredientCountForMinimumRecipe)
-                    //    {
-                    //        continue;
-                    //    }
-                    //    Mod.Logger.LogInfo($"Dish {{name = {dishData.Name}}} - Adding Ingredient {{name = {ingredient.name}}}");
-                    //    ingredients[iIndex] = ingredient.ID;
-                    //}
-                    //if (iIndex >= References.MaxIngredientCountForMinimumRecipe)
-                    //{
-                    //    Mod.Logger.LogWarning($"Dish (id = {dishData.ID}) has more minimum ingredients (count = {iIndex}) than expected. " +
-                    //        $"Expected max ingredient count = {References.MaxIngredientCountForMinimumRecipe}");
-                    //    //continue;
-                    //}
                     //TODO: try to get a CDynamicMenuItem for the entity and add ingredients for the fish itself..?
+                    //TODO: handle case when Static Dish is a "duplicate" MenuItem of an existing GenericMysteryDish's MenuItem
 
                     type = MysteryMenuType.Static;
                 }
@@ -153,34 +127,14 @@ namespace KitchenMysteryMenu.Systems
                         Mod.Logger.LogWarning($"Mystery Card ({mysteryDishCard.UniqueNameID}) does not seem to contain CMenuItem with ItemID = {menuItem.Item}");
                         continue;
                     }
-                    //int iIndex = 0;
-                    //foreach (Item ingredient in genericMysteryDish.MinimumRequiredMysteryIngredients)
-                    //{
-                    //    if (iIndex < References.MaxIngredientCountForMinimumRecipe)
-                    //    {
-                    //        Mod.Logger.LogInfo($"MysteryDish {{name = {dishData.Name}}} - Adding Ingredient {{name = {ingredient.name}}}");
-                    //        ingredients[iIndex] = ingredient.ID;
-                    //    }
-                    //    iIndex++;
-                    //}
-                    //if (iIndex >= References.MaxIngredientCountForMinimumRecipe)
-                    //{
-                    //    Mod.Logger.LogWarning($"Mystery Dish ({genericMysteryDish.UniqueNameID}) has more minimum ingredients (count = {iIndex}) than expected. " +
-                    //        $"Expected max ingredient count = {References.MaxIngredientCountForMinimumRecipe}");
-                    //}
                     type = MysteryMenuType.Mystery;
                     requiresVariant = genericMysteryDish.RequiresVariant;
 
+                    // TODO: Handle case when Mystery Dish would be a duplicate of an existing Static/Dynamic Dish's CMenuItem (by removing the one with MysteryMenuItem.Type = Mystery).
                     // Point the CMenuItem's SourceDish to the MysteryDish's ID instead of its parent MysteryDishCard's ID
                     menuItem.SourceDish = genericMysteryDish.GameDataObject.ID;
                     EntityManager.AddComponentData(entity, menuItem);
                 }
-                //else
-                //{
-                //    // It's a different custom dish with a dynamic type, so ignore it.
-                //    Mod.Logger.LogInfo($"Menu Item (source dish ID = {menuItem.SourceDish}) is an unknown/custom Dynamic type.");
-                //    continue;
-                //}
 
                 // Source Dish by now should either be the original dish ID or the GenericMysteryDish's GDO ID, rather than a GMDC's GDO ID
                 Mod.Logger.LogInfo($"Creating CMysteryMenuItem for entity {{Index = {entity.Index}}}");
@@ -232,22 +186,6 @@ namespace KitchenMysteryMenu.Systems
 
                 // This *is* a mystery dish option, so add the identifier component and the CMysteryMenuItem component so that we
                 //  know what ingredients will trigger this to be available.
-                //NativeArray<int> ingredients = new NativeArray<int>(References.MaxIngredientCountForMinimumRecipe, Allocator.Temp);
-                //int iIndex = 0;
-                //foreach (Item ingredient in genericMysteryDish.MinimumRequiredMysteryIngredients)
-                //{
-                //    if (iIndex < References.MaxIngredientCountForMinimumRecipe)
-                //    {
-                //        Mod.Logger.LogInfo($"MysteryDish {{name = {dishData.Name}}} - Adding Ingredient {{name = {ingredient.name}}}");
-                //        ingredients[iIndex] = ingredient.ID;
-                //    }
-                //    iIndex++;
-                //}
-                //if (iIndex >= References.MaxIngredientCountForMinimumRecipe)
-                //{
-                //    Mod.Logger.LogWarning($"Mystery Dish ({genericMysteryDish.UniqueNameID}) has more minimum ingredients (count = {iIndex}) than expected. " +
-                //        $"Expected max ingredient count = {References.MaxIngredientCountForMinimumRecipe}");
-                //}
 
                 Mod.Logger.LogInfo($"Creating CMysteryMenuItem and CMysteryMenuItemOption for entity {{Index = {entity.Index}}}");
                 EntityManager.AddComponentData(entity, new CMysteryMenuItem()
