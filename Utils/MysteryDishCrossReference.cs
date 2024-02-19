@@ -16,11 +16,13 @@ namespace KitchenMysteryMenu.Utils
 
         public static void RegisterDish(GenericMysteryDish mysteryDish)
         {
+            Mod.Logger.LogInfo($"Registering {{{mysteryDish.UniqueNameID}}} with GDO.ID {{{mysteryDish.GameDataObject.ID}}}");
             MysteryDishes.Add(mysteryDish);
         }
 
         public static void RegisterDishCard(GenericMysteryDishCard mysteryDishCard)
         {
+            Mod.Logger.LogInfo($"Registering {{{mysteryDishCard.UniqueNameID}}} with GDO.ID {{{mysteryDishCard.GameDataObject.ID}}}");
             MysteryDishCards.Add(mysteryDishCard);
         }
 
@@ -41,12 +43,12 @@ namespace KitchenMysteryMenu.Utils
 
         public static GenericMysteryDish GetMysteryDishById(int id)
         {
-            return MysteryDishes.Where(gmd => gmd.BaseGameDataObjectID == id).FirstOrDefault();
+            return MysteryDishes.Where(gmd => gmd.GameDataObject.ID == id).FirstOrDefault();
         }
 
         public static GenericMysteryDishCard GetMysteryCardById(int id)
         {
-            return MysteryDishCards.Where(gmdc => gmdc.BaseGameDataObjectID == id).FirstOrDefault();
+            return MysteryDishCards.Where(gmdc => gmdc.GameDataObject.ID == id).FirstOrDefault();
         }
 
         public static GenericMysteryDish GetMysteryDishByMenuItem(int menuItem)
