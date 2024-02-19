@@ -1,5 +1,6 @@
 ﻿using KitchenData;
 using KitchenLib.Customs;
+using KitchenMysteryMenu.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,12 +12,26 @@ namespace KitchenMysteryMenu.Customs.Dishes
     public abstract class GenericMysteryDish : CustomDish
     {
         protected abstract string NameTag { get; }
+        // Make sure OrigDish is a unique ID
+        public abstract Dish OrigDish { get; }
         public override UnlockGroup UnlockGroup => UnlockGroup.Dish;
         public override string UniqueNameID => "Mystery : " + NameTag;
         public override bool IsUnlockable => false;
         public override bool IsAvailableAsLobbyOption => false;
 
-        public abstract List<Item> MinimumRequiredMysteryIngredients { get; }
-        public abstract List<Item> UnlockedOptionalMysteryIngredients { get; }
+        public abstract HashSet<Item> MinimumRequiredMysteryIngredients { get; }
+        /**
+         * RequiresVariant
+         * Override as true if the base dish is not enough to be ordered on its own. Especially useful for plated dishes
+         *   like Pies and Stir Fry to ensure that their normal bases aren't needed to be available in order to be served.
+         */
+        public virtual bool RequiresVariant => false;
+        public virtual GenericMysteryDish BaseMysteryDish => default;
+
+        public override void OnRegister(Dish gameDataObject)
+        {
+            base.OnRegister(gameDataObject);
+            MysteryDishCrossReference.RegisterDish(this);
+        }
     }
 }

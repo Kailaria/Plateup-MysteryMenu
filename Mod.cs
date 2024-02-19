@@ -53,6 +53,7 @@ namespace KitchenMysteryMenu
         private void AddApplianceGDOs()
         {
             AddGameDataObject<MysteryIngredientProvider>();
+            AddGameDataObject<MysteryIngredientProvider2>();
         }
 
         private void AddIngredientGDOs()
@@ -72,10 +73,13 @@ namespace KitchenMysteryMenu
 
         private void AddDishGDOs()
         {
-            AddGameDataObject<MysterySteakDish>();
-            AddGameDataObject<MysteryBreakfastDish>();
-            AddGameDataObject<MysteryPiesDish>();
-            AddGameDataObject<MysteryMenuDish>();
+            // Base Mains
+            AddGameDataObject<MysterySteakBaseDish>();
+            AddGameDataObject<MysteryBreakfastBaseDish>();
+            AddGameDataObject<MysteryPiesBaseDish>();
+            AddGameDataObject<MysteryPiesMeatDish>();
+
+            AddGameDataObject<MysteryMenuBaseMainsDish>();
         }
     }
 }

@@ -2,6 +2,7 @@
 using KitchenLib.Customs;
 using KitchenLib.References;
 using KitchenLib.Utils;
+using KitchenMysteryMenu.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,9 +11,10 @@ using System.Threading.Tasks;
 
 namespace KitchenMysteryMenu.Customs.Dishes.Steaks
 {
-    public class MysterySteakDish : GenericMysteryDish
+    public class MysterySteakBaseDish : GenericMysteryDish
     {
         protected override string NameTag => "Mystery Steak Dish";
+        public override Dish OrigDish => (Dish)GDOUtils.GetExistingGDO(DishReferences.SteakBase);
         public override DishType Type => DishType.Base;
         public override DishCustomerChange CustomerMultiplier => DishCustomerChange.None;
         public override Unlock.RewardLevel ExpReward => Unlock.RewardLevel.None;
@@ -35,10 +37,22 @@ namespace KitchenMysteryMenu.Customs.Dishes.Steaks
                 FlavourText = "Cook steaks multiple times to match the order"
             })
         };
-        public override List<Item> MinimumRequiredMysteryIngredients => new List<Item>()
+        public override List<Dish.MenuItem> ResultingMenuItems => new()
+        {
+            new()
+            {
+                Item = (Item)GDOUtils.GetExistingGDO(ItemReferences.SteakPlated),
+                Phase = MenuPhase.Main,
+                Weight = 1
+            }
+        };
+        public override HashSet<Item> MinimumRequiredMysteryIngredients => new HashSet<Item>()
         {
             (Item) GDOUtils.GetExistingGDO(ItemReferences.Meat)
         };
-        public override List<Item> UnlockedOptionalMysteryIngredients => new List<Item>();
+        public override List<Unlock> HardcodedRequirements => new()
+        {
+            GDOUtils.GetCastedGDO<Dish, MysteryMenuBaseMainsDish>()
+        };
     }
 }

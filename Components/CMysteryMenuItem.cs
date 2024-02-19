@@ -11,8 +11,9 @@ namespace KitchenMysteryMenu.Components
 {
     public struct CMysteryMenuItem : IComponentData
     {
-        [NativeFixedLength(5)]
-        public NativeArray<int> Ingredients;
+        public int SourceDish;
+
+        public bool RequiresVariant;
 
         public MysteryMenuType Type;
 

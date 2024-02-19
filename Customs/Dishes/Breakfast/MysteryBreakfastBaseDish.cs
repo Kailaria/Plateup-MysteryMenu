@@ -1,6 +1,7 @@
 ﻿using KitchenData;
 using KitchenLib.References;
 using KitchenLib.Utils;
+using KitchenMysteryMenu.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,9 +10,10 @@ using System.Threading.Tasks;
 
 namespace KitchenMysteryMenu.Customs.Dishes.Breakfast
 {
-    public class MysteryBreakfastDish : GenericMysteryDish
+    public class MysteryBreakfastBaseDish : GenericMysteryDish
     {
         protected override string NameTag => "Mystery Breakfast Dish";
+        public override Dish OrigDish => (Dish)GDOUtils.GetExistingGDO(DishReferences.BreakfastBase);
         public override DishType Type => DishType.Base;
         public override DishCustomerChange CustomerMultiplier => DishCustomerChange.None;
         public override Unlock.RewardLevel ExpReward => Unlock.RewardLevel.None;
@@ -35,10 +37,22 @@ namespace KitchenMysteryMenu.Customs.Dishes.Breakfast
             })
         };
 
-        public override List<Item> MinimumRequiredMysteryIngredients => new List<Item>()
+        public override List<Dish.MenuItem> ResultingMenuItems => new()
+        {
+            new()
+            {
+                Item = (Item)GDOUtils.GetExistingGDO(ItemReferences.BreakfastPlated),
+                Phase = MenuPhase.Main,
+                Weight = 1
+            }
+        };
+        public override HashSet<Item> MinimumRequiredMysteryIngredients => new HashSet<Item>()
         {
             (Item) GDOUtils.GetExistingGDO(ItemReferences.Flour)
         };
-        public override List<Item> UnlockedOptionalMysteryIngredients => new List<Item>();
+        public override List<Unlock> HardcodedRequirements => new()
+        {
+            GDOUtils.GetCastedGDO<Dish, MysteryMenuBaseMainsDish>()
+        };
     }
 }

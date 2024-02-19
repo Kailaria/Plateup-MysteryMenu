@@ -1,6 +1,7 @@
 ﻿using KitchenData;
 using KitchenLib.References;
 using KitchenLib.Utils;
+using KitchenMysteryMenu.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +10,11 @@ using System.Threading.Tasks;
 
 namespace KitchenMysteryMenu.Customs.Dishes.Pies
 {
-    public class MysteryPiesDish : GenericMysteryDish
+    public class MysteryPiesMeatDish : GenericMysteryDish
     {
-        protected override string NameTag => "Mystery Pies Dish";
-        public override DishType Type => DishType.Base;
+        protected override string NameTag => "Mystery Meat Pie Dish";
+        public override Dish OrigDish => (Dish)GDOUtils.GetExistingGDO(DishReferences.PieBase);
+        public override DishType Type => DishType.Main;
         public override DishCustomerChange CustomerMultiplier => DishCustomerChange.None;
         public override Unlock.RewardLevel ExpReward => Unlock.RewardLevel.None;
         public override UnlockGroup UnlockGroup => UnlockGroup.Dish;
@@ -29,16 +31,30 @@ namespace KitchenMysteryMenu.Customs.Dishes.Pies
         {
             (Locale.English, new UnlockInfo()
             {
-                Name = "Mystery - Pies",
+                Name = "Mystery - Meat Pies",
                 Description = "Adds meat pie as a main when <b>Flour</b> and <b>Meat</b> are present",
                 FlavourText = "Are you ready for the best pies in PlateUp!?"
             })
         };
-        public override List<Item> MinimumRequiredMysteryIngredients => new List<Item>()
+        public override List<Unlock> HardcodedRequirements => new List<Unlock>()
+        {
+            BaseMysteryDish.GameDataObject
+        };
+
+        public override HashSet<Dish.IngredientUnlock> IngredientsUnlocks => new()
+        {
+            new()
+            {
+                MenuItem = (ItemGroup)GDOUtils.GetExistingGDO(ItemReferences.PiePlated),
+                Ingredient = (Item)GDOUtils.GetExistingGDO(ItemReferences.PieMeatCooked)
+            }
+        };
+        public override HashSet<Item> MinimumRequiredMysteryIngredients => new HashSet<Item>()
         {
             (Item) GDOUtils.GetExistingGDO(ItemReferences.Flour),
             (Item) GDOUtils.GetExistingGDO(ItemReferences.Meat)
         };
-        public override List<Item> UnlockedOptionalMysteryIngredients => new List<Item>();
+        public override bool RequiresVariant => false;
+        public override GenericMysteryDish BaseMysteryDish => (GenericMysteryDish) GDOUtils.GetCustomGameDataObject<MysteryPiesBaseDish>();
     }
 }
