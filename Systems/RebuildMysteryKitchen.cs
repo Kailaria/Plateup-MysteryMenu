@@ -73,8 +73,7 @@ namespace KitchenMysteryMenu.Systems
                 var cItemProvider = existingCItemProviders[i];
 
                 // Plate & Wok Stacks are also Item Providers, so don't change those.
-                if (cItemProvider.ProvidedItem == ItemReferences.Plate
-                    || cItemProvider.ProvidedItem == ItemReferences.Wok)
+                if (MysteryDishUtils.IsLimitedContainer(cItemProvider.ProvidedItem))
                 {
                     continue;
                 }

@@ -95,7 +95,6 @@ namespace KitchenMysteryMenu.Systems
                 }
 
                 MysteryMenuType type;
-                bool requiresVariant = false;
 
                 // This should handle both vanilla and modded dishes now since we have a dishData handed in.
                 if (genericMysteryDish == default && mysteryDishCard == default)
@@ -128,7 +127,6 @@ namespace KitchenMysteryMenu.Systems
                         continue;
                     }
                     type = MysteryMenuType.Mystery;
-                    requiresVariant = genericMysteryDish.RequiresVariant;
 
                     // TODO: Handle case when Mystery Dish would be a duplicate of an existing Static/Dynamic Dish's CMenuItem (by removing the one with MysteryMenuItem.Type = Mystery).
                     // Point the CMenuItem's SourceDish to the MysteryDish's ID instead of its parent MysteryDishCard's ID
@@ -140,10 +138,9 @@ namespace KitchenMysteryMenu.Systems
                 Mod.Logger.LogInfo($"Creating CMysteryMenuItem for entity {{Index = {entity.Index}}}");
                 EntityManager.AddComponentData(entity, new CMysteryMenuItem()
                 {
-                    SourceDish = menuItem.SourceDish,
+                    SourceMysteryDish = menuItem.SourceDish,
                     Type = type,
-                    HasBeenProvided = false,
-                    RequiresVariant = requiresVariant
+                    HasBeenProvided = false
                 });
                 break;
             }
@@ -191,7 +188,7 @@ namespace KitchenMysteryMenu.Systems
                 EntityManager.AddComponentData(entity, new CMysteryMenuItem()
                 {
                     Type = MysteryMenuType.Mystery,
-                    SourceDish = genericMysteryDish.GameDataObject.ID,
+                    SourceMysteryDish = genericMysteryDish.GameDataObject.ID,
                     HasBeenProvided = false,
                     RequiresVariant = genericMysteryDish.RequiresVariant
                 });
