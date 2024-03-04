@@ -189,8 +189,7 @@ namespace KitchenMysteryMenu.Systems
                 {
                     Type = MysteryMenuType.Mystery,
                     SourceMysteryDish = genericMysteryDish.GameDataObject.ID,
-                    HasBeenProvided = false,
-                    RequiresVariant = genericMysteryDish.RequiresVariant
+                    HasBeenProvided = false
                 });
                 EntityManager.AddComponent<CMysteryMenuItemOption>(entity);
             }
