@@ -130,7 +130,8 @@ namespace KitchenMysteryMenu.Systems
                 // algo 3d: Ensure that the only recipes that can be selected are those that require at most the number of available ingredient providers,
                 //          AND whose prerequisite dishes (if any) have already been satisfied.
                 //      * i.e. 2 available providers during a given randomization => only recipes that need 1-2 more ingredients to be valid
-                //      * Need to make sure __?
+                //      * Need to make sure to account for MenuItemTypes
+                //      * Need to make sure to account for RequiresVariant/Parent
                 var randomRecipe = SelectRandomRecipe(currentRecipes, newerCombinedEntities, olderCombinedEntities, numRemainingProviders);
 
                 // algo 3e: Given the selected recipe, assign the ingredients to Mystery Providers that have not already been provided, whether randomly
@@ -335,6 +336,33 @@ namespace KitchenMysteryMenu.Systems
                 return MissingIngredientCount <= availableProviderCount;
             }
 
+            public bool CouldBeSelected(int availableProviderCount, IEnumerable<MysteryRecipeIngredientCounter> nonCurrentRecipes)
+            {
+                if (IsMenuItem())
+                {
+                    return CanBeSelected(availableProviderCount);
+                }
+                if (IsAvailableIngredient())
+                {
+                    // Find the related parent dish
+                    var parentRecipe = GetParentRecipe(nonCurrentRecipes);
+                    return CanBeSelected(availableProviderCount - parentRecipe.MissingIngredientCount);
+                }
+                return false;
+            }
+
+            public MysteryRecipeIngredientCounter GetParentRecipe(IEnumerable<MysteryRecipeIngredientCounter> availableRecipes)
+            {
+                if (IsAvailableIngredient())
+                {
+                    return availableRecipes.Where(r => r.IsMenuItem() && DishOption.MenuItem == r.MenuItem.Item).FirstOrDefault();
+                }
+                // if (IsPossibleExtra())
+                //{
+                //}
+                return default;
+            }
+
             /**
              *  CanBeServed
              *  
@@ -344,13 +372,23 @@ namespace KitchenMysteryMenu.Systems
              **/
             public bool CanBeServed(IEnumerable<MysteryRecipeIngredientCounter> currentRecipes)
             {
-                return MenuItem.Item != 0
-                    || (DishOption.MenuItem != 0 && DishOption.Ingredient != 0 && currentRecipes.Any(r => r.MenuItem.Item == DishOption.MenuItem));
+                return (IsMenuItem() && (!Recipe.RequiresVariant || currentRecipes.Any(r => r.IsAvailableIngredient() && r.DishOption.MenuItem == MenuItem.Item)))
+                    || (IsAvailableIngredient() && currentRecipes.Any(r => r.IsMenuItem() && r.MenuItem.Item == DishOption.MenuItem));
             }
 
             public void RecalculateMatchingCount(HashSet<Item> availableItems)
             {
                 NumMatchingIngredients = Recipe.MinimumRequiredMysteryIngredients.Count(item => availableItems.Contains(item));
+            }
+
+            public bool IsMenuItem()
+            {
+                return MenuItem.Item != 0;
+            }
+
+            public bool IsAvailableIngredient()
+            {
+                return DishOption.MenuItem != 0 && DishOption.Ingredient != 0;
             }
         }
     }
