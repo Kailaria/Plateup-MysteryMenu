@@ -311,7 +311,10 @@ namespace KitchenMysteryMenu.Systems
                 return recipeList;
             }
 
-            float totalOldWeight = olderCombinedEntities.Where(e => e.CanBeSelected(numRemainingProviders) && e.CanBeServed(currentRecipes)).Sum(e => e.Weight);
+            float totalOldWeight = olderCombinedEntities
+                .Where(e => e.CanBeSelected(numRemainingProviders) &&
+                    (e.CanBeServed(currentRecipes) || e.CouldBeServed(numRemainingProviders, allCombinedEntities)))
+                .Sum(e => e.Weight);
             float randomOld = UnityEngine.Random.Range(0f, totalOldWeight);
             float currentOld = 0f;
 
