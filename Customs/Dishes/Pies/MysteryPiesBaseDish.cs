@@ -56,10 +56,7 @@ namespace KitchenMysteryMenu.Customs.Dishes.Pies
         //        Ingredient = (Item)GDOUtils.GetExistingGDO(ItemReferences.PieMeatCooked)
         //    }
         //};
-        public override HashSet<Item> MinimumRequiredMysteryIngredients => new HashSet<Item>()
-        {
-            (Item) GDOUtils.GetExistingGDO(ItemReferences.Flour)
-        };
+        public override HashSet<Item> MinimumRequiredMysteryIngredients => new HashSet<Item>();
         public override bool RequiresVariant => true;
         public override List<Unlock> HardcodedRequirements => new()
         {

@@ -11,9 +11,7 @@ namespace KitchenMysteryMenu.Components
 {
     public struct CMysteryMenuItem : IComponentData
     {
-        public int SourceDish;
-
-        public bool RequiresVariant;
+        public int SourceMysteryDish;
 
         public MysteryMenuType Type;
 
