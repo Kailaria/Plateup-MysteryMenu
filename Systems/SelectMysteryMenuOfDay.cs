@@ -143,6 +143,7 @@ namespace KitchenMysteryMenu.Systems
                     var mysteryProviderCItemProvider = EntityManager.GetComponentData<CItemProvider>(mysteryProviderEntityList[mysteryProviderIndex]);
                     mysteryProviderCItemProvider.SetAsItem(ingredient.ID);
                     EntityManager.SetComponentData(mysteryProviderEntityList[mysteryProviderIndex], mysteryProviderCItemProvider);
+                    availableItemsForRecipes.Add(ingredient);
                     mysteryProviderIndex++;
                 }
             }
@@ -322,7 +323,7 @@ namespace KitchenMysteryMenu.Systems
                 // If the random number is less than the current, then it's within the range of the previous weight and the current summed weight.
                 if (randomOld <= currentOld)
                 {
-                    Mod.Logger.LogInfo($"{LogMsgPrefix} Found a newer recipe! Name = {{{recipe.Recipe.UniqueNameID}}}; " +
+                    Mod.Logger.LogInfo($"{LogMsgPrefix} Found an older recipe! Name = {{{recipe.Recipe.UniqueNameID}}}; " +
                         $"missingIngredients: {{{recipe.MissingIngredientCount}}}");
                     if (recipe.CanBeSelected(numRemainingProviders))
                     {
