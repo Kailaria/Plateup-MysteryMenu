@@ -24,12 +24,12 @@ namespace KitchenMysteryMenu.Patches
         private static object[] IngredientsParameters = new object[]
         {
             new [] { new QueryHelper().All(typeof(CAvailableIngredient))
-                .None(typeof(CDisabledMysteryOption)).Build() }
+                .None(typeof(CDisabledMysteryMenu)).Build() }
         };
         private static object[] ExtrasParameters = new object[]
         {
             new [] { new QueryHelper().All(typeof(CPossibleExtra))
-                .None(typeof(CDisabledMysteryExtra)).Build() }
+                .None(typeof(CDisabledMysteryMenu)).Build() }
         };
 
         [HarmonyPostfix]
