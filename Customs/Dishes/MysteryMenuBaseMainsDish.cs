@@ -5,7 +5,9 @@ using KitchenLib.Utils;
 using KitchenMysteryMenu;
 using KitchenMysteryMenu.Customs.Dishes.Breakfast;
 using KitchenMysteryMenu.Customs.Dishes.Pies;
+using KitchenMysteryMenu.Customs.Dishes.Salad;
 using KitchenMysteryMenu.Customs.Dishes.Steaks;
+using KitchenMysteryMenu.Customs.Dishes.StirFry;
 using KitchenMysteryMenu.Customs.Ingredients;
 using KitchenMysteryMenu.Utils;
 using System;
@@ -50,6 +52,8 @@ namespace KitchenMysteryMenu.Customs.Dishes
             GDOUtils.GetCastedGDO<Item, MysteryFlour>(),
             (Item)GDOUtils.GetExistingGDO(ItemReferences.Plate),
             (Item)GDOUtils.GetExistingGDO(ItemReferences.Wok)
+            //,
+            //(Item)GDOUtils.GetExistingGDO(ItemReferences.Pot)
         };
         public override HashSet<Process> RequiredProcesses => new()
         {
@@ -63,8 +67,14 @@ namespace KitchenMysteryMenu.Customs.Dishes
             (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysterySteakBaseDish>(),
             (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryBreakfastBaseDish>(),
             (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryPiesBaseDish>(),
-            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryPiesMeatDish>()
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryPiesMeatDish>(),
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysterySaladBaseDish>(),
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysterySaladTomatoDish>(),
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryStirFryBaseDish>(),
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryStirFryBroccoliDish>(),
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryStirFryCarrotDish>()
         };
+
         public override Dictionary<Locale, string> Recipe => new()
         {
             { Locale.English, "Make other base main recipes with the given ingredients, then plate." }

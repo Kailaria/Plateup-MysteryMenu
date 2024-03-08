@@ -6,7 +6,9 @@ using KitchenMysteryMenu.Customs.Appliances;
 using KitchenMysteryMenu.Customs.Dishes;
 using KitchenMysteryMenu.Customs.Dishes.Breakfast;
 using KitchenMysteryMenu.Customs.Dishes.Pies;
+using KitchenMysteryMenu.Customs.Dishes.Salad;
 using KitchenMysteryMenu.Customs.Dishes.Steaks;
+using KitchenMysteryMenu.Customs.Dishes.StirFry;
 using KitchenMysteryMenu.Customs.Ingredients;
 using KitchenMysteryMenu.Customs.ItemGroups;
 using System.Linq;
@@ -73,12 +75,26 @@ namespace KitchenMysteryMenu
 
         private void AddDishGDOs()
         {
-            // Base Mains
+            // Mystery Steak Dishes
             AddGameDataObject<MysterySteakBaseDish>();
+
+            // Mystery Breakfast Dishes
             AddGameDataObject<MysteryBreakfastBaseDish>();
+
+            // Mystery Pies Dishes
             AddGameDataObject<MysteryPiesBaseDish>();
             AddGameDataObject<MysteryPiesMeatDish>();
 
+            // Mystery Salad Dishes
+            AddGameDataObject<MysterySaladBaseDish>();
+            AddGameDataObject<MysterySaladTomatoDish>();
+
+            // Mystery Stir Fry Dishes
+            AddGameDataObject<MysteryStirFryBaseDish>();
+            AddGameDataObject<MysteryStirFryBroccoliDish>();
+            AddGameDataObject<MysteryStirFryCarrotDish>();
+
+            // Mystery Dish cards
             AddGameDataObject<MysteryMenuBaseMainsDish>();
         }
     }
