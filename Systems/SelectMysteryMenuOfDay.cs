@@ -140,6 +140,11 @@ namespace KitchenMysteryMenu.Systems
                 var selectedRecipesIngredients = selectedRecipeList.SelectMany(r => r.Recipe.MinimumRequiredMysteryIngredients).ToHashSet();
                 foreach(var ingredient in selectedRecipesIngredients)
                 {
+                    if (availableItemsForRecipes.Any(item => item.ID == ingredient.ID))
+                    {
+                        // Don't re-add the ingredient if it's already there. 
+                        continue;
+                    }
                     var mysteryProviderCItemProvider = EntityManager.GetComponentData<CItemProvider>(mysteryProviderEntityList[mysteryProviderIndex]);
                     mysteryProviderCItemProvider.SetAsItem(ingredient.ID);
                     EntityManager.SetComponentData(mysteryProviderEntityList[mysteryProviderIndex], mysteryProviderCItemProvider);
@@ -201,7 +206,7 @@ namespace KitchenMysteryMenu.Systems
                 // AvailableIngredients should always be added if they can be cooked, since they still require a MenuItem to be plated.
                 // PossibleExtras should always be added since, if they can be cooked, they were already selected for a provider slot by another option.
                 //      The extra still won't be requested unless its related MenuItem is already there.
-                if (recipe.CanBeCooked() && !recipe.RequiresVariant)
+                if (recipe.CanBeCooked() && (!recipe.IsMenuItem() || !recipe.RequiresVariant))
                 {
                     count++;
                     currentRecipes.Add(recipe);
@@ -475,7 +480,7 @@ namespace KitchenMysteryMenu.Systems
 
             public void RecalculateMatchingCount(HashSet<Item> availableItems)
             {
-                NumMatchingIngredients = Recipe.MinimumRequiredMysteryIngredients.Count(item => availableItems.Contains(item));
+                NumMatchingIngredients = Recipe.MinimumRequiredMysteryIngredients.Count(item => availableItems.Any(avaItem => item.ID == avaItem.ID));
             }
 
             public bool IsMenuItem()
