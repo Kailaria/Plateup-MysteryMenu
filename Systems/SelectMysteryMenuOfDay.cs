@@ -192,6 +192,7 @@ namespace KitchenMysteryMenu.Systems
             Mod.Logger.LogInfo($"{LogMsgPrefix} Adding Recipes to 'Current' List that are fully supplied.");
             AddUpdateRecipesToCurrent(currentRecipes, newerCombinedEntities, availableItemsForRecipes, "newer");
             AddUpdateRecipesToCurrent(currentRecipes, olderCombinedEntities, availableItemsForRecipes, "older");
+            AddUpdateRequiresVariantMains(currentRecipes, newerCombinedEntities, olderCombinedEntities);
         }
 
         private void AddUpdateRecipesToCurrent(List<MysteryRecipeIngredientCounter> currentRecipes, List<MysteryRecipeIngredientCounter> combinedEntities, HashSet<Item> availableItemsForRecipes, string listName)
@@ -202,21 +203,47 @@ namespace KitchenMysteryMenu.Systems
                 // Recalculate the count of matching ingredients
                 recipe.RecalculateMatchingCount(availableItemsForRecipes);
 
-                // If a recipe can be cooked and doesn't require a variant, then add it.
+                // If a recipe can be cooked or one of its required variants can be cooked, then add it.
                 // AvailableIngredients should always be added if they can be cooked, since they still require a MenuItem to be plated.
                 // PossibleExtras should always be added since, if they can be cooked, they were already selected for a provider slot by another option.
                 //      The extra still won't be requested unless its related MenuItem is already there.
                 if (recipe.CanBeCooked() && (!recipe.IsMenuItem() || !recipe.RequiresVariant))
                 {
                     count++;
-                    currentRecipes.Add(recipe);
-                    var mysteryMenuComp = EntityManager.GetComponentData<CMysteryMenuItem>(recipe.Entity);
-                    mysteryMenuComp.HasBeenProvided = true;
-                    EntityManager.SetComponentData(recipe.Entity, mysteryMenuComp);
+                    UpdateRecipeEntity(currentRecipes, recipe);
                 }
             }
             combinedEntities.RemoveAll(r => currentRecipes.Contains(r));
             Mod.Logger.LogInfo($"{LogMsgPrefix} Moved {{count = {count}}} from {{{listName}}} to current.");
+        }
+
+        private void UpdateRecipeEntity(List<MysteryRecipeIngredientCounter> currentRecipes, MysteryRecipeIngredientCounter recipe)
+        {
+            currentRecipes.Add(recipe);
+            var mysteryMenuComp = EntityManager.GetComponentData<CMysteryMenuItem>(recipe.Entity);
+            mysteryMenuComp.HasBeenProvided = true;
+            EntityManager.SetComponentData(recipe.Entity, mysteryMenuComp);
+        }
+
+        private void AddUpdateRequiresVariantMains(List<MysteryRecipeIngredientCounter> currentRecipes,
+            List<MysteryRecipeIngredientCounter> newerCombinedRecipes,
+            List<MysteryRecipeIngredientCounter> olderCombinedRecipes)
+        {
+            var allCombinedRecipes = newerCombinedRecipes.Concat(olderCombinedRecipes);
+            var requiresVariantMainRecipes = allCombinedRecipes.Where(r => r.IsMenuItem() && r.RequiresVariant).ToList();
+            var availableRecipes = currentRecipes.Concat(allCombinedRecipes);
+            Mod.Logger.LogInfo($"{LogMsgPrefix} Checking {{count = {requiresVariantMainRecipes.Count}}} Mains that require a variant");
+            foreach (var recipe in requiresVariantMainRecipes)
+            {
+                if (recipe.CanBeCooked() && recipe.CanRequiredVariantBeCooked(availableRecipes))
+                {
+                    UpdateRecipeEntity(currentRecipes, recipe);
+                }
+            }
+            var count = newerCombinedRecipes.RemoveAll(r => currentRecipes.Contains(r));
+            Mod.Logger.LogInfo($"{LogMsgPrefix} Moved {{count = {count}}} RequiresVariant Mains from newer to current.");
+            count = olderCombinedRecipes.RemoveAll(r => currentRecipes.Contains(r));
+            Mod.Logger.LogInfo($"{LogMsgPrefix} Moved {{count = {count}}} RequiresVariant Mains from older to current.");
         }
 
         private void WeightRecipesByIngredientSum(
@@ -421,6 +448,16 @@ namespace KitchenMysteryMenu.Systems
             public bool CanBeCooked()
             {
                 return Recipe.MinimumRequiredMysteryIngredients.Count <= NumMatchingIngredients;
+            }
+
+            public bool CanRequiredVariantBeCooked(IEnumerable<MysteryRecipeIngredientCounter> recipes)
+            {
+                if (!IsMenuItem() || !RequiresVariant)
+                {
+                    return false;
+                }
+                return recipes.Where(r => r.DishOption.MenuItem == MenuItem.Item)
+                    .Any(r => r.CanBeCooked());
             }
 
             public bool CanBeSelected(int availableProviderCount)
