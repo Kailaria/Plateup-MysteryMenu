@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace KitchenMysteryMenu.Customs.Dishes.StirFry
 {
-    public class MysteryStirFryCarrotDish : GenericMysteryDish
+    public class MysteryStirFryBroccoliDish : GenericMysteryDish
     {
-        protected override string NameTag => "Mystery Stir Fry Carrot Dish";
+        protected override string NameTag => "Mystery Stir Fry Broccoli Dish";
         public override Dish OrigDish => (Dish)GDOUtils.GetExistingGDO(DishReferences.StirFryBase);
         public override DishType Type => DishType.Main;
         public override DishCustomerChange CustomerMultiplier => DishCustomerChange.None;
@@ -25,15 +25,15 @@ namespace KitchenMysteryMenu.Customs.Dishes.StirFry
         public override int Difficulty => 2;
         public override Dictionary<Locale, string> Recipe => new()
         {
-            { Locale.English, "Chop carrot and add to wok of stir fry ingredients." }
+            { Locale.English, "Chop broccoli and add to wok of stir fry ingredients." }
         };
         public override List<(Locale, UnlockInfo)> InfoList => new()
         {
             (Locale.English, new UnlockInfo()
             {
-                Name = "Mystery - Stir Fry Carrot",
-                Description = "Adds <b>Carrot</b> as an ingredient for Stir Fry when it's present with <b>Rice</b>",
-                FlavourText = "Nyehhhh *crunch* What's up, Doc?"
+                Name = "Mystery - Stir Fry Broccoli",
+                Description = "Adds <b>Broccoli</b> as an ingredient for Stir Fry when it's present with <b>Rice</b>",
+                FlavourText = ""
             })
         };
         public override List<Unlock> HardcodedRequirements => new List<Unlock>()
@@ -46,12 +46,12 @@ namespace KitchenMysteryMenu.Customs.Dishes.StirFry
             new()
             {
                 MenuItem = (ItemGroup)GDOUtils.GetExistingGDO(ItemReferences.StirFryPlated),
-                Ingredient = (Item)GDOUtils.GetExistingGDO(ItemReferences.CarrotChoppedContainerCooked)
+                Ingredient = (Item)GDOUtils.GetExistingGDO(ItemReferences.BroccoliChoppedContainerCooked)
             }
         };
         public override HashSet<Item> MinimumRequiredMysteryIngredients => new HashSet<Item>()
         {
-            (Item) GDOUtils.GetExistingGDO(ItemReferences.Carrot)
+            (Item) GDOUtils.GetExistingGDO(ItemReferences.BroccoliRaw)
         };
         public override bool RequiresVariant => false;
         public override GenericMysteryDish BaseMysteryDish => (GenericMysteryDish) GDOUtils.GetCustomGameDataObject<MysteryStirFryBaseDish>();

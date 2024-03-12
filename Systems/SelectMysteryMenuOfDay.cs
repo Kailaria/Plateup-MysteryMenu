@@ -192,7 +192,7 @@ namespace KitchenMysteryMenu.Systems
             Mod.Logger.LogInfo($"{LogMsgPrefix} Adding Recipes to 'Current' List that are fully supplied.");
             AddUpdateRecipesToCurrent(currentRecipes, newerCombinedEntities, availableItemsForRecipes, "newer");
             AddUpdateRecipesToCurrent(currentRecipes, olderCombinedEntities, availableItemsForRecipes, "older");
-            AddUpdateRequiresVariantMains(currentRecipes, newerCombinedEntities, olderCombinedEntities);
+            AddUpdateRequiresVariantRecipes(currentRecipes, newerCombinedEntities, olderCombinedEntities);
         }
 
         private void AddUpdateRecipesToCurrent(List<MysteryRecipeIngredientCounter> currentRecipes, List<MysteryRecipeIngredientCounter> combinedEntities, HashSet<Item> availableItemsForRecipes, string listName)
@@ -207,7 +207,7 @@ namespace KitchenMysteryMenu.Systems
                 // AvailableIngredients should always be added if they can be cooked, since they still require a MenuItem to be plated.
                 // PossibleExtras should always be added since, if they can be cooked, they were already selected for a provider slot by another option.
                 //      The extra still won't be requested unless its related MenuItem is already there.
-                if (recipe.CanBeCooked() && (!recipe.IsMenuItem() || !recipe.RequiresVariant))
+                if (recipe.CanBeCooked() && !recipe.RequiresVariant)
                 {
                     count++;
                     UpdateRecipeEntity(currentRecipes, recipe);
@@ -225,15 +225,15 @@ namespace KitchenMysteryMenu.Systems
             EntityManager.SetComponentData(recipe.Entity, mysteryMenuComp);
         }
 
-        private void AddUpdateRequiresVariantMains(List<MysteryRecipeIngredientCounter> currentRecipes,
+        private void AddUpdateRequiresVariantRecipes(List<MysteryRecipeIngredientCounter> currentRecipes,
             List<MysteryRecipeIngredientCounter> newerCombinedRecipes,
             List<MysteryRecipeIngredientCounter> olderCombinedRecipes)
         {
             var allCombinedRecipes = newerCombinedRecipes.Concat(olderCombinedRecipes);
-            var requiresVariantMainRecipes = allCombinedRecipes.Where(r => r.IsMenuItem() && r.RequiresVariant).ToList();
+            var requiresVariantRecipes = allCombinedRecipes.Where(r => r.RequiresVariant).ToList();
             var availableRecipes = currentRecipes.Concat(allCombinedRecipes);
-            Mod.Logger.LogInfo($"{LogMsgPrefix} Checking {{count = {requiresVariantMainRecipes.Count}}} Mains that require a variant");
-            foreach (var recipe in requiresVariantMainRecipes)
+            Mod.Logger.LogInfo($"{LogMsgPrefix} Checking {{count = {requiresVariantRecipes.Count}}} Mains that require a variant");
+            foreach (var recipe in requiresVariantRecipes)
             {
                 if (recipe.CanBeCooked() && recipe.CanRequiredVariantBeCooked(availableRecipes))
                 {
@@ -327,9 +327,9 @@ namespace KitchenMysteryMenu.Systems
                             found = true;
                             break;
                         }
-                        if (recipe.CouldBeServed(numRemainingProviders, allCombinedEntities, out var parentRecipe))
+                        if (recipe.CouldBeServed(numRemainingProviders, allCombinedEntities, out var parentRecipes))
                         {
-                            recipeList.Add(parentRecipe);
+                            recipeList.AddRange(parentRecipes);
                             found = true;
                             break;
                         }
@@ -368,9 +368,9 @@ namespace KitchenMysteryMenu.Systems
                             found = true;
                             break;
                         }
-                        if (recipe.CouldBeServed(numRemainingProviders, allCombinedEntities, out var parentRecipe))
+                        if (recipe.CouldBeServed(numRemainingProviders, allCombinedEntities, out var parentRecipes))
                         {
-                            recipeList.Add(parentRecipe);
+                            recipeList.AddRange(parentRecipes);
                             found = true;
                             break;
                         }
@@ -452,11 +452,19 @@ namespace KitchenMysteryMenu.Systems
 
             public bool CanRequiredVariantBeCooked(IEnumerable<MysteryRecipeIngredientCounter> recipes)
             {
-                if (!IsMenuItem() || !RequiresVariant)
+                if (!RequiresVariant)
                 {
+                    // All Extras won't require a variant. Most Options won't require a variant
                     return false;
                 }
-                return recipes.Where(r => r.DishOption.MenuItem == MenuItem.Item)
+                if (IsMenuItem())
+                {
+                    return recipes.Where(r => r.DishOption.MenuItem == MenuItem.Item)
+                        .Any(r => r.CanBeCooked() && (!r.RequiresVariant || r.CanRequiredVariantBeCooked(recipes)));
+                }
+                // This has a valid DishOption, so check if other Options that aren't the same Ingredient can be cooked.
+                //  (Should hopefully address Rice-only Stir Fry and null reference)
+                return recipes.Where(r => r.DishOption.MenuItem == DishOption.MenuItem && r.DishOption.Ingredient != DishOption.Ingredient)
                     .Any(r => r.CanBeCooked());
             }
 
@@ -489,25 +497,30 @@ namespace KitchenMysteryMenu.Systems
                 return CouldBeServed(availableProviderCount, nonCurrentRecipes, out _);
             }
 
-            public bool CouldBeServed(int availableProviderCount, IEnumerable<MysteryRecipeIngredientCounter> nonCurrentRecipes, out MysteryRecipeIngredientCounter parentRecipe)
+            public bool CouldBeServed(int availableProviderCount, IEnumerable<MysteryRecipeIngredientCounter> nonCurrentRecipes, out IEnumerable<MysteryRecipeIngredientCounter> parentRecipes)
             {
-                parentRecipe = GetParentRecipe(nonCurrentRecipes);
+                parentRecipes = GetParentRecipes(nonCurrentRecipes);
                 if (IsMenuItem())
                 {
                     return CanBeSelected(availableProviderCount);
                 }
                 if (IsAvailableIngredient())
                 {
-                    return CanBeSelected(availableProviderCount - parentRecipe.MissingIngredientCount);
+                    return CanBeSelected(availableProviderCount - parentRecipes.Sum(r => r.MissingIngredientCount));
                 }
                 return false;
             }
 
-            public MysteryRecipeIngredientCounter GetParentRecipe(IEnumerable<MysteryRecipeIngredientCounter> availableRecipes)
+            public IEnumerable<MysteryRecipeIngredientCounter> GetParentRecipes(IEnumerable<MysteryRecipeIngredientCounter> availableRecipes)
             {
                 if (IsAvailableIngredient())
                 {
-                    return availableRecipes.Where(r => r.IsMenuItem() && DishOption.MenuItem == r.MenuItem.Item).FirstOrDefault();
+                    var parents = availableRecipes
+                        .Where(r => r.RequiresVariant && (
+                            (r.IsMenuItem() && r.MenuItem.Item == DishOption.MenuItem) || 
+                            (r.DishOption.MenuItem == DishOption.MenuItem && r.DishOption.Ingredient != DishOption.Ingredient)))
+                        .ToList();
+                    return parents;
                 }
                 // if (IsPossibleExtra())
                 //{

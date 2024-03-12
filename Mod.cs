@@ -92,6 +92,7 @@ namespace KitchenMysteryMenu
 
             // Mystery Stir Fry Dishes
             AddGameDataObject<MysteryStirFryBaseDish>();
+            AddGameDataObject<MysteryStirFryRiceDish>();
             AddGameDataObject<MysteryStirFryBroccoliDish>();
             AddGameDataObject<MysteryStirFryCarrotDish>();
 
