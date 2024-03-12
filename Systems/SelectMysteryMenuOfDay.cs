@@ -16,7 +16,7 @@ namespace KitchenMysteryMenu.Systems
 {
     public class SelectMysteryMenuOfDay : StartOfDaySystem
     {
-        private string LogMsgPrefix = "[SelecteMysteryMenuOfDay]";
+        private string LogMsgPrefix = "[SelectMysteryMenuOfDay]";
 
         EntityQuery MysteryItemProviders;
         EntityQuery MenuItems;
