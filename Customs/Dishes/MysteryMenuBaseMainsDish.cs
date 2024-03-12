@@ -8,6 +8,7 @@ using KitchenMysteryMenu.Customs.Dishes.Pies;
 using KitchenMysteryMenu.Customs.Dishes.Salad;
 using KitchenMysteryMenu.Customs.Dishes.Steaks;
 using KitchenMysteryMenu.Customs.Dishes.StirFry;
+using KitchenMysteryMenu.Customs.Dishes.Turkey;
 using KitchenMysteryMenu.Customs.Ingredients;
 using KitchenMysteryMenu.Utils;
 using System;
@@ -64,15 +65,16 @@ namespace KitchenMysteryMenu.Customs.Dishes
         public override HashSet<GenericMysteryDish> ContainedMysteryRecipes => new()
         {
             // Add the Mystery versions of every base main
-            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysterySteakBaseDish>(),
             (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryBreakfastBaseDish>(),
             (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryPiesBaseDish>(),
             (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryPiesMeatDish>(),
             (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysterySaladBaseDish>(),
             (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysterySaladTomatoDish>(),
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysterySteakBaseDish>(),
             (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryStirFryBaseDish>(),
             (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryStirFryBroccoliDish>(),
-            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryStirFryCarrotDish>()
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryStirFryCarrotDish>(),
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryTurkeyBaseDish>()
         };
 
         public override Dictionary<Locale, string> Recipe => new()

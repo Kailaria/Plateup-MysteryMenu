@@ -9,6 +9,7 @@ using KitchenMysteryMenu.Customs.Dishes.Pies;
 using KitchenMysteryMenu.Customs.Dishes.Salad;
 using KitchenMysteryMenu.Customs.Dishes.Steaks;
 using KitchenMysteryMenu.Customs.Dishes.StirFry;
+using KitchenMysteryMenu.Customs.Dishes.Turkey;
 using KitchenMysteryMenu.Customs.Ingredients;
 using KitchenMysteryMenu.Customs.ItemGroups;
 using System.Linq;
@@ -93,6 +94,9 @@ namespace KitchenMysteryMenu
             AddGameDataObject<MysteryStirFryBaseDish>();
             AddGameDataObject<MysteryStirFryBroccoliDish>();
             AddGameDataObject<MysteryStirFryCarrotDish>();
+
+            // Mystery Turkey Dishes
+            AddGameDataObject<MysteryTurkeyBaseDish>();
 
             // Mystery Dish cards
             AddGameDataObject<MysteryMenuBaseMainsDish>();
