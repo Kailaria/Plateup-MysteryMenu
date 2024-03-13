@@ -321,14 +321,15 @@ namespace KitchenMysteryMenu.Systems
                         $"missingIngredients: {{{recipe.MissingIngredientCount}}}");
                     if (recipe.CanBeSelected(numRemainingProviders))
                     {
-                        recipeList.Add(recipe);
                         if (recipe.CanBeServed(currentRecipes))
                         {
+                            recipeList.Add(recipe);
                             found = true;
                             break;
                         }
                         if (recipe.CouldBeServed(numRemainingProviders, allCombinedEntities, out var parentRecipes))
                         {
+                            recipeList.Add(recipe);
                             recipeList.AddRange(parentRecipes);
                             found = true;
                             break;
@@ -349,6 +350,7 @@ namespace KitchenMysteryMenu.Systems
                 .Sum(e => e.Weight);
             float randomOld = UnityEngine.Random.Range(0f, totalOldWeight);
             float currentOld = 0f;
+            recipeList = new List<MysteryRecipeIngredientCounter>();
 
             Mod.Logger.LogInfo($"{LogMsgPrefix} Searching weight range {{0 -> {totalOldWeight}}} for older recipes. Seeking for {{{randomOld}}}");
             for (int j = 0; j < olderCombinedEntities.Count; j++)
@@ -362,14 +364,15 @@ namespace KitchenMysteryMenu.Systems
                         $"missingIngredients: {{{recipe.MissingIngredientCount}}}");
                     if (recipe.CanBeSelected(numRemainingProviders))
                     {
-                        recipeList.Add(recipe);
                         if (recipe.CanBeServed(currentRecipes))
                         {
+                            recipeList.Add(recipe);
                             found = true;
                             break;
                         }
                         if (recipe.CouldBeServed(numRemainingProviders, allCombinedEntities, out var parentRecipes))
                         {
+                            recipeList.Add(recipe);
                             recipeList.AddRange(parentRecipes);
                             found = true;
                             break;
