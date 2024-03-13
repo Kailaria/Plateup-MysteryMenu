@@ -462,8 +462,9 @@ namespace KitchenMysteryMenu.Systems
                 }
                 if (IsMenuItem())
                 {
-                    return recipes.Where(r => r.DishOption.MenuItem == MenuItem.Item)
-                        .Any(r => r.CanBeCooked() && (!r.RequiresVariant || r.CanRequiredVariantBeCooked(recipes)));
+                    IEnumerable<MysteryRecipeIngredientCounter> dishOptions = recipes.Where(r => r.DishOption.MenuItem == MenuItem.Item);
+                    return dishOptions.Any(r => !r.RequiresVariant && r.CanBeCooked()) &&
+                        dishOptions.All(r => r.RequiresVariant && r.CanBeCooked() && r.CanRequiredVariantBeCooked(recipes));
                 }
                 // This has a valid DishOption, so check if other Options that aren't the same Ingredient can be cooked.
                 //  (Should hopefully address Rice-only Stir Fry and null reference)
@@ -505,7 +506,7 @@ namespace KitchenMysteryMenu.Systems
                 parentRecipes = GetParentRecipes(nonCurrentRecipes);
                 if (IsMenuItem())
                 {
-                    return CanBeSelected(availableProviderCount);
+                    return CanBeSelected(availableProviderCount) && CanRequiredVariantBeCooked(nonCurrentRecipes);
                 }
                 if (IsAvailableIngredient())
                 {
@@ -541,9 +542,24 @@ namespace KitchenMysteryMenu.Systems
                 return MenuItem.Item != 0;
             }
 
+            public bool IsParentOf(MysteryRecipeIngredientCounter other)
+            {
+                return MenuItem.Item == other.DishOption.MenuItem;
+            }
+
             public bool IsAvailableIngredient()
             {
                 return DishOption.MenuItem != 0 && DishOption.Ingredient != 0;
+            }
+
+            public bool IsChildOf(MysteryRecipeIngredientCounter other)
+            {
+                return DishOption.MenuItem == other.MenuItem.Item;
+            }
+
+            public bool IsSiblingOf(MysteryRecipeIngredientCounter other)
+            {
+                return DishOption.MenuItem == other.DishOption.MenuItem && DishOption.Ingredient != other.DishOption.Ingredient;
             }
         }
     }
