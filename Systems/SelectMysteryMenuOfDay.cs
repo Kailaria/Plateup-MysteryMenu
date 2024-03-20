@@ -541,12 +541,13 @@ namespace KitchenMysteryMenu.Systems
                         $"Type = {{{(IsMenuItem() ? "MenuItem" : (IsAvailableIngredient() ? "AvailableIngredient" : "type not found"))}}}");
                     return false;
                 }
-                // If this recipe has no parent recipes (should only be CMenuItem entities), then bypass the rest of the checking.
-                if (parentRecipes.Count() == 0)
+                // If this recipe has no parent recipes and isn't a MenuItem entity, then the parent's card hasn't been selected and isn't available
+                //  for this option/extra.
+                if (parentRecipes.Count() == 0 && !IsMenuItem())
                 {
-                    Mod.Logger.LogInfo($"{logKey} Recipe {{{Recipe.UniqueNameID}}} has no parents. " +
+                    Mod.Logger.LogInfo($"{logKey} Recipe {{{Recipe.UniqueNameID}}} has no valid parents. " +
                         $"Type = {{{(IsMenuItem() ? "MenuItem" : (IsAvailableIngredient() ? "AvailableIngredient" : "type not found"))}}}");
-                    return true;
+                    return false;
                 }
                 // TODO: This might need to handle Side-type MenuItems and ensuring there's a Main already to attach it to, but perhaps
                 //  that'll be handled already by a different process that allots the minimum amount of ingredients applied to each course, thus

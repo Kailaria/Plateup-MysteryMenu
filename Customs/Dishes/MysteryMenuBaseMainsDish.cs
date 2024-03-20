@@ -4,6 +4,9 @@ using KitchenLib.References;
 using KitchenLib.Utils;
 using KitchenMysteryMenu;
 using KitchenMysteryMenu.Customs.Dishes.Breakfast;
+using KitchenMysteryMenu.Customs.Dishes.Burger;
+using KitchenMysteryMenu.Customs.Dishes.Fish;
+using KitchenMysteryMenu.Customs.Dishes.HotDog;
 using KitchenMysteryMenu.Customs.Dishes.Pies;
 using KitchenMysteryMenu.Customs.Dishes.Salad;
 using KitchenMysteryMenu.Customs.Dishes.Steaks;
@@ -66,6 +69,10 @@ namespace KitchenMysteryMenu.Customs.Dishes
         {
             // Add the Mystery versions of every base main
             (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryBreakfastBaseDish>(),
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryBurgerBaseDish>(),
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryFishBlueDish>(),
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryFishPinkDish>(),
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryHotdogBaseDish>(),
             (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryPiesBaseDish>(),
             (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryPiesMeatDish>(),
             (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysterySaladBaseDish>(),
