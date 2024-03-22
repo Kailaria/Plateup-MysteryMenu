@@ -1,4 +1,5 @@
 ﻿using KitchenData;
+using KitchenLib.Customs;
 using KitchenLib.References;
 using KitchenLib.Utils;
 using KitchenMysteryMenu.Utils;
@@ -8,13 +9,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KitchenMysteryMenu.Customs.Dishes.Salad
+namespace KitchenMysteryMenu.Customs.Dishes.Fish
 {
-    public class MysterySaladTomatoDish : GenericMysteryDish
+    public class MysteryFishBlueDish : GenericMysteryDish
     {
-        protected override string NameTag => "Mystery Salad Tomato Dish";
-        public override Dish OrigDish => (Dish)GDOUtils.GetExistingGDO(DishReferences.SaladBase);
-        public override DishType Type => DishType.Main;
+        protected override string NameTag => "Mystery Fish Blue Dish";
+        public override Dish OrigDish => (Dish)GDOUtils.GetExistingGDO(DishReferences.FishBase);
+        public override DishType Type => DishType.Base;
         public override DishCustomerChange CustomerMultiplier => DishCustomerChange.None;
         public override Unlock.RewardLevel ExpReward => Unlock.RewardLevel.None;
         public override UnlockGroup UnlockGroup => UnlockGroup.Dish;
@@ -26,35 +27,34 @@ namespace KitchenMysteryMenu.Customs.Dishes.Salad
         public override Dictionary<Locale, string> Recipe => new()
         {
             { Locale.English,
-                "<color=yellow>Requires ingredients:</color>  <i>Salad</i>, Tomato\n" + 
-                "Chop tomato once and serve when ordered with salad." }
+                "<color=yellow>Requires ingredient:</color> Blue Fish\n" + 
+                "Cook blue fish, plate, and serve." }
         };
         public override List<(Locale, UnlockInfo)> InfoList => new()
         {
             (Locale.English, new UnlockInfo()
             {
-                Name = "Mystery Salad - Tomato Topping",
-                Description = "Adds chopped tomato as a topping option when <b>Tomato</b> is present",
-                FlavourText = "Serve salads with and without chopped tomato."
+                Name = "Mystery Fish - Blue",
+                Description = "Adds <b>Blue Fish</b> as a main when it is present",
+                FlavourText = "Just keep swimming!"
             })
         };
-        public override HashSet<Dish.IngredientUnlock> IngredientsUnlocks => new()
-        { 
-            new Dish.IngredientUnlock()
+        public override List<Dish.MenuItem> ResultingMenuItems => new()
+        {
+            new()
             {
-                MenuItem = (ItemGroup) GDOUtils.GetExistingGDO(ItemGroupReferences.SaladPlated),
-                Ingredient = (Item) GDOUtils.GetExistingGDO(ItemReferences.TomatoChopped)
+                Item = (Item)GDOUtils.GetExistingGDO(ItemReferences.FishBluePlated),
+                Phase = MenuPhase.Main,
+                Weight = 1
             }
         };
         public override HashSet<Item> MinimumRequiredMysteryIngredients => new HashSet<Item>()
         {
-            (Item) GDOUtils.GetExistingGDO(ItemReferences.Tomato)
+            (Item) GDOUtils.GetExistingGDO(ItemReferences.FishBlueRaw)
         };
         public override List<Unlock> HardcodedRequirements => new()
         {
-            BaseMysteryDish.GameDataObject
+            GDOUtils.GetCastedGDO<Dish, MysteryMenuBaseMainsDish>()
         };
-        public override GenericMysteryDish BaseMysteryDish => 
-            (GenericMysteryDish) GDOUtils.GetCustomGameDataObject<MysterySaladBaseDish>();
     }
 }

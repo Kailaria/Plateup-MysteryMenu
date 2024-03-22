@@ -1,4 +1,5 @@
 ﻿using Kitchen;
+using KitchenData;
 using KitchenMysteryMenu.Components;
 using KitchenMysteryMenu.Utils;
 using System;
@@ -39,6 +40,9 @@ namespace KitchenMysteryMenu.Systems
                     // This probably makes more sense when the prefab is set up properly. For now, just do it the same way.
                     var cItemProvider = providerItemProviders[i];
                     cItemProvider.Available = 0;
+                    // Issue #5: empty out the items from the providers so that they can't be used to determine what static ingredients
+                    //      are available or not when new static dish cards are selected. Might want to revert it to the default instead?
+                    cItemProvider.SetAsItem(0);
                     EntityManager.SetComponentData(providerEntities[i], cItemProvider);
                 }
             }

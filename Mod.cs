@@ -5,8 +5,17 @@ using KitchenMods;
 using KitchenMysteryMenu.Customs.Appliances;
 using KitchenMysteryMenu.Customs.Dishes;
 using KitchenMysteryMenu.Customs.Dishes.Breakfast;
+using KitchenMysteryMenu.Customs.Dishes.Burger;
+using KitchenMysteryMenu.Customs.Dishes.Dumplings;
+using KitchenMysteryMenu.Customs.Dishes.Fish;
+using KitchenMysteryMenu.Customs.Dishes.HotDog;
 using KitchenMysteryMenu.Customs.Dishes.Pies;
+using KitchenMysteryMenu.Customs.Dishes.Pizza;
+using KitchenMysteryMenu.Customs.Dishes.Salad;
+using KitchenMysteryMenu.Customs.Dishes.Spaghetti;
 using KitchenMysteryMenu.Customs.Dishes.Steaks;
+using KitchenMysteryMenu.Customs.Dishes.StirFry;
+using KitchenMysteryMenu.Customs.Dishes.Turkey;
 using KitchenMysteryMenu.Customs.Ingredients;
 using KitchenMysteryMenu.Customs.ItemGroups;
 using System.Linq;
@@ -73,12 +82,49 @@ namespace KitchenMysteryMenu
 
         private void AddDishGDOs()
         {
-            // Base Mains
-            AddGameDataObject<MysterySteakBaseDish>();
+            // Mystery Breakfast Dishes
             AddGameDataObject<MysteryBreakfastBaseDish>();
+
+            // Mystery Burger Dishes
+            AddGameDataObject<MysteryBurgerBaseDish>();
+
+            // Mystery Dumplings Dishes
+            AddGameDataObject<MysteryDumplingsBaseDish>();
+
+            // Mystery Fish Dishes
+            AddGameDataObject<MysteryFishBlueDish>();
+            AddGameDataObject<MysteryFishPinkDish>();
+
+            // Mystery Hot Dog Dishes
+            AddGameDataObject<MysteryHotdogBaseDish>();
+
+            // Mystery Pies Dishes
             AddGameDataObject<MysteryPiesBaseDish>();
             AddGameDataObject<MysteryPiesMeatDish>();
 
+            // Mystery Pizza Dishes
+            AddGameDataObject<MysteryPizzaBaseDish>();
+
+            // Mystery Salad Dishes
+            AddGameDataObject<MysterySaladBaseDish>();
+            AddGameDataObject<MysterySaladTomatoDish>();
+
+            // Mystery Pizza Dishes
+            AddGameDataObject<MysterySpaghettiBaseDish>();
+
+            // Mystery Steak Dishes
+            AddGameDataObject<MysterySteakBaseDish>();
+
+            // Mystery Stir Fry Dishes
+            AddGameDataObject<MysteryStirFryBaseDish>();
+            AddGameDataObject<MysteryStirFryRiceDish>();
+            AddGameDataObject<MysteryStirFryBroccoliDish>();
+            AddGameDataObject<MysteryStirFryCarrotDish>();
+
+            // Mystery Turkey Dishes
+            AddGameDataObject<MysteryTurkeyBaseDish>();
+
+            // Mystery Dish cards
             AddGameDataObject<MysteryMenuBaseMainsDish>();
         }
     }

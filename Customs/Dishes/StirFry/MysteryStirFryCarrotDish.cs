@@ -8,12 +8,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KitchenMysteryMenu.Customs.Dishes.Pies
+namespace KitchenMysteryMenu.Customs.Dishes.StirFry
 {
-    public class MysteryPiesMeatDish : GenericMysteryDish
+    public class MysteryStirFryCarrotDish : GenericMysteryDish
     {
-        protected override string NameTag => "Mystery Meat Pie Dish";
-        public override Dish OrigDish => (Dish)GDOUtils.GetExistingGDO(DishReferences.PieBase);
+        protected override string NameTag => "Mystery Stir Fry Carrot Dish";
+        public override Dish OrigDish => (Dish)GDOUtils.GetExistingGDO(DishReferences.StirFryBase);
         public override DishType Type => DishType.Main;
         public override DishCustomerChange CustomerMultiplier => DishCustomerChange.None;
         public override Unlock.RewardLevel ExpReward => Unlock.RewardLevel.None;
@@ -26,16 +26,16 @@ namespace KitchenMysteryMenu.Customs.Dishes.Pies
         public override Dictionary<Locale, string> Recipe => new()
         {
             { Locale.English,
-                "<color=yellow>Requires ingredients:</color> Flour, Meat\n" + 
-                "Knead flour (or add water) to make dough, then knead into pie crust. Add meat and cook." }
+                "<color=yellow>Requires ingredients:</color>  <i>Stir Fry in Wok</i>, Carrot\n" + 
+                "Chop carrot and add to wok of stir fry ingredients." }
         };
         public override List<(Locale, UnlockInfo)> InfoList => new()
         {
             (Locale.English, new UnlockInfo()
             {
-                Name = "Mystery - Meat Pies",
-                Description = "Adds meat pie as a main when <b>Flour</b> and <b>Meat</b> are present",
-                FlavourText = "Are you ready for the best pies in PlateUp!?"
+                Name = "Mystery - Stir Fry Carrot",
+                Description = "Adds <b>Carrot</b> as an ingredient for Stir Fry when it's present with <b>Rice</b>",
+                FlavourText = "Nyehhhh *crunch* What's up, Doc?"
             })
         };
         public override List<Unlock> HardcodedRequirements => new List<Unlock>()
@@ -47,16 +47,15 @@ namespace KitchenMysteryMenu.Customs.Dishes.Pies
         {
             new()
             {
-                MenuItem = (ItemGroup)GDOUtils.GetExistingGDO(ItemReferences.PiePlated),
-                Ingredient = (Item)GDOUtils.GetExistingGDO(ItemReferences.PieMeatCooked)
+                MenuItem = (ItemGroup)GDOUtils.GetExistingGDO(ItemReferences.StirFryPlated),
+                Ingredient = (Item)GDOUtils.GetExistingGDO(ItemReferences.CarrotChoppedContainerCooked)
             }
         };
         public override HashSet<Item> MinimumRequiredMysteryIngredients => new HashSet<Item>()
         {
-            (Item) GDOUtils.GetExistingGDO(ItemReferences.Flour),
-            (Item) GDOUtils.GetExistingGDO(ItemReferences.Meat)
+            (Item) GDOUtils.GetExistingGDO(ItemReferences.Carrot)
         };
         public override bool RequiresVariant => false;
-        public override GenericMysteryDish BaseMysteryDish => (GenericMysteryDish) GDOUtils.GetCustomGameDataObject<MysteryPiesBaseDish>();
+        public override GenericMysteryDish BaseMysteryDish => (GenericMysteryDish) GDOUtils.GetCustomGameDataObject<MysteryStirFryBaseDish>();
     }
 }

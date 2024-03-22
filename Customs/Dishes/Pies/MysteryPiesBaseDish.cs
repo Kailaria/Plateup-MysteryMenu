@@ -25,7 +25,11 @@ namespace KitchenMysteryMenu.Customs.Dishes.Pies
         public override int Difficulty => 2;
         public override Dictionary<Locale, string> Recipe => new()
         {
-            { Locale.English, "Knead flour (or add water) to make dough, then knead into pie crust. Add meat and cook." }
+            {
+                Locale.English,
+                "<color=yellow>Requires ingredients:</color> Flour + <i>variant filling</i>\n" +
+                "Knead flour (or add water) to make dough, then knead into pie crust. Add filling and cook."
+            }
         };
         public override List<(Locale, UnlockInfo)> InfoList => new()
         {
@@ -46,16 +50,7 @@ namespace KitchenMysteryMenu.Customs.Dishes.Pies
                 Weight = 1
             }
         };
-        //TODO: Might need to keep this for the lobby at least..? Or perhaps not if it'll just be moved to a MysteryPieMeatDish anyway
-        //     and *that* will get included in MysteryMenuBaseMainsDish...
-        //public override HashSet<Dish.IngredientUnlock> IngredientsUnlocks => new()
-        //{
-        //    new()
-        //    {
-        //        MenuItem = (ItemGroup)GDOUtils.GetExistingGDO(ItemReferences.PiePlated),
-        //        Ingredient = (Item)GDOUtils.GetExistingGDO(ItemReferences.PieMeatCooked)
-        //    }
-        //};
+
         public override HashSet<Item> MinimumRequiredMysteryIngredients => new HashSet<Item>();
         public override bool RequiresVariant => true;
         public override List<Unlock> HardcodedRequirements => new()

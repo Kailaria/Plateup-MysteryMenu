@@ -8,13 +8,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KitchenMysteryMenu.Customs.Dishes.Salad
+namespace KitchenMysteryMenu.Customs.Dishes.Burger
 {
-    public class MysterySaladTomatoDish : GenericMysteryDish
+    public class MysteryBurgerBaseDish : GenericMysteryDish
     {
-        protected override string NameTag => "Mystery Salad Tomato Dish";
-        public override Dish OrigDish => (Dish)GDOUtils.GetExistingGDO(DishReferences.SaladBase);
-        public override DishType Type => DishType.Main;
+        protected override string NameTag => "Mystery Burger Dish";
+        public override Dish OrigDish => (Dish)GDOUtils.GetExistingGDO(DishReferences.BurgerBase);
+        public override DishType Type => DishType.Base;
         public override DishCustomerChange CustomerMultiplier => DishCustomerChange.None;
         public override Unlock.RewardLevel ExpReward => Unlock.RewardLevel.None;
         public override UnlockGroup UnlockGroup => UnlockGroup.Dish;
@@ -26,35 +26,36 @@ namespace KitchenMysteryMenu.Customs.Dishes.Salad
         public override Dictionary<Locale, string> Recipe => new()
         {
             { Locale.English,
-                "<color=yellow>Requires ingredients:</color>  <i>Salad</i>, Tomato\n" + 
-                "Chop tomato once and serve when ordered with salad." }
+                "<color=yellow>Requires ingredients:</color> Burger Bun, Burger Patty\n" + 
+                "Cook burger patty, add burger bun, then serve." }
         };
         public override List<(Locale, UnlockInfo)> InfoList => new()
         {
             (Locale.English, new UnlockInfo()
             {
-                Name = "Mystery Salad - Tomato Topping",
-                Description = "Adds chopped tomato as a topping option when <b>Tomato</b> is present",
-                FlavourText = "Serve salads with and without chopped tomato."
+                Name = "Mystery - Burger",
+                Description = "Adds burgers as a main when <b>Burger Bun</b> and <b>Burger Patty</b> are present",
+                FlavourText = "Bah dap bap bap baaah!"
             })
         };
-        public override HashSet<Dish.IngredientUnlock> IngredientsUnlocks => new()
-        { 
-            new Dish.IngredientUnlock()
+
+        public override List<Dish.MenuItem> ResultingMenuItems => new()
+        {
+            new()
             {
-                MenuItem = (ItemGroup) GDOUtils.GetExistingGDO(ItemGroupReferences.SaladPlated),
-                Ingredient = (Item) GDOUtils.GetExistingGDO(ItemReferences.TomatoChopped)
+                Item = (Item)GDOUtils.GetExistingGDO(ItemReferences.BurgerPlated),
+                Phase = MenuPhase.Main,
+                Weight = 1
             }
         };
         public override HashSet<Item> MinimumRequiredMysteryIngredients => new HashSet<Item>()
         {
-            (Item) GDOUtils.GetExistingGDO(ItemReferences.Tomato)
+            (Item) GDOUtils.GetExistingGDO(ItemReferences.BurgerBun),
+            (Item) GDOUtils.GetExistingGDO(ItemReferences.BurgerPattyRaw)
         };
         public override List<Unlock> HardcodedRequirements => new()
         {
-            BaseMysteryDish.GameDataObject
+            GDOUtils.GetCastedGDO<Dish, MysteryMenuBaseMainsDish>()
         };
-        public override GenericMysteryDish BaseMysteryDish => 
-            (GenericMysteryDish) GDOUtils.GetCustomGameDataObject<MysterySaladBaseDish>();
     }
 }
