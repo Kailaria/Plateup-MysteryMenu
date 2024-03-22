@@ -26,7 +26,8 @@ namespace KitchenMysteryMenu.Customs.Dishes.Turkey
         public override int Difficulty => 1;
         public override Dictionary<Locale, string> Recipe => new()
         {
-            { Locale.English, "Cook Turkey when available, then portion, plate, and serve. Portions up to 4 times." }
+            { Locale.English, "<color=yellow>Requires ingredient:</color> Turkey\n" + 
+                "Cook Turkey, then portion, plate, and serve. Portions up to 4 times." }
         };
         public override List<(Locale, UnlockInfo)> InfoList => new()
         {

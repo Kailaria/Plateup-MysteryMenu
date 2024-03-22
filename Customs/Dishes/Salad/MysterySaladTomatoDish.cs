@@ -25,7 +25,9 @@ namespace KitchenMysteryMenu.Customs.Dishes.Salad
         public override int Difficulty => 1;
         public override Dictionary<Locale, string> Recipe => new()
         {
-            { Locale.English, "Chop tomato once and serve when ordered with salad." }
+            { Locale.English,
+                "<color=yellow>Requires ingredients:</color>  <i>Salad</i>, Tomato\n" + 
+                "Chop tomato once and serve when ordered with salad." }
         };
         public override List<(Locale, UnlockInfo)> InfoList => new()
         {

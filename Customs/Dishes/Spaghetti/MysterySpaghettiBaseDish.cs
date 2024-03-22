@@ -8,12 +8,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KitchenMysteryMenu.Customs.Dishes.HotDog
+namespace KitchenMysteryMenu.Customs.Dishes.Spaghetti
 {
-    public class MysteryHotdogBaseDish : GenericMysteryDish
+    public class MysterySpaghettiBaseDish : GenericMysteryDish
     {
-        protected override string NameTag => "Mystery Hot Dog Dish";
-        public override Dish OrigDish => (Dish)GDOUtils.GetExistingGDO(DishReferences.HotdogBase);
+        protected override string NameTag => "Mystery Spaghetti Dish";
+        public override Dish OrigDish => (Dish)GDOUtils.GetExistingGDO(1764920765/*Spaghetti Base Dish - "Pomodoro"*/);
         public override DishType Type => DishType.Base;
         public override DishCustomerChange CustomerMultiplier => DishCustomerChange.None;
         public override Unlock.RewardLevel ExpReward => Unlock.RewardLevel.None;
@@ -22,20 +22,20 @@ namespace KitchenMysteryMenu.Customs.Dishes.HotDog
         public override Item RequiredDishItem => (Item)GDOUtils.GetExistingGDO(ItemReferences.Plate);
         public override bool RequiredNoDishItem => false;
         public override bool IsAvailableAsLobbyOption => false;
-        public override int Difficulty => 1;
+        public override int Difficulty => 2;
         public override Dictionary<Locale, string> Recipe => new()
         {
             { Locale.English,
-                "<color=yellow>Requires ingredients:</color> Hot Dog Bun, Hot Dog\n" + 
-                "Cook hot dog link, add hot dog bun, then serve.\n" +
-                "You don't need to worry about Extra Ketchup with only the base Mystery Menu." }
+                "<color=yellow>Requires ingredients:</color> Tomato, Spaghetti\n" +
+                "Put raw spaghetti into a pot with water and boil, then empty the water into the trash. " +
+                "Chop tomato twice to make sauce. Combine boiled pasta on a plate with the sauce." }
         };
         public override List<(Locale, UnlockInfo)> InfoList => new()
         {
             (Locale.English, new UnlockInfo()
             {
-                Name = "Mystery - Hot Dog",
-                Description = "Adds hot dogs as a main when <b>Hot Dog Buns</b> and <b>Hot Dog Links</b> are present",
+                Name = "Mystery - Spaghetti",
+                Description = "Adds spaghetti as a main when <b>Tomatoes</b> and <b>Raw Spaghetti</b> are present",
                 FlavourText = ""
             })
         };
@@ -44,15 +44,15 @@ namespace KitchenMysteryMenu.Customs.Dishes.HotDog
         {
             new()
             {
-                Item = (Item)GDOUtils.GetExistingGDO(ItemReferences.HotdogPlated),
+                Item = (Item)GDOUtils.GetExistingGDO(1900532137/*Spaghetti Pomodoro Plated*/),
                 Phase = MenuPhase.Main,
                 Weight = 1
             }
         };
         public override HashSet<Item> MinimumRequiredMysteryIngredients => new HashSet<Item>()
         {
-            (Item) GDOUtils.GetExistingGDO(ItemReferences.HotdogBun),
-            (Item) GDOUtils.GetExistingGDO(ItemReferences.HotdogRaw)
+            (Item) GDOUtils.GetExistingGDO(ItemReferences.Tomato),
+            (Item) GDOUtils.GetExistingGDO(-823534126/*Spaghetti raw*/)
         };
         public override List<Unlock> HardcodedRequirements => new()
         {

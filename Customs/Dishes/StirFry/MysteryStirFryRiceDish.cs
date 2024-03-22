@@ -25,7 +25,11 @@ namespace KitchenMysteryMenu.Customs.Dishes.StirFry
         public override int Difficulty => 2;
         public override Dictionary<Locale, string> Recipe => new()
         {
-            { Locale.English, "Add rice to wok of stir fry ingredients." }
+            {
+                Locale.English,
+                "<color=yellow>Requires ingredients:</color>  <i>Stir Fry in Wok</i>, Rice\n" +
+                "Add rice to wok of stir fry ingredients. **Required to make any stir fry**"
+            }
         };
         public override List<(Locale, UnlockInfo)> InfoList => new()
         {

@@ -1,4 +1,5 @@
 ﻿using KitchenData;
+using KitchenLib.Customs;
 using KitchenLib.References;
 using KitchenLib.Utils;
 using KitchenMysteryMenu.Utils;
@@ -8,12 +9,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KitchenMysteryMenu.Customs.Dishes.HotDog
+namespace KitchenMysteryMenu.Customs.Dishes.Fish
 {
-    public class MysteryHotdogBaseDish : GenericMysteryDish
+    public class MysteryFishPinkDish : GenericMysteryDish
     {
-        protected override string NameTag => "Mystery Hot Dog Dish";
-        public override Dish OrigDish => (Dish)GDOUtils.GetExistingGDO(DishReferences.HotdogBase);
+        protected override string NameTag => "Mystery Fish Pink Dish";
+        public override Dish OrigDish => (Dish)GDOUtils.GetExistingGDO(DishReferences.FishBase);
         public override DishType Type => DishType.Base;
         public override DishCustomerChange CustomerMultiplier => DishCustomerChange.None;
         public override Unlock.RewardLevel ExpReward => Unlock.RewardLevel.None;
@@ -26,33 +27,30 @@ namespace KitchenMysteryMenu.Customs.Dishes.HotDog
         public override Dictionary<Locale, string> Recipe => new()
         {
             { Locale.English,
-                "<color=yellow>Requires ingredients:</color> Hot Dog Bun, Hot Dog\n" + 
-                "Cook hot dog link, add hot dog bun, then serve.\n" +
-                "You don't need to worry about Extra Ketchup with only the base Mystery Menu." }
+                "<color=yellow>Requires ingredient:</color> Pink Fish\n" + 
+                "Cook pink fish, plate, and serve." }
         };
         public override List<(Locale, UnlockInfo)> InfoList => new()
         {
             (Locale.English, new UnlockInfo()
             {
-                Name = "Mystery - Hot Dog",
-                Description = "Adds hot dogs as a main when <b>Hot Dog Buns</b> and <b>Hot Dog Links</b> are present",
+                Name = "Mystery - Fish - Pink",
+                Description = "Adds <b>Pink Fish</b> as a main when it is present",
                 FlavourText = ""
             })
         };
-
         public override List<Dish.MenuItem> ResultingMenuItems => new()
         {
             new()
             {
-                Item = (Item)GDOUtils.GetExistingGDO(ItemReferences.HotdogPlated),
+                Item = (Item)GDOUtils.GetExistingGDO(ItemReferences.FishPinkPlated),
                 Phase = MenuPhase.Main,
                 Weight = 1
             }
         };
         public override HashSet<Item> MinimumRequiredMysteryIngredients => new HashSet<Item>()
         {
-            (Item) GDOUtils.GetExistingGDO(ItemReferences.HotdogBun),
-            (Item) GDOUtils.GetExistingGDO(ItemReferences.HotdogRaw)
+            (Item) GDOUtils.GetExistingGDO(ItemReferences.FishPinkRaw)
         };
         public override List<Unlock> HardcodedRequirements => new()
         {

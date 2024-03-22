@@ -26,7 +26,9 @@ namespace KitchenMysteryMenu.Customs.Dishes.Fish
         public override int Difficulty => 1;
         public override Dictionary<Locale, string> Recipe => new()
         {
-            { Locale.English, "Cook blue fish, plate, and serve." }
+            { Locale.English,
+                "<color=yellow>Requires ingredient:</color> Blue Fish\n" + 
+                "Cook blue fish, plate, and serve." }
         };
         public override List<(Locale, UnlockInfo)> InfoList => new()
         {

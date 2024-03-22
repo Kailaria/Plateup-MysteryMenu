@@ -25,7 +25,9 @@ namespace KitchenMysteryMenu.Customs.Dishes.StirFry
         public override int Difficulty => 3;
         public override Dictionary<Locale, string> Recipe => new()
         {
-            { Locale.English, "Cook rice in a wok and add available ingredients (initially only chopped " +
+            { Locale.English,
+                "<color=yellow>Requires ingredients:</color> Rice, <i>up to two variant ingredients per plate</i>\n" + 
+                "Cook rice in a wok and add available ingredients (initially only chopped " +
                 "Carrot or chopped Broccoli) to order. Remember to cook after each ingredient!" }
         };
         public override List<(Locale, UnlockInfo)> InfoList => new()

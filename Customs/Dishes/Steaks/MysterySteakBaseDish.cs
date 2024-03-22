@@ -26,7 +26,9 @@ namespace KitchenMysteryMenu.Customs.Dishes.Steaks
         public override int Difficulty => 1;
         public override Dictionary<Locale, string> Recipe => new()
         {
-            { Locale.English, "Cook steak once for rare, twice for medium, and thrice for well-done" }
+            { Locale.English,
+                "<color=yellow>Requires ingredient:</color> Meat\n" + 
+                "Cook steak once for rare, twice for medium, and thrice for well-done" }
         };
         public override List<(Locale, UnlockInfo)> InfoList => new()
         {

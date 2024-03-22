@@ -25,7 +25,9 @@ namespace KitchenMysteryMenu.Customs.Dishes.Burger
         public override int Difficulty => 1;
         public override Dictionary<Locale, string> Recipe => new()
         {
-            { Locale.English, "Cook burger patty, add burger bun, then serve." }
+            { Locale.English,
+                "<color=yellow>Requires ingredients:</color> Burger Bun, Burger Patty\n" + 
+                "Cook burger patty, add burger bun, then serve." }
         };
         public override List<(Locale, UnlockInfo)> InfoList => new()
         {

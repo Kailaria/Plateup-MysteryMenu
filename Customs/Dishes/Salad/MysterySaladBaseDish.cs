@@ -25,7 +25,9 @@ namespace KitchenMysteryMenu.Customs.Dishes.Salad
         public override int Difficulty => 1;
         public override Dictionary<Locale, string> Recipe => new()
         {
-            { Locale.English, "Chop lettuce and plate." }
+            { Locale.English,
+                "<color=yellow>Requires ingredients:</color> Lettuce\n" + 
+                "Chop lettuce and plate." }
         };
         public override List<(Locale, UnlockInfo)> InfoList => new()
         {

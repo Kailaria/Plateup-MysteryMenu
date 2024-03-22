@@ -25,7 +25,9 @@ namespace KitchenMysteryMenu.Customs.Dishes.Pies
         public override int Difficulty => 2;
         public override Dictionary<Locale, string> Recipe => new()
         {
-            { Locale.English, "Knead flour (or add water) to make dough, then knead into pie crust. Add meat and cook." }
+            { Locale.English,
+                "<color=yellow>Requires ingredients:</color> Flour, Meat\n" + 
+                "Knead flour (or add water) to make dough, then knead into pie crust. Add meat and cook." }
         };
         public override List<(Locale, UnlockInfo)> InfoList => new()
         {
