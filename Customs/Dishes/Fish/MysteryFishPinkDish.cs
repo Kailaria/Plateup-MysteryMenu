@@ -1,17 +1,20 @@
 ﻿using KitchenData;
+using KitchenLib.Customs;
 using KitchenLib.References;
 using KitchenLib.Utils;
+using KitchenMysteryMenu.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KitchenMysteryMenu.Customs.Dishes.Salad
+namespace KitchenMysteryMenu.Customs.Dishes.Fish
 {
-    public class MysterySaladDish : GenericMysteryDish
+    public class MysteryFishPinkDish : GenericMysteryDish
     {
-        protected override string NameTag => "Mystery Salad Dish";
+        protected override string NameTag => "Mystery Fish Pink Dish";
+        public override Dish OrigDish => (Dish)GDOUtils.GetExistingGDO(DishReferences.FishBase);
         public override DishType Type => DishType.Base;
         public override DishCustomerChange CustomerMultiplier => DishCustomerChange.None;
         public override Unlock.RewardLevel ExpReward => Unlock.RewardLevel.None;
@@ -23,34 +26,35 @@ namespace KitchenMysteryMenu.Customs.Dishes.Salad
         public override int Difficulty => 1;
         public override Dictionary<Locale, string> Recipe => new()
         {
-            { Locale.English, "Chop lettuce and plate. If tomato is present, also sometimes chop tomato once and add." }
+            { Locale.English,
+                "<color=yellow>Requires ingredient:</color> Pink Fish\n" + 
+                "Cook pink fish, plate, and serve." }
         };
         public override List<(Locale, UnlockInfo)> InfoList => new()
         {
             (Locale.English, new UnlockInfo()
             {
-                Name = "Mystery - Salad",
-                Description = "Adds salad as a main dish when <b>Lettuce</b> is present",
-                FlavourText = "No cooking, but lots of chopping!\n" +
-                            "Basic lettuce salads. If <b>Tomato</b> is present, serve salads with and without chopped tomato."
+                Name = "Mystery - Fish - Pink",
+                Description = "Adds <b>Pink Fish</b> as a main when it is present",
+                FlavourText = ""
             })
         };
         public override List<Dish.MenuItem> ResultingMenuItems => new()
         {
             new()
             {
-                Item = (Item) GDOUtils.GetExistingGDO(ItemReferences.SaladPlated),
+                Item = (Item)GDOUtils.GetExistingGDO(ItemReferences.FishPinkPlated),
                 Phase = MenuPhase.Main,
                 Weight = 1
             }
         };
-        public override List<Item> MinimumRequiredMysteryIngredients => new List<Item>()
+        public override HashSet<Item> MinimumRequiredMysteryIngredients => new HashSet<Item>()
         {
-            (Item) GDOUtils.GetExistingGDO(ItemReferences.Lettuce)
+            (Item) GDOUtils.GetExistingGDO(ItemReferences.FishPinkRaw)
         };
-        public override List<Item> UnlockedOptionalMysteryIngredients => new List<Item>()
+        public override List<Unlock> HardcodedRequirements => new()
         {
-            (Item) GDOUtils.GetExistingGDO(ItemReferences.Tomato)
+            GDOUtils.GetCastedGDO<Dish, MysteryMenuBaseMainsDish>()
         };
     }
 }

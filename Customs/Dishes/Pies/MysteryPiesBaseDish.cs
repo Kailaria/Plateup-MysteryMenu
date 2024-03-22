@@ -1,6 +1,7 @@
 ﻿using KitchenData;
 using KitchenLib.References;
 using KitchenLib.Utils;
+using KitchenMysteryMenu.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +10,11 @@ using System.Threading.Tasks;
 
 namespace KitchenMysteryMenu.Customs.Dishes.Pies
 {
-    public class MysteryPiesDish : GenericMysteryDish
+    public class MysteryPiesBaseDish : GenericMysteryDish
     {
         protected override string NameTag => "Mystery Pies Dish";
-        public override DishType Type => DishType.Base;
+        public override Dish OrigDish => (Dish)GDOUtils.GetExistingGDO(DishReferences.PieBase);
+        public override DishType Type => DishType.Main;
         public override DishCustomerChange CustomerMultiplier => DishCustomerChange.None;
         public override Unlock.RewardLevel ExpReward => Unlock.RewardLevel.None;
         public override UnlockGroup UnlockGroup => UnlockGroup.Dish;
@@ -23,7 +25,11 @@ namespace KitchenMysteryMenu.Customs.Dishes.Pies
         public override int Difficulty => 2;
         public override Dictionary<Locale, string> Recipe => new()
         {
-            { Locale.English, "Knead flour (or add water) to make dough, then knead into pie crust. Add meat and cook." }
+            {
+                Locale.English,
+                "<color=yellow>Requires ingredients:</color> Flour + <i>variant filling</i>\n" +
+                "Knead flour (or add water) to make dough, then knead into pie crust. Add filling and cook."
+            }
         };
         public override List<(Locale, UnlockInfo)> InfoList => new()
         {
@@ -34,11 +40,22 @@ namespace KitchenMysteryMenu.Customs.Dishes.Pies
                 FlavourText = "Are you ready for the best pies in PlateUp!?"
             })
         };
-        public override List<Item> MinimumRequiredMysteryIngredients => new List<Item>()
+
+        public override List<Dish.MenuItem> ResultingMenuItems => new()
         {
-            (Item) GDOUtils.GetExistingGDO(ItemReferences.Flour),
-            (Item) GDOUtils.GetExistingGDO(ItemReferences.Meat)
+            new()
+            {
+                Item = (Item)GDOUtils.GetExistingGDO(ItemReferences.PiePlated),
+                Phase = MenuPhase.Main,
+                Weight = 1
+            }
         };
-        public override List<Item> UnlockedOptionalMysteryIngredients => new List<Item>();
+
+        public override HashSet<Item> MinimumRequiredMysteryIngredients => new HashSet<Item>();
+        public override bool RequiresVariant => true;
+        public override List<Unlock> HardcodedRequirements => new()
+        {
+            GDOUtils.GetCastedGDO<Dish, MysteryMenuBaseMainsDish>()
+        };
     }
 }
