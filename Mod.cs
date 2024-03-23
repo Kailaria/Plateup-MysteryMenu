@@ -94,6 +94,10 @@ namespace KitchenMysteryMenu
             // Mystery Fish Dishes
             AddGameDataObject<MysteryFishBlueDish>();
             AddGameDataObject<MysteryFishPinkDish>();
+            AddGameDataObject<MysteryFishCrabCakeDish>();
+            AddGameDataObject<MysteryFishFilletDish>();
+            AddGameDataObject<MysteryFishOysterDish>();
+            AddGameDataObject<MysteryFishSpinyDish>();
 
             // Mystery Hot Dog Dishes
             AddGameDataObject<MysteryHotdogBaseDish>();
@@ -114,18 +118,23 @@ namespace KitchenMysteryMenu
 
             // Mystery Steak Dishes
             AddGameDataObject<MysterySteakBaseDish>();
+            AddGameDataObject<MysterySteakBonedDish>();
+            AddGameDataObject<MysterySteakThickDish>();
+            AddGameDataObject<MysterySteakThinDish>();
 
             // Mystery Stir Fry Dishes
             AddGameDataObject<MysteryStirFryBaseDish>();
             AddGameDataObject<MysteryStirFryRiceDish>();
             AddGameDataObject<MysteryStirFryBroccoliDish>();
             AddGameDataObject<MysteryStirFryCarrotDish>();
+            AddGameDataObject<MysteryStirFrySteakDish>();
 
             // Mystery Turkey Dishes
             AddGameDataObject<MysteryTurkeyBaseDish>();
 
             // Mystery Dish cards
             AddGameDataObject<MysteryMenuBaseMainsDish>();
+            AddGameDataObject<MysteryMenuCarnivoreVariationsDish>();
         }
     }
 }
