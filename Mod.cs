@@ -26,11 +26,11 @@ namespace KitchenMysteryMenu
 {
     public class Mod : BaseMod, IModSystem
     {
-        public const string MOD_GUID = "com.kailaria.mysterymenu";
+        public const string MOD_GUID = "kailaria.mysterymenu";
         public const string MOD_NAME = "MysteryMenu";
-        public const string MOD_VERSION = "0.1.0";
+        public const string MOD_VERSION = "0.0.1";
         public const string MOD_AUTHOR = "Kailaria";
-        public const string MOD_GAMEVERSION = ">=1.1.8";
+        public const string MOD_GAMEVERSION = ">=1.1.9";
 
         public static AssetBundle Bundle;
         public static KitchenLogger Logger;
@@ -63,6 +63,10 @@ namespace KitchenMysteryMenu
         {
             AddGameDataObject<MysteryIngredientProvider>();
             AddGameDataObject<MysteryIngredientProvider2>();
+            AddGameDataObject<MysteryIngredientProviderExtra>();
+            AddGameDataObject<MysteryIngredientProviderExtra2>();
+            AddGameDataObject<MysteryIngredientProviderExtra3>();
+            //AddGameDataObject<MysteryIngredientProvider2>();
         }
 
         private void AddIngredientGDOs()
@@ -70,6 +74,9 @@ namespace KitchenMysteryMenu
             // For the HQ Kitchen to work with minimal extra code
             AddGameDataObject<MysteryMeat>();
             AddGameDataObject<MysteryFlour>();
+            AddGameDataObject<MysterySurfNTurf>();
+            AddGameDataObject<MysteryOnion>();
+            AddGameDataObject<MysteryWine>();
         }
 
         private void AddItemGroupGDOs()
@@ -82,6 +89,11 @@ namespace KitchenMysteryMenu
 
         private void AddDishGDOs()
         {
+            // Mystery Dish cards
+            AddGameDataObject<MysteryMenuBaseMainsDish>();
+            AddGameDataObject<MysteryMenuCarnivoreVariationsDish>();
+            AddGameDataObject<MysteryMenuSaucesDish>();
+
             // Mystery Breakfast Dishes
             AddGameDataObject<MysteryBreakfastBaseDish>();
 
@@ -113,14 +125,18 @@ namespace KitchenMysteryMenu
             AddGameDataObject<MysterySaladBaseDish>();
             AddGameDataObject<MysterySaladTomatoDish>();
 
-            // Mystery Pizza Dishes
+            // Mystery Spaghetti Dishes
             AddGameDataObject<MysterySpaghettiBaseDish>();
+            AddGameDataObject<MysterySpaghettiBologneseDish>();
+            AddGameDataObject<MysterySpaghettiCheesyDish>();
 
             // Mystery Steak Dishes
             AddGameDataObject<MysterySteakBaseDish>();
             AddGameDataObject<MysterySteakBonedDish>();
             AddGameDataObject<MysterySteakThickDish>();
             AddGameDataObject<MysterySteakThinDish>();
+            AddGameDataObject<MysterySteakSauceMushroomSauceDish>();
+            AddGameDataObject<MysterySteakSauceRedWineJusDish>();
 
             // Mystery Stir Fry Dishes
             AddGameDataObject<MysteryStirFryBaseDish>();
@@ -131,10 +147,8 @@ namespace KitchenMysteryMenu
 
             // Mystery Turkey Dishes
             AddGameDataObject<MysteryTurkeyBaseDish>();
-
-            // Mystery Dish cards
-            AddGameDataObject<MysteryMenuBaseMainsDish>();
-            AddGameDataObject<MysteryMenuCarnivoreVariationsDish>();
+            AddGameDataObject<MysteryTurkeyCranberrySauceDish>();
+            AddGameDataObject<MysteryTurkeyGravyDish>();
         }
     }
 }

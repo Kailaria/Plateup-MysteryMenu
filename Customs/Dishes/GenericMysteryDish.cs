@@ -15,11 +15,13 @@ namespace KitchenMysteryMenu.Customs.Dishes
         // Make sure OrigDish is a unique ID
         public abstract Dish OrigDish { get; }
         public override UnlockGroup UnlockGroup => UnlockGroup.Dish;
-        public override string UniqueNameID => "Mystery : " + NameTag;
+        public override string UniqueNameID => "Mystery Dish: " + NameTag;
         public override bool IsUnlockable => false;
         public override bool IsAvailableAsLobbyOption => false;
 
         public abstract HashSet<Item> MinimumRequiredMysteryIngredients { get; }
+
+        public override HashSet<Process> RequiredProcesses => OrigDish.RequiredProcesses;
         /**
          * RequiresVariant
          * Override as true if the base dish is not enough to be ordered on its own. Especially useful for plated dishes

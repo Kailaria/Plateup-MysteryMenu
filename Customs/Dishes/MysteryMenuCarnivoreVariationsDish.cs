@@ -22,7 +22,7 @@ namespace KitchenMysteryMenu.Customs.Dishes
         protected override string NameTag => "Carnivorous Variety";
         public override DishType Type => DishType.Main;
         public override DishCustomerChange CustomerMultiplier => DishCustomerChange.SmallDecrease;
-        public override Unlock.RewardLevel ExpReward => Unlock.RewardLevel.Large;
+        public override Unlock.RewardLevel ExpReward => Unlock.RewardLevel.Medium;
         public override UnlockGroup UnlockGroup => UnlockGroup.Dish;
         public override bool IsUnlockable => true;
         public override Item RequiredDishItem => (Item)GDOUtils.GetExistingGDO(ItemReferences.Plate);
@@ -32,7 +32,7 @@ namespace KitchenMysteryMenu.Customs.Dishes
         public override HashSet<Item> MinimumIngredients => new()
         {
             // Add X Mystery Ingredients
-            GDOUtils.GetCastedGDO<Item, MysteryMeat>(),
+            GDOUtils.GetCastedGDO<Item, MysterySurfNTurf>(),
             (Item)GDOUtils.GetExistingGDO(ItemReferences.Plate)
         };
         public override HashSet<Process> RequiredProcesses => new()
@@ -42,20 +42,22 @@ namespace KitchenMysteryMenu.Customs.Dishes
 
         public override HashSet<GenericMysteryDish> ContainedMysteryRecipes => new()
         {
-            // Add the Mystery versions of every steak variant
+            // Add the Mystery versions of every steak & fish variant plus steak stir fry
             (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysterySteakThinDish>(),
             (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysterySteakThickDish>(),
             (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysterySteakBonedDish>(),
+
             (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryFishCrabCakeDish>(),
             (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryFishFilletDish>(),
             (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryFishOysterDish>(),
             (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryFishSpinyDish>(),
+
             (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryStirFrySteakDish>(),
         };
 
         public override Dictionary<Locale, string> Recipe => new()
         {
-            { Locale.English, "<color=cyan>New possible menu items:</color> Thin-Cut Steak, Thick-Cut Steak, Bone-In Steak, " +
+            { Locale.English, "<color=#00ffff>New possible menu items:</color> Thin-Cut Steak, Thick-Cut Steak, Bone-In Steak, " +
                 "Spiny Fish, Oysters, Fish Fillet, Crab Cakes, Steak Stir Fry\n" +
                 "Adds one extra Mystery Provider."
             }

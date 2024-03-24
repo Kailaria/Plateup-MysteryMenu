@@ -12,7 +12,7 @@ namespace KitchenMysteryMenu.Customs.Dishes
     public abstract class GenericMysteryDishCard : CustomDish
     {
         protected abstract string NameTag { get; }
-        public override string UniqueNameID => "Mystery Menu Card : " + NameTag;
+        public override string UniqueNameID => "Mystery Card: " + NameTag;
         public abstract HashSet<GenericMysteryDish> ContainedMysteryRecipes { get; }
         public override List<Dish.MenuItem> ResultingMenuItems => 
             ContainedMysteryRecipes.SelectMany(r => r.ResultingMenuItems).ToList();

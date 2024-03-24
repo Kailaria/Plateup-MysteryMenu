@@ -1,4 +1,5 @@
 ﻿using KitchenData;
+using KitchenLib.Customs;
 using KitchenLib.References;
 using KitchenLib.Utils;
 using KitchenMysteryMenu.Utils;
@@ -8,13 +9,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KitchenMysteryMenu.Customs.Dishes.Spaghetti
+namespace KitchenMysteryMenu.Customs.Dishes.Turkey
 {
-    public class MysterySpaghettiBaseDish : GenericMysteryDish
+    public class MysteryTurkeyGravyDish : GenericMysteryDish
     {
-        protected override string NameTag => "Mystery Spaghetti Dish";
-        public override Dish OrigDish => (Dish)GDOUtils.GetExistingGDO(References.SpaghettiBaseDish);
-        public override DishType Type => DishType.Base;
+        protected override string NameTag => "Mystery Turkey Gravy Dish";
+        public override Dish OrigDish => (Dish)GDOUtils.GetExistingGDO(DishReferences.TurkeyGravy);
+        public override DishType Type => DishType.Extra;
         public override DishCustomerChange CustomerMultiplier => DishCustomerChange.None;
         public override Unlock.RewardLevel ExpReward => Unlock.RewardLevel.None;
         public override UnlockGroup UnlockGroup => UnlockGroup.Dish;
@@ -26,37 +27,35 @@ namespace KitchenMysteryMenu.Customs.Dishes.Spaghetti
         public override Dictionary<Locale, string> Recipe => new()
         {
             { Locale.English,
-                "<color=yellow>Requires ingredients:</color> Tomato, Spaghetti\n" +
-                "Put raw spaghetti into a pot with water and boil, then empty the water into the trash. " +
-                "Chop tomato twice to make sauce. Combine boiled pasta on a plate with the sauce." }
+                "<color=yellow>Requires ingredient:</color> Onion, Turkey\n" + 
+                "Cook onion in a pot of water to make broth. Add a turkey carcass to the broth and cook again.\n" +
+                "Plate with  <i>Turkey</i>." }
         };
         public override List<(Locale, UnlockInfo)> InfoList => new()
         {
             (Locale.English, new UnlockInfo()
             {
-                Name = "Mystery - Spaghetti",
-                Description = "Adds spaghetti as a main when <b>Tomatoes</b> and <b>Raw Spaghetti</b> are present",
-                FlavourText = ""
+                Name = "Mystery - Turkey - Gravy",
+                Description = "Adds Gravy as an option for Turkey",
+                FlavourText = "(placeholder card, do not add with Cards Manager)"
             })
         };
-
-        public override List<Dish.MenuItem> ResultingMenuItems => new()
+        public override HashSet<Dish.IngredientUnlock> IngredientsUnlocks => new()
         {
-            new()
+            new Dish.IngredientUnlock()
             {
-                Item = (Item)GDOUtils.GetExistingGDO(References.SpaghettiPomodoroPlated/*Spaghetti Pomodoro Plated*/),
-                Phase = MenuPhase.Main,
-                Weight = 1
+                MenuItem = (ItemGroup)GDOUtils.GetExistingGDO(ItemGroupReferences.TurkeyPlated),
+                Ingredient = (Item)GDOUtils.GetExistingGDO(ItemReferences.TurkeyGravy)
             }
         };
         public override HashSet<Item> MinimumRequiredMysteryIngredients => new HashSet<Item>()
         {
-            (Item) GDOUtils.GetExistingGDO(ItemReferences.Tomato),
-            (Item) GDOUtils.GetExistingGDO(References.SpaghettiRaw)
+            (Item) GDOUtils.GetExistingGDO(ItemReferences.Onion),
+            (Item) GDOUtils.GetExistingGDO(ItemReferences.TurkeyIngredient),
         };
         public override List<Unlock> HardcodedRequirements => new()
         {
-            GDOUtils.GetCastedGDO<Dish, MysteryMenuBaseMainsDish>()
+            GDOUtils.GetCastedGDO<Dish, MysteryMenuSaucesDish>()
         };
     }
 }
