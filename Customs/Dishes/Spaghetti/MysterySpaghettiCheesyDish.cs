@@ -35,7 +35,7 @@ namespace KitchenMysteryMenu.Customs.Dishes.Spaghetti
         {
             (Locale.English, new UnlockInfo()
             {
-                Name = "Mystery - Cheesy Spaghetti",
+                Name = "Mystery - Spaghetti with Cheese",
                 Description = "Adds cheesy spaghetti as a main when <b>Cheese</b>, <b>Butter</b>, <b>Flour</b>, <b>Milk</b>, and <b>Raw Spaghetti</b> are present",
                 FlavourText = "(placeholder card, do not add with Cards Manager)"
             })
@@ -60,7 +60,7 @@ namespace KitchenMysteryMenu.Customs.Dishes.Spaghetti
         };
         public override List<Unlock> HardcodedRequirements => new()
         {
-            GDOUtils.GetCastedGDO<Dish, MysteryMenuBaseMainsDish>()
+            GDOUtils.GetCastedGDO<Dish, MysteryMenuSaucesDish>()
         };
     }
 }

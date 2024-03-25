@@ -54,11 +54,11 @@ namespace KitchenMysteryMenu.Customs.Dishes.Spaghetti
         {
             (Item) GDOUtils.GetExistingGDO(ItemReferences.Tomato),
             (Item) GDOUtils.GetExistingGDO(References.SpaghettiRaw),
-            (Item) GDOUtils.GetExistingGDO(References.MinceRaw)
+            (Item) GDOUtils.GetExistingGDO(References.Mince)
         };
         public override List<Unlock> HardcodedRequirements => new()
         {
-            GDOUtils.GetCastedGDO<Dish, MysteryMenuBaseMainsDish>()
+            GDOUtils.GetCastedGDO<Dish, MysteryMenuSaucesDish>()
         };
     }
 }

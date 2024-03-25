@@ -27,7 +27,7 @@ namespace KitchenMysteryMenu.Utils
         public static int LasagnePlated = 82891941;
 
         public static int SpaghettiRaw = -823534126;
-        public static int MinceRaw = -2047874552;
+        public static int Mince = -2047874552;
         public static int Butter = 1605072344;
         public static int LasagnePastaSheet = 1521319349;
         public static int LasagneTray = -2080052245;

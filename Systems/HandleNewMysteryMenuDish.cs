@@ -86,10 +86,10 @@ namespace KitchenMysteryMenu.Systems
                 var menuItem = cMenuItems[i];
 
                 // Continue until we find the matching non-mystery Dish or the matching MysteryDishCard
-                Mod.Logger.LogInfo($"[HandleNewMenuItems] cMenuItem.SourceDish {{{menuItem.SourceDish}}}; dishData.ID {{{dishData.ID}}}; " +
-                    $"gMD.GDO.ID {{{genericMysteryDish?.GameDataObject.ID}}}; mDC.GDO.ID {{{mysteryDishCard?.GameDataObject.ID}}}");
                 int relevantSourceDishID = mysteryDishCard == default ? dishData.ID : mysteryDishCard.GameDataObject.ID;
-                if (menuItem.SourceDish != relevantSourceDishID)
+                Mod.Logger.LogInfo($"[HandleNewMenuItems] cMenuItem.SourceDish {{{menuItem.SourceDish}}}; cMenuItem.Item {{{menuItem.Item}}}; dishData.ID {{{dishData.ID}}}; " +
+                    $"gMD.GDO.ID {{{genericMysteryDish?.GameDataObject.ID}}}; mDC.GDO.ID {{{mysteryDishCard?.GameDataObject.ID}}}; gmd.UniqueNameID {{{genericMysteryDish?.UniqueNameID}}}");
+                if (menuItem.SourceDish != relevantSourceDishID || !genericMysteryDish.ResultingMenuItems.Any(rmi => rmi.Item.ID == menuItem.Item))
                 {
                     continue;
                 }
