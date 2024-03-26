@@ -55,6 +55,5 @@ namespace KitchenMysteryMenu.Customs.Dishes.HotDog
         {
             GDOUtils.GetCastedGDO<Dish, MysteryMenuCondimentsDish>()
         };
-        public override bool RequiresVariant => true;
     }
 }

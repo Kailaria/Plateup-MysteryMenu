@@ -495,7 +495,7 @@ namespace KitchenMysteryMenu.Systems
                 }
                 // This has a valid DishOption/Extra, so check if other Options that aren't the same Ingredient can be cooked.
                 //  (Should hopefully address Rice-only Stir Fry and null reference)
-                bool anySiblingCanBeCooked = recipes.Where(r => IsSiblingOf(r))
+                bool anySiblingCanBeCooked = recipes.Where(r => IsSiblingOf(r) && !r.IsPossibleExtra())
                                     .Any(r => r.CanBeCooked());
                 Mod.Logger.LogInfo($"{logID} - Recipe {{{Recipe.UniqueNameID}}} is DishOption. Any one sibling recipe can be cooked = {{{anySiblingCanBeCooked}}}");
                 return anySiblingCanBeCooked;
@@ -524,7 +524,7 @@ namespace KitchenMysteryMenu.Systems
                 if (IsMenuItem())
                 {
                     bool canMenuItemBeServed = !RequiresVariant ||
-                        currentRecipes.Any(r => r.IsAvailableIngredient() && MenuItem.Item == r.DishOption.MenuItem && !r.RequiresVariant);
+                        currentRecipes.Any(r => r.IsAvailableIngredient() && IsParentOf(r) && !r.RequiresVariant);
                     Mod.Logger.LogInfo($"{logKey} - MenuItem {{name = {Recipe.UniqueNameID}, requiresVariant = {RequiresVariant}, canBeServed = {canMenuItemBeServed}}}");
                     return canMenuItemBeServed;
                 }
@@ -537,7 +537,7 @@ namespace KitchenMysteryMenu.Systems
                 }
 
                 bool canExtraBeServed = IsPossibleExtra() && currentRecipes.Any(r => r.IsMenuItem() && IsChildOf(r)) &&
-                                    (!RequiresVariant || currentRecipes.Any(r => !r.RequiresVariant && IsSiblingOf(r)));
+                                    currentRecipes.Any(r => !r.RequiresVariant && IsSiblingOf(r));
                 Mod.Logger.LogInfo($"{logKey} - DishOption {{name = {Recipe.UniqueNameID}, requiresVariant = {RequiresVariant}, canBeServed = {canExtraBeServed}");
                 return canExtraBeServed;
             }
@@ -590,7 +590,7 @@ namespace KitchenMysteryMenu.Systems
                         $" ParentRecipes = {parentRecipes}, ParentDistinctMissingIngredientSum = {parentMissingIngredientSum}}}");
                     return CanBeSelected(availableProviderCount - parentMissingIngredientSum);
                 }
-                // This is where we ensure that the parent recipes get added and accounted for
+                // Possible Extras always need their parent recipe to be "Could Be Served", and as such
                 if (IsPossibleExtra())
                 {
                     int parentMissingIngredientSum = parentRecipes.SelectMany(r => r.MissingIngredients).ToHashSet().Count();

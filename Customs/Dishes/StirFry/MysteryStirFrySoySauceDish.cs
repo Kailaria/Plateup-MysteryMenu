@@ -55,6 +55,5 @@ namespace KitchenMysteryMenu.Customs.Dishes.StirFry
         {
             GDOUtils.GetCastedGDO<Dish, MysteryMenuCondimentsDish>()
         };
-        public override bool RequiresVariant => true;
     }
 }

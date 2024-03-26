@@ -55,6 +55,5 @@ namespace KitchenMysteryMenu.Customs.Dishes.Dumplings
         {
             GDOUtils.GetCastedGDO<Dish, MysteryMenuCondimentsDish>()
         };
-        public override bool RequiresVariant => true;
     }
 }

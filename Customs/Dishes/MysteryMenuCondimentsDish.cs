@@ -55,7 +55,7 @@ namespace KitchenMysteryMenu.Customs.Dishes
         {
             { Locale.English, "<color=#00ffff>New possible menu items:</color>  <i>Hot Dogs</i> - Extra Ketchup, Extra Mustard;  " +
                 "<i>Dumplings</i> - Soy Sauce;  <i>Stir Fry</i> - Soy Sauce\n" +
-                "Adds two extra Mystery Providers."
+                "Adds one extra Mystery Provider."
             }
         };
         public override List<(Locale, UnlockInfo)> InfoList => new()
