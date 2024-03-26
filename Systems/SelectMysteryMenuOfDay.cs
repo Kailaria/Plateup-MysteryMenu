@@ -33,8 +33,8 @@ namespace KitchenMysteryMenu.Systems
                 .All(typeof(CItemProvider))
                 .None(typeof(CMysteryMenuProvider), typeof(CDynamicMenuProvider)));
             MenuItems = GetEntityQuery(typeof(CMenuItem), typeof(CMysteryMenuItem));
-            MysteryOptions = GetEntityQuery(typeof(CMysteryMenuItemOption), typeof(CMysteryMenuItem));
-            MysteryExtras = GetEntityQuery(typeof(CPossibleExtra), typeof(CMysteryMenuItem));
+            MysteryOptions = GetEntityQuery(typeof(CAvailableIngredient), typeof(CMysteryMenuItemOption), typeof(CMysteryMenuItem));
+            MysteryExtras = GetEntityQuery(typeof(CPossibleExtra), typeof(CMysteryMenuItemOption), typeof(CMysteryMenuItem));
             DisabledMenuItems = GetEntityQuery(typeof(CMysteryMenuItem), typeof(CDisabledMysteryMenu));
             RequireForUpdate(MenuItems);
         }
@@ -55,9 +55,10 @@ namespace KitchenMysteryMenu.Systems
             using var mysteryOptionEntities = MysteryOptions.ToEntityArray(Allocator.Temp);
             using var mysteryOptionRecipes = MysteryOptions.ToComponentDataArray<CMysteryMenuItem>(Allocator.Temp);
             using var mysteryOptionIngredients = MysteryOptions.ToComponentDataArray<CAvailableIngredient>(Allocator.Temp);
-            
-            //using var mysteryExtraEntities = MysteryExtras.ToEntityArray(Allocator.Temp);
-            //using var mysteryExtraRecipes = MysteryExtras.ToComponentDataArray<CMysteryMenuItem>(Allocator.Temp);
+
+            using var mysteryExtraEntities = MysteryExtras.ToEntityArray(Allocator.Temp);
+            using var mysteryExtraRecipes = MysteryExtras.ToComponentDataArray<CMysteryMenuItem>(Allocator.Temp);
+            using var mysteryExtraExtraComps = MysteryExtras.ToComponentDataArray<CPossibleExtra>(Allocator.Temp);
 
             // algo 1: Determine existing, permanently available ingredients
             //      (ignore all possible Dynamic dishes; but this parenthetical should be handled already by HandleNewMysteryMenuDish)
@@ -86,19 +87,29 @@ namespace KitchenMysteryMenu.Systems
                         .Add(new MysteryRecipeIngredientCounter(mysteryOptionEntities[i], mysteryOptionIngredients[i], mysteryOptionRecipes[i].SourceMysteryDish));
                 }
             }
-            //TODO: also sort Extras separately, but then combine. This way, it's easier to know what to do with each.
+            
+            List<MysteryRecipeIngredientCounter> olderMysteryExtraEntities = new List<MysteryRecipeIngredientCounter>();
+            List<MysteryRecipeIngredientCounter> newerMysteryExtraEntities = new List<MysteryRecipeIngredientCounter>();
+            for (int i = 0; i < mysteryExtraRecipes.Length; i++)
+            {
+                if (mysteryExtraRecipes[i].Type == MysteryMenuType.Mystery)
+                {
+                    (mysteryExtraRecipes[i].HasBeenProvided ? olderMysteryExtraEntities : newerMysteryExtraEntities)
+                        .Add(new MysteryRecipeIngredientCounter(mysteryExtraEntities[i], mysteryExtraExtraComps[i], mysteryExtraRecipes[i].SourceMysteryDish));
+                }
+            }
 
             // Combine the entities for ease of access
             List<MysteryRecipeIngredientCounter> olderCombinedEntities = new List<MysteryRecipeIngredientCounter>();
             olderCombinedEntities.AddRange(olderMysteryMenuItemEntities);
             olderCombinedEntities.AddRange(olderMysteryOptionEntities);
-            //addrange
+            olderCombinedEntities.AddRange(olderMysteryExtraEntities);
             //olderCombinedEntities.ShuffleInPlace(); // No longer shuffling since randomness will be determined by ingredient weight anyway.
 
             List<MysteryRecipeIngredientCounter> newerCombinedEntities = new List<MysteryRecipeIngredientCounter>();
             newerCombinedEntities.AddRange(newerMysteryMenuItemEntities);
             newerCombinedEntities.AddRange(newerMysteryOptionEntities);
-            //addrange
+            newerCombinedEntities.AddRange(newerMysteryExtraEntities);
             //newerCombinedEntities.ShuffleInPlace(); // No longer shuffling since randomness will be determined by weight anyway.
 
             List<Entity> mysteryProviderEntityList = new List<Entity>();
@@ -422,7 +433,7 @@ namespace KitchenMysteryMenu.Systems
             public Entity Entity;
             public CMenuItem MenuItem;
             public CAvailableIngredient DishOption;
-            //public CPossibleExtra DishExtra;
+            public CPossibleExtra DishExtra;
             public GenericMysteryDish Recipe;
             public HashSet<Item> MissingIngredients;
             public bool RequiresVariant => Recipe.RequiresVariant;
@@ -430,20 +441,25 @@ namespace KitchenMysteryMenu.Systems
 
             public MysteryRecipeIngredientCounter(Entity entity, int sourceDishID)
             {
-                Instantiate(entity, sourceDishID, default, default);
+                Instantiate(entity, sourceDishID, default, default, default);
             }
 
             public MysteryRecipeIngredientCounter(Entity entity, CMenuItem menuItem, int sourceDishID)
             {
-                Instantiate(entity, sourceDishID, menuItem, default);
+                Instantiate(entity, sourceDishID, menuItem, default, default);
             }
 
             public MysteryRecipeIngredientCounter(Entity entity, CAvailableIngredient dishOption, int sourceDishID)
             {
-                Instantiate(entity, sourceDishID, default, dishOption);
+                Instantiate(entity, sourceDishID, default, dishOption, default);
             }
 
-            private void Instantiate(Entity entity, int sourceDishID, CMenuItem menuItem, CAvailableIngredient dishOption)
+            public MysteryRecipeIngredientCounter(Entity entity, CPossibleExtra dishExtra, int sourceDishID)
+            {
+                Instantiate(entity, sourceDishID, default, default, dishExtra);
+            }
+
+            private void Instantiate(Entity entity, int sourceDishID, CMenuItem menuItem, CAvailableIngredient dishOption, CPossibleExtra dishExtra)
             {
                 Entity = entity;
                 Recipe = MysteryDishCrossReference.GetMysteryDishById(sourceDishID);
@@ -451,6 +467,7 @@ namespace KitchenMysteryMenu.Systems
                 Weight = 0f;
                 MenuItem = menuItem;
                 DishOption = dishOption;
+                DishExtra = dishExtra;
             }
 
             public bool CanBeCooked()
@@ -476,7 +493,7 @@ namespace KitchenMysteryMenu.Systems
                         $"All dependent children recipes can be cooked = {{{allDependentChildrenCanBeCooked}}}");
                     return anyIndependentChildCanBeCooked && allDependentChildrenCanBeCooked;
                 }
-                // This has a valid DishOption, so check if other Options that aren't the same Ingredient can be cooked.
+                // This has a valid DishOption/Extra, so check if other Options that aren't the same Ingredient can be cooked.
                 //  (Should hopefully address Rice-only Stir Fry and null reference)
                 bool anySiblingCanBeCooked = recipes.Where(r => IsSiblingOf(r))
                                     .Any(r => r.CanBeCooked());
@@ -511,11 +528,18 @@ namespace KitchenMysteryMenu.Systems
                     Mod.Logger.LogInfo($"{logKey} - MenuItem {{name = {Recipe.UniqueNameID}, requiresVariant = {RequiresVariant}, canBeServed = {canMenuItemBeServed}}}");
                     return canMenuItemBeServed;
                 }
+                if (IsAvailableIngredient())
+                {
+                    bool canOptionBeServed = IsAvailableIngredient() && currentRecipes.Any(r => r.IsMenuItem() && IsChildOf(r)) &&
+                                        (!RequiresVariant || currentRecipes.Any(r => !r.RequiresVariant && IsSiblingOf(r)));
+                    Mod.Logger.LogInfo($"{logKey} - DishOption {{name = {Recipe.UniqueNameID}, requiresVariant = {RequiresVariant}, canBeServed = {canOptionBeServed}");
+                    return canOptionBeServed;
+                }
 
-                bool canOptionBeServed = IsAvailableIngredient() && currentRecipes.Any(r => r.IsMenuItem() && r.MenuItem.Item == DishOption.MenuItem) &&
-                                    (!RequiresVariant || currentRecipes.Any(r => r.IsAvailableIngredient() && !r.RequiresVariant && IsSiblingOf(r)));
-                Mod.Logger.LogInfo($"{logKey} - DishOption {{name = {Recipe.UniqueNameID}, requiresVariant = {RequiresVariant}, canBeServed = {canOptionBeServed}");
-                return canOptionBeServed;
+                bool canExtraBeServed = IsPossibleExtra() && currentRecipes.Any(r => r.IsMenuItem() && IsChildOf(r)) &&
+                                    (!RequiresVariant || currentRecipes.Any(r => !r.RequiresVariant && IsSiblingOf(r)));
+                Mod.Logger.LogInfo($"{logKey} - DishOption {{name = {Recipe.UniqueNameID}, requiresVariant = {RequiresVariant}, canBeServed = {canExtraBeServed}");
+                return canExtraBeServed;
             }
 
             /**
@@ -538,7 +562,7 @@ namespace KitchenMysteryMenu.Systems
                 if (RequiresVariant)
                 {
                     Mod.Logger.LogInfo($"{logKey} Recipe {{{Recipe.UniqueNameID}}} requires a variant. " +
-                        $"Type = {{{(IsMenuItem() ? "MenuItem" : (IsAvailableIngredient() ? "AvailableIngredient" : "type not found"))}}}");
+                        $"Type = {{{TypeName}}}");
                     return false;
                 }
                 // If this recipe has no parent recipes and isn't a MenuItem entity, then the parent's card hasn't been selected and isn't available
@@ -546,7 +570,7 @@ namespace KitchenMysteryMenu.Systems
                 if (parentRecipes.Count() == 0 && !IsMenuItem())
                 {
                     Mod.Logger.LogInfo($"{logKey} Recipe {{{Recipe.UniqueNameID}}} has no valid parents. " +
-                        $"Type = {{{(IsMenuItem() ? "MenuItem" : (IsAvailableIngredient() ? "AvailableIngredient" : "type not found"))}}}");
+                        $"Type = {{{TypeName}}}");
                     return false;
                 }
                 // TODO: This might need to handle Side-type MenuItems and ensuring there's a Main already to attach it to, but perhaps
@@ -566,24 +590,30 @@ namespace KitchenMysteryMenu.Systems
                         $" ParentRecipes = {parentRecipes}, ParentDistinctMissingIngredientSum = {parentMissingIngredientSum}}}");
                     return CanBeSelected(availableProviderCount - parentMissingIngredientSum);
                 }
+                // This is where we ensure that the parent recipes get added and accounted for
+                if (IsPossibleExtra())
+                {
+                    int parentMissingIngredientSum = parentRecipes.SelectMany(r => r.MissingIngredients).ToHashSet().Count();
+                    Mod.Logger.LogInfo($"{logKey} AvailableIngredient {{Recipe = {Recipe.UniqueNameID}, MenuItem = " +
+                        $"{Recipe.ExtraOrderUnlocks.First(iu => iu.Ingredient.ID == DishExtra.Ingredient && iu.MenuItem.ID == DishExtra.MenuItem).MenuItem.name}," +
+                        $" ParentRecipes = {parentRecipes}, ParentDistinctMissingIngredientSum = {parentMissingIngredientSum}}}");
+                    return CanBeSelected(availableProviderCount - parentMissingIngredientSum);
+                }
                 Mod.Logger.LogInfo($"{logKey} Recipe {{{Recipe.UniqueNameID}}} could not be served. It's not a menu item or available ingredient.");
                 return false;
             }
 
             public List<MysteryRecipeIngredientCounter> GetParentRecipes(IEnumerable<MysteryRecipeIngredientCounter> availableRecipes)
             {
-                if (IsAvailableIngredient())
+                if (IsAvailableIngredient() || IsPossibleExtra())
                 {
                     // Menu Item only cares about child relationship, especially once toppings/sauces/extras get involved.
                     // Siblings are only "parents" if the sibling of this recipe Requires Variant.
                     var parents = availableRecipes
-                        .Where(r => (r.IsMenuItem() && IsChildOf(r)) || (r.RequiresVariant && IsSiblingOf(r)))
+                        .Where(r => (r.IsMenuItem() && IsChildOf(r)) || (r.RequiresVariant && !r.IsPossibleExtra() && IsSiblingOf(r)))
                         .ToList();
                     return parents;
                 }
-                // if (IsPossibleExtra())
-                //{
-                //}
                 return default;
             }
 
@@ -597,25 +627,73 @@ namespace KitchenMysteryMenu.Systems
                 return MenuItem.Item != 0;
             }
 
-            public bool IsParentOf(MysteryRecipeIngredientCounter other)
-            {
-                return MenuItem.Item == other.DishOption.MenuItem;
-            }
-
             public bool IsAvailableIngredient()
             {
                 return DishOption.MenuItem != 0 && DishOption.Ingredient != 0;
             }
 
+            public bool IsPossibleExtra()
+            {
+                return DishExtra.MenuItem != 0 && DishExtra.Ingredient != 0;
+            }
+
+            public bool IsParentOf(MysteryRecipeIngredientCounter other)
+            {
+                if (other.IsAvailableIngredient())
+                {
+                    return MenuItem.Item == other.DishOption.MenuItem;
+                }
+                if (other.IsPossibleExtra())
+                {
+                    return MenuItem.Item == other.DishExtra.MenuItem;
+                }
+
+                return false;
+            }
+
             public bool IsChildOf(MysteryRecipeIngredientCounter other)
             {
-                return DishOption.MenuItem == other.MenuItem.Item;
+                if (IsAvailableIngredient())
+                {
+                    return DishOption.MenuItem == other.MenuItem.Item;
+                }
+                if (IsPossibleExtra())
+                {
+                    return DishExtra.MenuItem == other.MenuItem.Item;
+                }
+                return false;
             }
 
             public bool IsSiblingOf(MysteryRecipeIngredientCounter other)
             {
-                return DishOption.MenuItem == other.DishOption.MenuItem && DishOption.Ingredient != other.DishOption.Ingredient;
+                // If they're the same type, make sure they aren't the same ingredient
+                if (IsAvailableIngredient() && other.IsAvailableIngredient())
+                {
+                    return DishOption.MenuItem == other.DishOption.MenuItem && DishOption.Ingredient != other.DishOption.Ingredient;
+                }
+                if (IsPossibleExtra() && other.IsPossibleExtra())
+                {
+                    return DishExtra.MenuItem == other.DishExtra.MenuItem && DishExtra.Ingredient != other.DishExtra.Ingredient;
+                }
+
+                // If they're different types, just ensure they are for the same menu item.
+                if (IsAvailableIngredient() && other.IsPossibleExtra())
+                {
+                    return DishOption.MenuItem == other.DishExtra.MenuItem;
+                }
+                if (IsPossibleExtra() && other.IsAvailableIngredient())
+                {
+                    return DishExtra.MenuItem == other.DishOption.MenuItem;
+                }
+
+                // Any other combo isn't a sibling relationship.
+                return false;
             }
+
+            public string TypeName => IsMenuItem() ? "MenuItem" 
+                : (IsAvailableIngredient() ? "AvailableIngredient" 
+                : (IsPossibleExtra() ? "PossibleExtra" 
+                : "type not found"));
         }
     }
 }
