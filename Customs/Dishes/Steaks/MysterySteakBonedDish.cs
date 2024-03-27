@@ -37,7 +37,7 @@ namespace KitchenMysteryMenu.Customs.Dishes.Steaks
             {
                 Name = "Mystery - Bone-In Steak",
                 Description = "Adds Bone-In steak as a main when <b>Bone-In Meat</b> is present",
-                FlavourText = "Be sure to trash the bone when they're done!"
+                FlavourText = $"{References.DishCardDoNotAddFlavorText}"
             })
         };
         public override List<Dish.MenuItem> ResultingMenuItems => new()

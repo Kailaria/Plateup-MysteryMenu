@@ -36,7 +36,7 @@ namespace KitchenMysteryMenu.Customs.Dishes.StirFry
             {
                 Name = "Mystery - Stir Fry - Soy Sauce",
                 Description = "Adds Soy Sauce as a possible extra after serving Dumplings.",
-                FlavourText = "(alsoAddsRecipes card, do not add with Cards Manager)"
+                FlavourText = $"{References.DishCardDoNotAddFlavorText}"
             })
         };
         public override HashSet<Dish.IngredientUnlock> ExtraOrderUnlocks => new()

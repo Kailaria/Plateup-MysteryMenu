@@ -37,7 +37,7 @@ namespace KitchenMysteryMenu.Customs.Dishes.Turkey
             {
                 Name = "Mystery - Turkey - Gravy",
                 Description = "Adds Gravy as an option for Turkey",
-                FlavourText = "(placeholder card, do not add with Cards Manager)"
+                FlavourText = $"{References.DishCardDoNotAddFlavorText}"
             })
         };
         public override HashSet<Dish.IngredientUnlock> IngredientsUnlocks => new()

@@ -37,7 +37,7 @@ namespace KitchenMysteryMenu.Customs.Dishes.Spaghetti
             {
                 Name = "Mystery - Spaghetti Bolognese",
                 Description = "Adds spaghetti bolognese as a main when <b>Tomatoes</b>, <b>Mince</b>, and <b>Raw Spaghetti</b> are present",
-                FlavourText = "(placeholder card, do not add with Cards Manager)"
+                FlavourText = $"{References.DishCardDoNotAddFlavorText}"
             })
         };
 

@@ -35,7 +35,7 @@ namespace KitchenMysteryMenu.Customs.Dishes.StirFry
             {
                 Name = "Mystery - Stir Fry Broccoli",
                 Description = "Adds <b>Broccoli</b> as an ingredient for Stir Fry when it's present with <b>Rice</b>",
-                FlavourText = ""
+                FlavourText = $"{References.DishCardDoNotAddFlavorText}"
             })
         };
         public override List<Unlock> HardcodedRequirements => new List<Unlock>()

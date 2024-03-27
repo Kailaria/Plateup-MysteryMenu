@@ -35,7 +35,7 @@ namespace KitchenMysteryMenu.Customs.Dishes.Turkey
             {
                 Name = "Mystery - Turkey",
                 Description = "Adds <b>Turkey</b> as a main when it is present",
-                FlavourText = "Gobble gobble gobble!"
+                FlavourText = $"{References.DishCardDoNotAddFlavorText}"
             })
         };
         public override List<Dish.MenuItem> ResultingMenuItems => new()

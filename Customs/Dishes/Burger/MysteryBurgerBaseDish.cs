@@ -35,7 +35,7 @@ namespace KitchenMysteryMenu.Customs.Dishes.Burger
             {
                 Name = "Mystery - Burger",
                 Description = "Adds burgers as a main when <b>Burger Bun</b> and <b>Burger Patty</b> are present",
-                FlavourText = "Bah dap bap bap baaah!"
+                FlavourText = $"{References.DishCardDoNotAddFlavorText}"
             })
         };
 

@@ -2,6 +2,7 @@
 using KitchenLib.References;
 using KitchenLib.Utils;
 using KitchenMysteryMenu.Customs.Dishes;
+using KitchenMysteryMenu.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,7 +37,7 @@ namespace KitchenMysteryMenu.Customs.Dishes.StirFry
             {
                 Name = "Mystery - Stir Fry",
                 Description = "Adds Stir Fry as a main when <b>Rice</b> and one of <b>Carrot</b> or <b>Broccoli</b> are present",
-                FlavourText = "Cook after adding each ingredient!"
+                FlavourText = $"{References.DishCardDoNotAddFlavorText}"
             })
         };
 

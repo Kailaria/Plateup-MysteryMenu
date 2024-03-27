@@ -15,6 +15,8 @@ namespace KitchenMysteryMenu.Utils
         public static readonly DynamicMenuType DynamicMenuTypeMystery = (DynamicMenuType)VariousUtils.GetID($"{Mod.MOD_GUID}:{((Dish)MysteryMenuBaseDish).Name}");
         public static readonly int MaxIngredientCountForMinimumRecipe = 5;
 
+        public static string DishCardDoNotAddFlavorText = "(alsoAddsRecipes card, do not add with Cards Manager)";
+
         // Temporary until KitchenLib updates w/ Spaghetti
         public static int SpaghettiBaseDish = 1764920765;
         public static int SpaghettiBologneseDish = -1501485763;

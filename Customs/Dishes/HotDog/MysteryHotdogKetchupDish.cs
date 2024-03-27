@@ -36,7 +36,7 @@ namespace KitchenMysteryMenu.Customs.Dishes.HotDog
             {
                 Name = "Mystery - Hot Dog - Extra Ketchup",
                 Description = "Adds Ketchup as a possible extra after serving a Hot Dog.",
-                FlavourText = "(placeholder card, do not add with Cards Manager)"
+                FlavourText = $"{References.DishCardDoNotAddFlavorText}"
             })
         };
         public override HashSet<Dish.IngredientUnlock> ExtraOrderUnlocks => new()

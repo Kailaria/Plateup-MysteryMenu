@@ -37,7 +37,7 @@ namespace KitchenMysteryMenu.Customs.Dishes.Steaks
             {
                 Name = "Mystery - Steak Sauce - Red Wine Jus",
                 Description = "Adds Red Wine Jus as a sauce option for any Steak dish",
-                FlavourText = "(placeholder card, do not add with Cards Manager)"
+                FlavourText = $"{References.DishCardDoNotAddFlavorText}"
             })
         };
         public override HashSet<Dish.IngredientUnlock> IngredientsUnlocks => new()

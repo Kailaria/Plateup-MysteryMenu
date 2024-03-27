@@ -36,7 +36,7 @@ namespace KitchenMysteryMenu.Customs.Dishes.Fish
             {
                 Name = "Mystery Fish - Blue",
                 Description = "Adds <b>Blue Fish</b> as a main when it is present",
-                FlavourText = "Just keep swimming!"
+                FlavourText = $"{References.DishCardDoNotAddFlavorText}"
             })
         };
         public override List<Dish.MenuItem> ResultingMenuItems => new()

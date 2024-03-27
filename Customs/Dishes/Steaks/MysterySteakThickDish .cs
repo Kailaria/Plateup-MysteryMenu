@@ -37,7 +37,7 @@ namespace KitchenMysteryMenu.Customs.Dishes.Steaks
             {
                 Name = "Mystery - Thick-Cut Steak",
                 Description = "Adds Thick-Cut steak as a main when <b>Thick Meat</b> is present",
-                FlavourText = "Be mindful, they take a long time to cook!"
+                FlavourText = $"{References.DishCardDoNotAddFlavorText}"
             })
         };
         public override List<Dish.MenuItem> ResultingMenuItems => new()

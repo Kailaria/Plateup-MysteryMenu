@@ -36,7 +36,7 @@ namespace KitchenMysteryMenu.Customs.Dishes.HotDog
             {
                 Name = "Mystery - Hot Dog",
                 Description = "Adds hot dogs as a main when <b>Hot Dog Buns</b> and <b>Hot Dog Links</b> are present",
-                FlavourText = ""
+                FlavourText = $"{References.DishCardDoNotAddFlavorText}"
             })
         };
 

@@ -37,7 +37,7 @@ namespace KitchenMysteryMenu.Customs.Dishes.Pizza
             {
                 Name = "Mystery - Pizza",
                 Description = "Adds pizzas as a main when <b>Flour</b>, <b>Oil</b>, <b>Tomato</b>, and <b>Cheese</b> are present",
-                FlavourText = ""
+                FlavourText = $"{References.DishCardDoNotAddFlavorText}"
             })
         };
 
