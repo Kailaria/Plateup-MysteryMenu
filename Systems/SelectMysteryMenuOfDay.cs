@@ -124,7 +124,8 @@ namespace KitchenMysteryMenu.Systems
             // algo 3: Begin selection & randomization loop until all Mystery Providers have been assigned
             int mysteryProviderIndex = 0;
             List<MysteryRecipeIngredientCounter> currentRecipes = new List<MysteryRecipeIngredientCounter>();
-
+            int failedAttempts = 0;
+            int maxFailedAttempts = 3;
             while (mysteryProviderIndex < mysteryProviderEntities.Length)
             {
                 Mod.Logger.LogInfo($"{LogMsgPrefix} Provider Loop - Provider index {mysteryProviderIndex} of {mysteryProviderEntities.Length}");
@@ -148,6 +149,15 @@ namespace KitchenMysteryMenu.Systems
 
                 // algo 3e: Given the selected recipe(s), assign the ingredients to Mystery Providers that have not already been provided, whether randomly
                 //          or permanently, and add the new ingredients to the availableItemsForRecipes set.
+                if (selectedRecipeList == default)
+                {
+                    failedAttempts++;
+                    if (failedAttempts < maxFailedAttempts)
+                    {
+                        continue;
+                    }
+                    throw new ArgumentNullException($"{LogMsgPrefix} Failed to properly fill all mystery providers after {failedAttempts} failed attempts.");
+                }
                 var selectedRecipesIngredients = selectedRecipeList.SelectMany(r => r.Recipe.MinimumRequiredMysteryIngredients).ToHashSet();
                 foreach(var ingredient in selectedRecipesIngredients)
                 {
@@ -283,20 +293,26 @@ namespace KitchenMysteryMenu.Systems
             var allValidEntities = allCombinedEntities
                 .Where(e => e.CanBeSelected(numRemainingProviders) && (e.CanBeServed(currentRecipes) || e.CouldBeServed(numRemainingProviders, allCombinedEntities, currentRecipes)))
                 .ToList();
-
-            // Determine what ingredients there are to choose from (i.e. which ingredients are NOT already available)
-            Mod.Logger.LogInfo($"{LogMsgPrefix} — Gathering Missing Ingredients");
-            HashSet<Item> missingIngredients = allValidEntities.SelectMany(entity => entity.MissingIngredients).ToHashSet();
-
-            // Loop over ingredients
-            foreach (Item item in missingIngredients)
+            // [2024-03-27] Doing the ingredient-based weights ends up putting too much emphasis on large recipes like cheesy spaghetti.
+            //      Gonna try just leaving it at recipe-based weighting, completely even, but maintain existing code
+            foreach (var validEntity in allValidEntities)
             {
-                // Add the inverse of the count to the total recipe weight such that each *ingredient* only contributes 1.0f
-                //  total weight across all non-current recipes it's in
-                List<MysteryRecipeIngredientCounter> recipesMissingThisItem = allValidEntities.Where(e => e.MissingIngredients.Contains(item)).ToList();
-                Mod.Logger.LogInfo($"{LogMsgPrefix} — Weight Loop — Unavailable Item {{name = {item.name}}} is in {{{recipesMissingThisItem.Count}}} valid, unlocked recipes");
-                recipesMissingThisItem.ForEach(r => r.Weight += 1f / recipesMissingThisItem.Count);
+                validEntity.Weight = 1;
             }
+
+            //// Determine what ingredients there are to choose from (i.e. which ingredients are NOT already available)
+            //Mod.Logger.LogInfo($"{LogMsgPrefix} — Gathering Missing Ingredients");
+            //HashSet<Item> missingIngredients = allValidEntities.SelectMany(entity => entity.MissingIngredients).ToHashSet();
+
+            //// Loop over ingredients
+            //foreach (Item item in missingIngredients)
+            //{
+            //    // Add the inverse of the count to the total recipe weight such that each *ingredient* only contributes 1.0f
+            //    //  total weight across all non-current recipes it's in
+            //    List<MysteryRecipeIngredientCounter> recipesMissingThisItem = allValidEntities.Where(e => e.MissingIngredients.Contains(item)).ToList();
+            //    Mod.Logger.LogInfo($"{LogMsgPrefix} — Weight Loop — Unavailable Item {{name = {item.name}}} is in {{{recipesMissingThisItem.Count}}} valid, unlocked recipes");
+            //    recipesMissingThisItem.ForEach(r => r.Weight += 1f / recipesMissingThisItem.Count);
+            //}
             Mod.Logger.LogInfo($"{LogMsgPrefix} Done weighting recipes this loop");
         }
 
@@ -318,7 +334,7 @@ namespace KitchenMysteryMenu.Systems
             float randomNew = UnityEngine.Random.Range(0f, totalNewWeight);
             float currentNew = 0f;
 
-            Mod.Logger.LogInfo($"{LogMsgPrefix} Searching weight range {{0 -> {totalNewWeight}}} for newer recipes. Seeking for {{{randomNew}}}");
+            Mod.Logger.LogInfo($"{LogMsgPrefix} {methodPrefix} Searching weight range {{0 -> {totalNewWeight}}} for newer recipes. Seeking for {{{randomNew}}}");
             bool found = false;
             var recipeList = new List<MysteryRecipeIngredientCounter>();
             for (int i = 0; i < newerCombinedEntities.Count; i++)
@@ -350,6 +366,11 @@ namespace KitchenMysteryMenu.Systems
                     }
                     Mod.Logger.LogInfo($"{LogMsgPrefix} {methodPrefix} - It cannot be selected or served..?");
                     break;
+                }
+                else
+                {
+                    Mod.Logger.LogInfo($"{LogMsgPrefix} {methodPrefix} - Skipping Name = {{{recipe.Recipe.UniqueNameID}}}; " +
+                        $"missingIngredients: {{{recipe.MissingIngredients.Count}}}");
                 }
             }
             if (found)
@@ -486,7 +507,7 @@ namespace KitchenMysteryMenu.Systems
                 }
                 if (IsMenuItem())
                 {
-                    IEnumerable<MysteryRecipeIngredientCounter> dishOptions = recipes.Where(r => IsParentOf(r));
+                    IEnumerable<MysteryRecipeIngredientCounter> dishOptions = recipes.Where(r => IsParentOf(r) && r.IsAvailableIngredient());
                     bool anyIndependentChildCanBeCooked = dishOptions.Where(r => !r.RequiresVariant).Any(r => r.CanBeCooked());
                     bool allDependentChildrenCanBeCooked = dishOptions.Where(r => r.RequiresVariant).All(r => r.CanBeCooked() && r.CanRequiredVariantBeCooked(recipes));
                     Mod.Logger.LogInfo($"{logID} - Recipe {{{Recipe.UniqueNameID}}} is MenuItem. Independent child recipe can be cooked = {{{anyIndependentChildCanBeCooked}}}. " +
@@ -495,7 +516,7 @@ namespace KitchenMysteryMenu.Systems
                 }
                 // This has a valid DishOption/Extra, so check if other Options that aren't the same Ingredient can be cooked.
                 //  (Should hopefully address Rice-only Stir Fry and null reference)
-                bool anySiblingCanBeCooked = recipes.Where(r => IsSiblingOf(r) && !r.IsPossibleExtra())
+                bool anySiblingCanBeCooked = recipes.Where(r => IsSiblingOf(r) && r.IsAvailableIngredient())
                                     .Any(r => r.CanBeCooked());
                 Mod.Logger.LogInfo($"{logID} - Recipe {{{Recipe.UniqueNameID}}} is DishOption. Any one sibling recipe can be cooked = {{{anySiblingCanBeCooked}}}");
                 return anySiblingCanBeCooked;
@@ -530,8 +551,8 @@ namespace KitchenMysteryMenu.Systems
                 }
                 if (IsAvailableIngredient())
                 {
-                    bool canOptionBeServed = IsAvailableIngredient() && currentRecipes.Any(r => r.IsMenuItem() && IsChildOf(r)) &&
-                                        (!RequiresVariant || currentRecipes.Any(r => !r.RequiresVariant && IsSiblingOf(r)));
+                    bool canOptionBeServed = currentRecipes.Any(r => r.IsMenuItem() && IsChildOf(r)) &&
+                                        (!RequiresVariant || currentRecipes.Where(r => r.IsAvailableIngredient() && IsSiblingOf(r)).Any(r => !r.RequiresVariant));
                     Mod.Logger.LogInfo($"{logKey} - DishOption {{name = {Recipe.UniqueNameID}, requiresVariant = {RequiresVariant}, canBeServed = {canOptionBeServed}");
                     return canOptionBeServed;
                 }
@@ -594,7 +615,7 @@ namespace KitchenMysteryMenu.Systems
                 if (IsPossibleExtra())
                 {
                     int parentMissingIngredientSum = parentRecipes.SelectMany(r => r.MissingIngredients).ToHashSet().Count();
-                    Mod.Logger.LogInfo($"{logKey} AvailableIngredient {{Recipe = {Recipe.UniqueNameID}, MenuItem = " +
+                    Mod.Logger.LogInfo($"{logKey} PossibleExtra {{Recipe = {Recipe.UniqueNameID}, MenuItem = " +
                         $"{Recipe.ExtraOrderUnlocks.First(iu => iu.Ingredient.ID == DishExtra.Ingredient && iu.MenuItem.ID == DishExtra.MenuItem).MenuItem.name}," +
                         $" ParentRecipes = {parentRecipes}, ParentDistinctMissingIngredientSum = {parentMissingIngredientSum}}}");
                     return CanBeSelected(availableProviderCount - parentMissingIngredientSum);
@@ -605,13 +626,32 @@ namespace KitchenMysteryMenu.Systems
 
             public List<MysteryRecipeIngredientCounter> GetParentRecipes(IEnumerable<MysteryRecipeIngredientCounter> availableRecipes)
             {
-                if (IsAvailableIngredient() || IsPossibleExtra())
+                if (IsAvailableIngredient())
                 {
                     // Menu Item only cares about child relationship, especially once toppings/sauces/extras get involved.
                     // Siblings are only "parents" if the sibling of this recipe Requires Variant.
                     var parents = availableRecipes
-                        .Where(r => (r.IsMenuItem() && IsChildOf(r)) || (r.RequiresVariant && !r.IsPossibleExtra() && IsSiblingOf(r)))
+                        .Where(r => (r.IsMenuItem() && IsChildOf(r)) || (r.RequiresVariant && r.IsAvailableIngredient() && IsSiblingOf(r)))
                         .ToList();
+                    return parents;
+                }
+                if (IsPossibleExtra())
+                {
+                    // Extras need a completely servable recipe. So, get all true parents, and then a sibling (if relevant).
+                    var parents = availableRecipes
+                        .Where(r => (r.IsMenuItem() && IsChildOf(r)) || (r.IsAvailableIngredient() && r.RequiresVariant && IsSiblingOf(r)))
+                        .ToList();
+                    var completingSiblings = availableRecipes
+                        .Where(r => !r.RequiresVariant && r.IsAvailableIngredient() && IsSiblingOf(r))
+                        .ToList();
+                    // Only add a sibling if any parents require a variant
+                    if (parents.Any(r => r.RequiresVariant) && completingSiblings.Count > 0)
+                    {
+                        var minimumMissingIngredients = completingSiblings.Min(r => r.MissingIngredients.Count);
+                        completingSiblings.ShuffleInPlace();
+                        var completingSibling = completingSiblings.Where(r => r.MissingIngredients.Count == minimumMissingIngredients).First();
+                        parents.Add(completingSibling);
+                    }
                     return parents;
                 }
                 return default;
