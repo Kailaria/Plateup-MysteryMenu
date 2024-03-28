@@ -69,12 +69,14 @@ namespace KitchenMysteryMenu
             AddGameDataObject<MysteryIngredientProviderExtra4>();
             AddGameDataObject<MysteryIngredientProviderExtra5>();
             AddGameDataObject<MysteryIngredientProviderExtra6>();
+            AddGameDataObject<MysteryIngredientProviderExtra7>();
         }
 
         private void AddIngredientGDOs()
         {
             // For the HQ Kitchen to work with minimal extra code
             AddGameDataObject<MysteryApple>();
+            AddGameDataObject<MysteryCheese>();
             AddGameDataObject<MysteryFlour>();
             AddGameDataObject<MysteryMeat>();
             AddGameDataObject<MysteryMushroom>();
@@ -99,17 +101,26 @@ namespace KitchenMysteryMenu
             AddGameDataObject<MysteryMenuCarnivoreVariationsDish>();
             AddGameDataObject<MysteryMenuCondimentsDish>();
             AddGameDataObject<MysteryMenuSaucesDish>();
+            AddGameDataObject<MysteryMenuToppingsDish>();
             AddGameDataObject<MysteryMenuVeggieVariationsDish>();
 
             // Mystery Breakfast Dishes
             AddGameDataObject<MysteryBreakfastBaseDish>();
+            AddGameDataObject<MysteryBreakfastToppingBeansDish>();
+            AddGameDataObject<MysteryBreakfastToppingEggsDish>();
+            AddGameDataObject<MysteryBreakfastToppingMushroomDish>();
+            AddGameDataObject<MysteryBreakfastToppingTomatoDish>();
 
             // Mystery Burger Dishes
             AddGameDataObject<MysteryBurgerBaseDish>();
+            AddGameDataObject<MysteryBurgerToppingCheeseDish>();
+            AddGameDataObject<MysteryBurgerToppingOnionDish>();
+            AddGameDataObject<MysteryBurgerToppingTomatoDish>();
 
             // Mystery Dumplings Dishes
             AddGameDataObject<MysteryDumplingsBaseDish>();
             AddGameDataObject<MysteryDumplingsSoySauceDish>();
+            AddGameDataObject<MysteryDumplingsSeaweedDish>();
 
             // Mystery Fish Dishes
             AddGameDataObject<MysteryFishBlueDish>();
@@ -138,6 +149,8 @@ namespace KitchenMysteryMenu
             // Mystery Salad Dishes
             AddGameDataObject<MysterySaladBaseDish>();
             AddGameDataObject<MysterySaladTomatoDish>();
+            AddGameDataObject<MysterySaladToppingOliveDish>();
+            AddGameDataObject<MysterySaladToppingOnionDish>();
             AddGameDataObject<MysterySaladAppleDish>();
             AddGameDataObject<MysterySaladPotatoDish>();
 
@@ -153,6 +166,8 @@ namespace KitchenMysteryMenu
             AddGameDataObject<MysterySteakThinDish>();
             AddGameDataObject<MysterySteakSauceMushroomSauceDish>();
             AddGameDataObject<MysterySteakSauceRedWineJusDish>();
+            AddGameDataObject<MysterySteakToppingMushroomDish>();
+            AddGameDataObject<MysterySteakToppingTomatoDish>();
 
             // Mystery Stir Fry Dishes
             AddGameDataObject<MysteryStirFryBaseDish>();
@@ -169,6 +184,7 @@ namespace KitchenMysteryMenu
             AddGameDataObject<MysteryNutRoastDish>();
             AddGameDataObject<MysteryTurkeyCranberrySauceDish>();
             AddGameDataObject<MysteryTurkeyGravyDish>();
+            AddGameDataObject<MysteryTurkeyStuffingDish>();
         }
     }
 }
