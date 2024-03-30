@@ -35,7 +35,7 @@ namespace KitchenMysteryMenu.Customs.Dishes.Pies
             {
                 Name = "Mystery - Meat Pies",
                 Description = "Adds meat pie as a main when <b>Flour</b> and <b>Meat</b> are present",
-                FlavourText = "Are you ready for the best pies in PlateUp!?"
+                FlavourText = $"{References.DishCardDoNotAddFlavorText}"
             })
         };
         public override List<Unlock> HardcodedRequirements => new List<Unlock>()

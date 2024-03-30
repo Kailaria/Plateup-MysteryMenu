@@ -35,7 +35,7 @@ namespace KitchenMysteryMenu.Customs.Dishes.Salad
             {
                 Name = "Mystery Salad - Tomato Topping",
                 Description = "Adds chopped tomato as a topping option when <b>Tomato</b> is present",
-                FlavourText = "Serve salads with and without chopped tomato."
+                FlavourText = $"{References.DishCardDoNotAddFlavorText}"
             })
         };
         public override HashSet<Dish.IngredientUnlock> IngredientsUnlocks => new()

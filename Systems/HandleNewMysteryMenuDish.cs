@@ -86,10 +86,10 @@ namespace KitchenMysteryMenu.Systems
                 var menuItem = cMenuItems[i];
 
                 // Continue until we find the matching non-mystery Dish or the matching MysteryDishCard
-                Mod.Logger.LogInfo($"[HandleNewMenuItems] cMenuItem.SourceDish {{{menuItem.SourceDish}}}; dishData.ID {{{dishData.ID}}}; " +
-                    $"gMD.GDO.ID {{{genericMysteryDish?.GameDataObject.ID}}}; mDC.GDO.ID {{{mysteryDishCard?.GameDataObject.ID}}}");
                 int relevantSourceDishID = mysteryDishCard == default ? dishData.ID : mysteryDishCard.GameDataObject.ID;
-                if (menuItem.SourceDish != relevantSourceDishID)
+                Mod.Logger.LogInfo($"[HandleNewMenuItems] cMenuItem.SourceDish {{{menuItem.SourceDish}}}; cMenuItem.Item {{{menuItem.Item}}}; dishData.ID {{{dishData.ID}}}; " +
+                    $"gMD.GDO.ID {{{genericMysteryDish?.GameDataObject.ID}}}; mDC.GDO.ID {{{mysteryDishCard?.GameDataObject.ID}}}; gmd.UniqueNameID {{{genericMysteryDish?.UniqueNameID}}}");
+                if (menuItem.SourceDish != relevantSourceDishID || !genericMysteryDish.ResultingMenuItems.Any(rmi => rmi.Item.ID == menuItem.Item))
                 {
                     continue;
                 }
@@ -131,6 +131,9 @@ namespace KitchenMysteryMenu.Systems
                     // TODO: Handle case when Mystery Dish would be a duplicate of an existing Static/Dynamic Dish's CMenuItem (by removing the one with MysteryMenuItem.Type = Mystery).
                     // Point the CMenuItem's SourceDish to the MysteryDish's ID instead of its parent MysteryDishCard's ID
                     menuItem.SourceDish = genericMysteryDish.GameDataObject.ID;
+
+                    // Counteract HandleNewDish to make the weights more balanced when ordering since all menu items are bundled in large cards with this mod.
+                    menuItem.Weight = 1;
                     EntityManager.AddComponentData(entity, menuItem);
                 }
 
@@ -197,7 +200,51 @@ namespace KitchenMysteryMenu.Systems
 
         private void HandleNewExtras(Dish dishData, GenericMysteryDish genericMysteryDish, GenericMysteryDishCard genericMysteryDishCard)
         {
+            string soughtExtrasLog = "";
+            foreach (var ingredient in dishData.ExtraOrderUnlocks)
+            {
+                soughtExtrasLog += $"  {{MenuItem = {ingredient.MenuItem.ID}, Ingredient = {ingredient.Ingredient.ID}}}\n";
+            }
+            Mod.Logger.LogInfo($"Handling new menu extra; Looking for possible extras objects: [\n{soughtExtrasLog}]");
+            using var possibleExtrasEntities = NonHandledPossibleExtras.ToEntityArray(Allocator.Temp);
+            using var possibleExtras = NonHandledPossibleExtras.ToComponentDataArray<CPossibleExtra>(Allocator.Temp);
+            for (int i = 0; i < possibleExtrasEntities.Length; i++)
+            {
+                var entity = possibleExtrasEntities[i];
+                var possibleExtra = possibleExtras[i];
 
+                // Continue until we find the matching CAvailableIngredient. The relevant IngredientUnlock set will be a standard dish if non-mystery
+                //  or the MysteryDish's if it is mystery.
+                Mod.Logger.LogInfo($"[HandleNewMenuOptions] cPossibleExtra {{MenuItem = {possibleExtra.MenuItem}, Ingredient = {possibleExtra.Ingredient}}}");
+                HashSet<Dish.IngredientUnlock> relevantUISet = genericMysteryDish == default
+                    ? dishData.ExtraOrderUnlocks
+                    : genericMysteryDish.ExtraOrderUnlocks;
+                if (!relevantUISet.Any(ui => ui.MenuItem.ID == possibleExtra.MenuItem && ui.Ingredient.ID == possibleExtra.Ingredient))
+                {
+                    continue;
+                }
+
+                if (genericMysteryDish == default)
+                {
+                    // This is not a mystery dish, so give the entity the appropriate component to prevent it from showing up here again
+                    // TODO: do I want to actually add the recipe here..? Maybe worry about it when testing Autumn/Lake/Variety
+                    Mod.Logger.LogInfo("Option is *not* mystery; Adding CNonMysteryExtra");
+                    EntityManager.AddComponent<CNonMysteryExtra>(entity);
+                    break;
+                }
+
+                // This *is* a mystery dish option, so add the identifier component and the CMysteryMenuItem component so that we
+                //  know what ingredients will trigger this to be available.
+
+                Mod.Logger.LogInfo($"Creating CMysteryMenuItem and CMysteryMenuItemOption for entity {{Index = {entity.Index}}}");
+                EntityManager.AddComponentData(entity, new CMysteryMenuItem()
+                {
+                    Type = MysteryMenuType.Mystery,
+                    SourceMysteryDish = genericMysteryDish.GameDataObject.ID,
+                    HasBeenProvided = false
+                });
+                EntityManager.AddComponent<CMysteryMenuItemOption>(entity);
+            }
         }
     }
 }

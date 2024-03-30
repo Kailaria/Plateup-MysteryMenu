@@ -35,7 +35,7 @@ namespace KitchenMysteryMenu.Customs.Dishes.Breakfast
             {
                 Name = "Mystery - Breakfast",
                 Description = "Adds toast as a main when <b>Flour</b> is present",
-                FlavourText = "The most important meal of the day"
+                FlavourText = $"{References.DishCardDoNotAddFlavorText}"
             })
         };
 

@@ -35,8 +35,7 @@ namespace KitchenMysteryMenu.Customs.Dishes.Salad
             {
                 Name = "Mystery - Salad",
                 Description = "Adds salad as a main dish when <b>Lettuce</b> is present",
-                FlavourText = "No cooking, but lots of chopping!\n" +
-                            "Basic lettuce salads. If <b>Tomato</b> is present, serve salads with and without chopped tomato."
+                FlavourText = $"{References.DishCardDoNotAddFlavorText}"
             })
         };
         public override List<Dish.MenuItem> ResultingMenuItems => new()

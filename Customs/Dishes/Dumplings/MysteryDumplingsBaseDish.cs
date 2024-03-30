@@ -36,7 +36,7 @@ namespace KitchenMysteryMenu.Customs.Dishes.Dumplings
             {
                 Name = "Mystery - Dumplings",
                 Description = "Adds dumplings as a main when <b>Flour</b>, <b>Meat</b>, and <b>Carrots</b> are present",
-                FlavourText = ""
+                FlavourText = $"{References.DishCardDoNotAddFlavorText}"
             })
         };
 
