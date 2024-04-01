@@ -63,8 +63,12 @@ namespace KitchenMysteryMenu.Systems
             // algo 1: Determine existing, permanently available ingredients
             //      (ignore all possible Dynamic dishes; but this parenthetical should be handled already by HandleNewMysteryMenuDish)
             HashSet<Item> availableItemsForRecipes = FillAvailableItemsFromStaticProviders();
+            List<MysteryRecipeIngredientCounter> currentRecipes = new List<MysteryRecipeIngredientCounter>();
 
             // algo 2: Sort MysteryMenuItems by whether they've been provided or not
+            // algo 2.5: While sorting, work out which menu phases are possible and already being served.
+            Dictionary<MenuPhase, int> minimumIngredientsPerMenuPhase = new Dictionary<MenuPhase, int>();
+
             Mod.Logger.LogInfo($"{LogMsgPrefix} Sorting CMysteryMenuItem");
             List<MysteryRecipeIngredientCounter> olderMysteryMenuItemEntities = new List<MysteryRecipeIngredientCounter>();
             List<MysteryRecipeIngredientCounter> newerMysteryMenuItemEntities = new List<MysteryRecipeIngredientCounter>();
@@ -74,6 +78,12 @@ namespace KitchenMysteryMenu.Systems
                 {
                     (menuItemMysteryComps[i].HasBeenProvided ? olderMysteryMenuItemEntities : newerMysteryMenuItemEntities)
                         .Add(new MysteryRecipeIngredientCounter(menuItemEntities[i], menuItemItemComps[i], menuItemMysteryComps[i].SourceMysteryDish));
+                }
+                else
+                {
+                    // It's not a mystery menu item, so we'll assume its phase is always available since it presumably has static providers.
+                    currentRecipes.Add(new MysteryRecipeIngredientCounter(menuItemEntities[i], menuItemItemComps[i], menuItemMysteryComps[i].SourceMysteryDish));
+                    minimumIngredientsPerMenuPhase[menuItemItemComps[i].Phase] = 0;
                 }
             }
 
@@ -123,7 +133,6 @@ namespace KitchenMysteryMenu.Systems
 
             // algo 3: Begin selection & randomization loop until all Mystery Providers have been assigned
             int mysteryProviderIndex = 0;
-            List<MysteryRecipeIngredientCounter> currentRecipes = new List<MysteryRecipeIngredientCounter>();
             int failedAttempts = 0;
             int maxFailedAttempts = 3;
             while (mysteryProviderIndex < mysteryProviderEntities.Length)
@@ -289,7 +298,7 @@ namespace KitchenMysteryMenu.Systems
             // Only allow recipes that can be fulfilled with the remaining provider count AND either have their prerequisite met
             //  or have the ability to be selected if their prereq dish could be also selected.
             //  If these conditions are met, then consider the entity valid for weighting purposes.
-            var availableMenus = currentRecipes.Select(r => r.Recipe).ToList();
+            //TODO: weight by menu phase
             var allValidEntities = allCombinedEntities
                 .Where(e => e.CanBeSelected(numRemainingProviders) && (e.CanBeServed(currentRecipes) || e.CouldBeServed(numRemainingProviders, allCombinedEntities, currentRecipes)))
                 .ToList();
