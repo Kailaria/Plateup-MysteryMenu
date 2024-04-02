@@ -53,7 +53,8 @@ namespace KitchenMysteryMenu.Customs.Dishes.StirFry
         };
         public override HashSet<Item> MinimumRequiredMysteryIngredients => new HashSet<Item>()
         {
-            (Item) GDOUtils.GetExistingGDO(ItemReferences.BroccoliRaw)
+            (Item) GDOUtils.GetExistingGDO(ItemReferences.BroccoliRaw),
+            (Item) GDOUtils.GetExistingGDO(ItemReferences.Rice)
         };
         public override bool RequiresVariant => false;
         public override GenericMysteryDish BaseMysteryDish => (GenericMysteryDish) GDOUtils.GetCustomGameDataObject<MysteryStirFryBaseDish>();

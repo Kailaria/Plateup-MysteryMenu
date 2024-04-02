@@ -53,7 +53,8 @@ namespace KitchenMysteryMenu.Customs.Dishes.StirFry
         };
         public override HashSet<Item> MinimumRequiredMysteryIngredients => new HashSet<Item>()
         {
-            (Item) GDOUtils.GetExistingGDO(ItemReferences.BambooRaw)
+            (Item) GDOUtils.GetExistingGDO(ItemReferences.BambooRaw),
+            (Item) GDOUtils.GetExistingGDO(ItemReferences.Rice)
         };
     }
 }
