@@ -56,5 +56,6 @@ namespace KitchenMysteryMenu.Customs.Dishes.StirFry
             (Item) GDOUtils.GetExistingGDO(ItemReferences.Mushroom),
             (Item) GDOUtils.GetExistingGDO(ItemReferences.Rice)
         };
+        public override GenericMysteryDish BaseMysteryDish => (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryStirFryBaseDish>();
     }
 }

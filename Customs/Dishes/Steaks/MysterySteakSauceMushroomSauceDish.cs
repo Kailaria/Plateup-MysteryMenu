@@ -72,5 +72,7 @@ namespace KitchenMysteryMenu.Customs.Dishes.Steaks
         {
             GDOUtils.GetCastedGDO<Dish, MysteryMenuSaucesDish>()
         };
+        public override GenericMysteryDish BaseMysteryDish =>
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysterySteakBaseDish>();
     }
 }

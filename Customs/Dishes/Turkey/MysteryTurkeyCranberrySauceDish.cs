@@ -57,5 +57,6 @@ namespace KitchenMysteryMenu.Customs.Dishes.Turkey
         {
             GDOUtils.GetCastedGDO<Dish, MysteryMenuSaucesDish>()
         };
+        public override GenericMysteryDish BaseMysteryDish => (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryTurkeyBaseDish>();
     }
 }
