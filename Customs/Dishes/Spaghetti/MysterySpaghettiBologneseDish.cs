@@ -58,7 +58,7 @@ namespace KitchenMysteryMenu.Customs.Dishes.Spaghetti
         };
         public override List<Unlock> HardcodedRequirements => new()
         {
-            GDOUtils.GetCastedGDO<Dish, MysteryMenuSaucesDish>()
+            GDOUtils.GetCastedGDO<Dish, MysteryMenuSaucesSoupsDish>()
         };
     }
 }

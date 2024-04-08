@@ -48,7 +48,7 @@ namespace KitchenMysteryMenu.Customs.Dishes.StirFry
             new()
             {
                 MenuItem = (ItemGroup)GDOUtils.GetExistingGDO(ItemReferences.StirFryPlated),
-                Ingredient = (Item)GDOUtils.GetExistingGDO(ItemReferences.MeatChoppedContainerCooked)
+                Ingredient = (Item)GDOUtils.GetExistingGDO(ItemReferences.MushroomCookedWrapped)
             }
         };
         public override HashSet<Item> MinimumRequiredMysteryIngredients => new HashSet<Item>()

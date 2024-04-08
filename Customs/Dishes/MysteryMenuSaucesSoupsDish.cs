@@ -14,14 +14,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using KitchenMysteryMenu.Customs.Dishes.Starters;
 
 namespace KitchenMysteryMenu.Customs.Dishes
 {
-    public class MysteryMenuSaucesDish : GenericMysteryDishCard
+    public class MysteryMenuSaucesSoupsDish : GenericMysteryDishCard
     {
-        protected override string NameTag => "Sauces";
+        protected override string NameTag => "Sauces and Soups";
         public override DishType Type => DishType.Extra;
-        public override DishCustomerChange CustomerMultiplier => DishCustomerChange.SmallDecrease;
+        public override DishCustomerChange CustomerMultiplier => DishCustomerChange.LargeDecrease;
         public override Unlock.RewardLevel ExpReward => Unlock.RewardLevel.Medium;
         public override UnlockGroup UnlockGroup => UnlockGroup.Dish;
         public override bool IsUnlockable => true;
@@ -47,6 +48,8 @@ namespace KitchenMysteryMenu.Customs.Dishes
         public override HashSet<GenericMysteryDish> ContainedMysteryRecipes => new()
         {
             // Add the Mystery versions of every sauce
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryBroccoliCheeseSoupDish>(),
+
             (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysterySteakSauceMushroomSauceDish>(),
             (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysterySteakSauceRedWineJusDish>(),
 
@@ -68,7 +71,7 @@ namespace KitchenMysteryMenu.Customs.Dishes
         {
             (Locale.English, new UnlockInfo()
             {
-                Name = "Mystery - Sauces",
+                Name = "Mystery - Sauces & Soups",
                 Description = "Adds Mushroom Sauce and Red Wine Jus as possible Extras for Steaks, Gravy and Cranberry Sauce " +
                 "as possible Extras for Turkey, and Bolognese Sauce and Cheesy Spaghetti as alternative Mains with Spaghetti.\n" +
                 "Provides two additional Mystery Ingredient Providers.",

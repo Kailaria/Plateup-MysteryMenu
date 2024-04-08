@@ -369,15 +369,34 @@ namespace KitchenMysteryMenu.Systems
             // Only allow recipes that can be fulfilled with the remaining provider count AND either have their prerequisite met
             //  or have the ability to be selected if their prereq dish could be also selected.
             //  If these conditions are met, then consider the entity valid for weighting purposes.
-            //TODO: weight by menu phase
             var allValidEntities = allCombinedEntities
                 .Where(e => e.CanBeSelected(e.GetUsableProviderCount(minimumIngredientsPerMenuPhase)) && 
                     (e.CanBeServed(currentRecipes) || 
                         e.CouldBeServed(e.GetUsableProviderCount(minimumIngredientsPerMenuPhase), allCombinedEntities, currentRecipes)))
                 .ToList();
+
+            // Get the phases with the maximal amount of minimum ingredients to increase the odds of pulling in more menu phases than just
+            //  the one.
+            HashSet<MenuPhase> menuPhases = minimumIngredientsPerMenuPhase
+                .Where(kvp => kvp.Key != MenuPhase.Complete && kvp.Value > 0
+                    && kvp.Value == minimumIngredientsPerMenuPhase.Max(kvp => kvp.Value))
+                .Select(kvp => kvp.Key)
+                .ToHashSet();
+            List<MysteryRecipeIngredientCounter> idealPhaseValidEntities;
+            if (menuPhases.Count == 0)
+            {
+                idealPhaseValidEntities = allValidEntities;
+            }
+            else
+            {
+                idealPhaseValidEntities = allValidEntities
+                    .Where(e => menuPhases.Contains(e.GetMenuPhase()))
+                    .ToList();
+            }
+
             // [2024-03-27] Doing the ingredient-based weights ends up putting too much emphasis on large recipes like cheesy spaghetti.
             //      Gonna try just leaving it at recipe-based weighting, completely even, but maintain existing code
-            foreach (var validEntity in allValidEntities)
+            foreach (var validEntity in idealPhaseValidEntities)
             {
                 validEntity.Weight = 1;
             }
@@ -616,7 +635,7 @@ namespace KitchenMysteryMenu.Systems
                 {
                     availableProviderCount = availableProvidersPerPhase[MenuPhase.Complete];
                 }
-                else if (availableProvidersPerPhase[phase] != 0)
+                else if (availableProvidersPerPhase[phase] > 0)
                 {
                     availableProviderCount = availableProvidersPerPhase[phase] + availableProvidersPerPhase[MenuPhase.Complete];
                 }
@@ -837,7 +856,7 @@ namespace KitchenMysteryMenu.Systems
                 {
                     return MenuItem.Phase;
                 }
-                return Recipe.BaseMysteryDish.ResultingMenuItems.First().Phase;
+                return Recipe.MenuPhase;
             }
 
             public string TypeName => IsMenuItem() ? "MenuItem" 

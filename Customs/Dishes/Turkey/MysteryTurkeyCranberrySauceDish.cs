@@ -55,8 +55,9 @@ namespace KitchenMysteryMenu.Customs.Dishes.Turkey
         };
         public override List<Unlock> HardcodedRequirements => new()
         {
-            GDOUtils.GetCastedGDO<Dish, MysteryMenuSaucesDish>()
+            GDOUtils.GetCastedGDO<Dish, MysteryMenuSaucesSoupsDish>()
         };
         public override GenericMysteryDish BaseMysteryDish => (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryTurkeyBaseDish>();
+        public override MenuPhase MenuPhase => BaseMysteryDish.MenuPhase;
     }
 }
