@@ -59,7 +59,7 @@ namespace KitchenMysteryMenu.Customs.Dishes
         {
             { Locale.English, "<color=#00ffff>New possible menu items:</color> Thin-Cut Steak, Thick-Cut Steak, Bone-In Steak, " +
                 "Spiny Fish, Oysters, Fish Fillet, Crab Cakes, Steak Stir Fry\n" +
-                "Adds one extra Mystery Provider."
+                "Adds one extra Mystery Ingredient Provider."
             }
         };
         public override List<(Locale, UnlockInfo)> InfoList => new()

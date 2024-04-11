@@ -11,10 +11,10 @@ using System.Threading.Tasks;
 
 namespace KitchenMysteryMenu.Customs.Dishes.Starters
 {
-    public class MysteryBroccoliCheeseSoupDish : GenericMysteryDish
+    public class MysteryMeatSoupDish : GenericMysteryDish
     {
-        protected override string NameTag => "Broccoli Cheese Soup";
-        public override Dish OrigDish => (Dish)GDOUtils.GetExistingGDO(DishReferences.BroccoliCheeseSoup);
+        protected override string NameTag => "Meat Soup";
+        public override Dish OrigDish => (Dish)GDOUtils.GetExistingGDO(DishReferences.MeatSoup);
         public override DishType Type => DishType.Starter;
         public override DishCustomerChange CustomerMultiplier => DishCustomerChange.None;
         public override Unlock.RewardLevel ExpReward => Unlock.RewardLevel.None;
@@ -26,16 +26,16 @@ namespace KitchenMysteryMenu.Customs.Dishes.Starters
         public override Dictionary<Locale, string> Recipe => new()
         {
             { Locale.English,
-                "<color=yellow>Requires ingredients:</color> Onion, Cheese, Broccoli\n" +
-                "Put onion into a pot with water and boil to make broth. Combine broth with broccoli and" +
-                "cheese, then cook again. Portion to serve as a Starter." }
+                "<color=yellow>Requires ingredients:</color> Onion, Meat\n" +
+                "Put onion into a pot with water and boil to make broth. Combine broth with meat" +
+                "then cook again. Portion to serve as a Starter." }
         };
         public override List<(Locale, UnlockInfo)> InfoList => new()
         {
             (Locale.English, new UnlockInfo()
             {
-                Name = "Mystery - Starter - Broccoli Cheese Soup",
-                Description = "Adds broccoli cheese soup as a starter when onion, cheese, and broccoli are present",
+                Name = "Mystery - Starter - Meat Soup",
+                Description = "Adds meat soup as a starter when onion and meat are present",
                 FlavourText = $"{References.DishCardDoNotAddFlavorText}"
             })
         };
@@ -44,7 +44,7 @@ namespace KitchenMysteryMenu.Customs.Dishes.Starters
         {
             new()
             {
-                Item = (Item)GDOUtils.GetExistingGDO(ItemReferences.ServedSoupBroccoliCheese),
+                Item = (Item)GDOUtils.GetExistingGDO(ItemReferences.ServedSoupMeat),
                 Phase = MenuPhase.Starter,
                 Weight = 1
             }
@@ -52,8 +52,7 @@ namespace KitchenMysteryMenu.Customs.Dishes.Starters
         public override HashSet<Item> MinimumRequiredMysteryIngredients => new HashSet<Item>()
         {
             (Item) GDOUtils.GetExistingGDO(ItemReferences.Onion),
-            (Item) GDOUtils.GetExistingGDO(ItemReferences.BroccoliRaw),
-            (Item) GDOUtils.GetExistingGDO(ItemReferences.Cheese)
+            (Item) GDOUtils.GetExistingGDO(ItemReferences.Meat)
         };
         public override List<Unlock> HardcodedRequirements => new()
         {

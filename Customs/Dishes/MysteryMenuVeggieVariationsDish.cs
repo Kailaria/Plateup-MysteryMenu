@@ -66,7 +66,7 @@ namespace KitchenMysteryMenu.Customs.Dishes
         {
             { Locale.English, "<color=#00ffff>New possible menu items:</color> Apple Salad, Potato Salad, Mushroom Pie, " +
                 "Veggie Pie, Nut Roast, Onion Pizza, Mushroom Pizza, Bamboo Stir Fry, Mushroom Stir Fry\n" +
-                "Adds two extra Mystery Providers."
+                "Adds two extra Mystery Ingredient Providers."
             }
         };
         public override List<(Locale, UnlockInfo)> InfoList => new()

@@ -107,6 +107,9 @@ namespace KitchenMysteryMenu
 
             // Mystery Starters
             AddGameDataObject<MysteryBroccoliCheeseSoupDish>();
+            AddGameDataObject<MysteryCarrotSoupDish>();
+            AddGameDataObject<MysteryMeatSoupDish>();
+            AddGameDataObject<MysteryTomatoSoupDish>();
 
             // Mystery Breakfast Dishes
             AddGameDataObject<MysteryBreakfastBaseDish>();
