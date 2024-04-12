@@ -51,6 +51,7 @@ namespace KitchenMysteryMenu.Customs.Dishes
             (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryBroccoliCheeseSoupDish>(),
             (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryCarrotSoupDish>(),
             (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryMeatSoupDish>(),
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryPumpkinSoupDish>(),
             (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryTomatoSoupDish>(),
 
             (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysterySteakSauceMushroomSauceDish>(),
