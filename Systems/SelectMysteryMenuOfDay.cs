@@ -725,7 +725,11 @@ namespace KitchenMysteryMenu.Systems
                 // This is where we ensure that the parent recipes get added and accounted for
                 if (IsAvailableIngredient())
                 {
-                    int parentMissingIngredientSum = parentRecipes.SelectMany(r => r.MissingIngredients).ToHashSet().Count();
+                    // Only count ingredients that aren't in this recipe's missing ingredients to not double count, say, rice.
+                    HashSet<Item> parentMissingIngredients = parentRecipes.SelectMany(r => r.MissingIngredients)
+                        .Where(item => !MissingIngredients.Contains(item))
+                        .ToHashSet();
+                    int parentMissingIngredientSum = parentMissingIngredients.Count();
                     Mod.Logger.LogInfo($"{logKey} AvailableIngredient {{Recipe = {Recipe.UniqueNameID}, MenuItem = " +
                         $"{Recipe.IngredientsUnlocks.First(iu => iu.Ingredient.ID == DishOption.Ingredient && iu.MenuItem.ID == DishOption.MenuItem).MenuItem.name}," +
                         $" ParentRecipes = {parentRecipes}, ParentDistinctMissingIngredientSum = {parentMissingIngredientSum}}}");
@@ -734,7 +738,10 @@ namespace KitchenMysteryMenu.Systems
                 // Possible Extras always need their parent recipe to be "Could Be Served", and as such
                 if (IsPossibleExtra())
                 {
-                    int parentMissingIngredientSum = parentRecipes.SelectMany(r => r.MissingIngredients).ToHashSet().Count();
+                    HashSet<Item> parentMissingIngredients = parentRecipes.SelectMany(r => r.MissingIngredients)
+                        .Where(item => !MissingIngredients.Contains(item))
+                        .ToHashSet();
+                    int parentMissingIngredientSum = parentMissingIngredients.Count();
                     Mod.Logger.LogInfo($"{logKey} PossibleExtra {{Recipe = {Recipe.UniqueNameID}, MenuItem = " +
                         $"{Recipe.ExtraOrderUnlocks.First(iu => iu.Ingredient.ID == DishExtra.Ingredient && iu.MenuItem.ID == DishExtra.MenuItem).MenuItem.name}," +
                         $" ParentRecipes = {parentRecipes}, ParentDistinctMissingIngredientSum = {parentMissingIngredientSum}}}");
