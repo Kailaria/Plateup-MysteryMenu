@@ -9,13 +9,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KitchenMysteryMenu.Customs.Dishes.Starters
+namespace KitchenMysteryMenu.Customs.Dishes.Desserts
 {
-    public class MysteryPumpkinSoupDish : GenericMysteryDish
+    public class MysteryCheeseBoardDish : GenericMysteryDish
     {
-        protected override string NameTag => "Pumpkin Soup";
-        public override Dish OrigDish => (Dish)GDOUtils.GetExistingGDO(DishReferences.PumpkinSoup);
-        public override DishType Type => DishType.Starter;
+        protected override string NameTag => "Cheese Boards";
+        public override Dish OrigDish => (Dish)GDOUtils.GetExistingGDO(DishReferences.CheeseBoard);
+        public override DishType Type => DishType.Dessert;
         public override DishCustomerChange CustomerMultiplier => DishCustomerChange.None;
         public override Unlock.RewardLevel ExpReward => Unlock.RewardLevel.None;
         public override UnlockGroup UnlockGroup => UnlockGroup.Dish;
@@ -26,16 +26,17 @@ namespace KitchenMysteryMenu.Customs.Dishes.Starters
         public override Dictionary<Locale, string> Recipe => new()
         {
             { Locale.English,
-                "<color=yellow>Requires ingredients:</color> Onion, Pumpkin\n" +
-                "Put onion into a pot with water and boil to make broth. Portion to remove the seeds, then chop the hollow pumpkin. " +
-                "Combine broth with chopped pumpkin then cook again. Portion to serve as a Starter." }
+                "<color=yellow>Requires ingredients:</color> Serving Board, Cheese, Apple, Nuts\n" +
+                "Chop an apple. Place on a serving board with a wedge of cheese and some nuts, then " +
+                "serve as a dessert.\n" +
+                "Can be shared by up to two customers."}
         };
         public override List<(Locale, UnlockInfo)> InfoList => new()
         {
             (Locale.English, new UnlockInfo()
             {
-                Name = "Mystery - Starter - Pumpkin Soup",
-                Description = "Adds pumpkin soup as a starter when onion and pumpkins are present",
+                Name = "Mystery - Dessert - Cheese Board",
+                Description = "Adds cheese boards as a dessert when cheese, apples, and nuts are present",
                 FlavourText = $"{References.DishCardDoNotAddFlavorText}"
             })
         };
@@ -44,20 +45,21 @@ namespace KitchenMysteryMenu.Customs.Dishes.Starters
         {
             new()
             {
-                Item = (Item)GDOUtils.GetExistingGDO(ItemReferences.ServedSoupPumpkin),
-                Phase = MenuPhase.Starter,
+                Item = (Item)GDOUtils.GetExistingGDO(ItemGroupReferences.CheeseBoardServing),
+                Phase = MenuPhase.Dessert,
                 Weight = 1
             }
         };
         public override HashSet<Item> MinimumRequiredMysteryIngredients => new HashSet<Item>()
         {
-            (Item) GDOUtils.GetExistingGDO(ItemReferences.Onion),
-            (Item) GDOUtils.GetExistingGDO(ItemReferences.Pumpkin)
+            (Item) GDOUtils.GetExistingGDO(ItemReferences.Cheese),
+            (Item) GDOUtils.GetExistingGDO(ItemReferences.Apple),
+            (Item) GDOUtils.GetExistingGDO(ItemReferences.NutsIngredient)
         };
         public override List<Unlock> HardcodedRequirements => new()
         {
-            GDOUtils.GetCastedGDO<Dish, MysteryMenuSaucesSoupsDish>()
+            GDOUtils.GetCastedGDO<Dish, MysteryMenuBoardsTreatsDish>()
         };
-        public override MenuPhase MenuPhase => MenuPhase.Starter;
+        public override MenuPhase MenuPhase => MenuPhase.Dessert;
     }
 }

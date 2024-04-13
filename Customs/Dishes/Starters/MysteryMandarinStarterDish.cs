@@ -11,10 +11,10 @@ using System.Threading.Tasks;
 
 namespace KitchenMysteryMenu.Customs.Dishes.Starters
 {
-    public class MysteryPumpkinSoupDish : GenericMysteryDish
+    public class MysteryMandarinStarterDish : GenericMysteryDish
     {
-        protected override string NameTag => "Pumpkin Soup";
-        public override Dish OrigDish => (Dish)GDOUtils.GetExistingGDO(DishReferences.PumpkinSoup);
+        protected override string NameTag => "Mandarin";
+        public override Dish OrigDish => (Dish)GDOUtils.GetExistingGDO(DishReferences.Mandarin);
         public override DishType Type => DishType.Starter;
         public override DishCustomerChange CustomerMultiplier => DishCustomerChange.None;
         public override Unlock.RewardLevel ExpReward => Unlock.RewardLevel.None;
@@ -26,16 +26,15 @@ namespace KitchenMysteryMenu.Customs.Dishes.Starters
         public override Dictionary<Locale, string> Recipe => new()
         {
             { Locale.English,
-                "<color=yellow>Requires ingredients:</color> Onion, Pumpkin\n" +
-                "Put onion into a pot with water and boil to make broth. Portion to remove the seeds, then chop the hollow pumpkin. " +
-                "Combine broth with chopped pumpkin then cook again. Portion to serve as a Starter." }
+                "<color=yellow>Requires ingredients:</color> Mandarins\n" +
+                "Portion 2 or 4 slices of Mandarin as a Starter."}
         };
         public override List<(Locale, UnlockInfo)> InfoList => new()
         {
             (Locale.English, new UnlockInfo()
             {
-                Name = "Mystery - Starter - Pumpkin Soup",
-                Description = "Adds pumpkin soup as a starter when onion and pumpkins are present",
+                Name = "Mystery - Starter - Mandarins",
+                Description = "Adds mandarins as a starter when they are present",
                 FlavourText = $"{References.DishCardDoNotAddFlavorText}"
             })
         };
@@ -44,19 +43,24 @@ namespace KitchenMysteryMenu.Customs.Dishes.Starters
         {
             new()
             {
-                Item = (Item)GDOUtils.GetExistingGDO(ItemReferences.ServedSoupPumpkin),
+                Item = (Item)GDOUtils.GetExistingGDO(ItemReferences.MandarinSlices2Serving),
+                Phase = MenuPhase.Starter,
+                Weight = 1
+            },
+            new()
+            {
+                Item = (Item)GDOUtils.GetExistingGDO(ItemReferences.MandarinSlices4Serving),
                 Phase = MenuPhase.Starter,
                 Weight = 1
             }
         };
         public override HashSet<Item> MinimumRequiredMysteryIngredients => new HashSet<Item>()
         {
-            (Item) GDOUtils.GetExistingGDO(ItemReferences.Onion),
-            (Item) GDOUtils.GetExistingGDO(ItemReferences.Pumpkin)
+            (Item) GDOUtils.GetExistingGDO(ItemReferences.MandarinRaw)
         };
         public override List<Unlock> HardcodedRequirements => new()
         {
-            GDOUtils.GetCastedGDO<Dish, MysteryMenuSaucesSoupsDish>()
+            GDOUtils.GetCastedGDO<Dish, MysteryMenuBoardsTreatsDish>()
         };
         public override MenuPhase MenuPhase => MenuPhase.Starter;
     }
