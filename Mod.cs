@@ -13,6 +13,7 @@ using KitchenMysteryMenu.Customs.Dishes.HotDog;
 using KitchenMysteryMenu.Customs.Dishes.Pies;
 using KitchenMysteryMenu.Customs.Dishes.Pizza;
 using KitchenMysteryMenu.Customs.Dishes.Salad;
+using KitchenMysteryMenu.Customs.Dishes.Sides;
 using KitchenMysteryMenu.Customs.Dishes.Spaghetti;
 using KitchenMysteryMenu.Customs.Dishes.Starters;
 using KitchenMysteryMenu.Customs.Dishes.Steaks;
@@ -74,6 +75,7 @@ namespace KitchenMysteryMenu
             AddGameDataObject<MysteryIngredientProviderExtra5>();
             AddGameDataObject<MysteryIngredientProviderExtra6>();
             AddGameDataObject<MysteryIngredientProviderExtra7>();
+            AddGameDataObject<MysteryIngredientProviderSides>();
         }
 
         private void AddIngredientGDOs()
@@ -87,6 +89,7 @@ namespace KitchenMysteryMenu
             AddGameDataObject<MysteryMeat>();
             AddGameDataObject<MysteryMushroom>();
             AddGameDataObject<MysteryOnion>();
+            AddGameDataObject<MysteryPotato>();
             AddGameDataObject<MysterySoySauce>();
             AddGameDataObject<MysterySurfNTurf>();
             AddGameDataObject<MysteryWine>();
@@ -108,6 +111,7 @@ namespace KitchenMysteryMenu
             AddGameDataObject<MysteryMenuCarnivoreVariationsDish>();
             AddGameDataObject<MysteryMenuCondimentsDish>();
             AddGameDataObject<MysteryMenuSaucesSoupsDish>();
+            AddGameDataObject<MysteryMenuSidesDish>();
             AddGameDataObject<MysteryMenuToppingsDish>();
             AddGameDataObject<MysteryMenuVeggieVariationsDish>();
 
@@ -121,6 +125,15 @@ namespace KitchenMysteryMenu
             AddGameDataObject<MysteryPumpkinSeedDish>();
             AddGameDataObject<MysteryPumpkinSoupDish>();
             AddGameDataObject<MysteryTomatoSoupDish>();
+
+            // Mystery Sides
+            AddGameDataObject<MysterySideBambooDish>();
+            AddGameDataObject<MysterySideBroccoliDish>();
+            AddGameDataObject<MysterySideChipsDish>();
+            AddGameDataObject<MysterySideCornOnCobDish>();
+            AddGameDataObject<MysterySideMashedPotatoDish>();
+            AddGameDataObject<MysterySideOnionRingsDish>();
+            AddGameDataObject<MysterySideRoastPotatoDish>();
 
             // Mystery Desserts
             AddGameDataObject<MysteryCheeseBoardDish>();
