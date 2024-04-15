@@ -180,6 +180,9 @@ namespace KitchenMysteryMenu.Systems
                     }
                     var mysteryProviderCItemProvider = EntityManager.GetComponentData<CItemProvider>(mysteryProviderEntityList[mysteryProviderIndex]);
                     mysteryProviderCItemProvider.SetAsItem(ingredient.ID);
+                    mysteryProviderCItemProvider.PreventReturns = selectedRecipeList
+                        .Where(recipe => recipe.Recipe.MinimumRequiredMysteryIngredients.Contains(ingredient))
+                        .Any(recipe => recipe.Recipe.PreventIngredientReturns);
                     EntityManager.SetComponentData(mysteryProviderEntityList[mysteryProviderIndex], mysteryProviderCItemProvider);
                     availableItemsForRecipes.Add(ingredient);
                     mysteryProviderIndex++;

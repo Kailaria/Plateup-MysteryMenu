@@ -30,6 +30,7 @@ namespace KitchenMysteryMenu.Customs.Dishes
         public virtual bool RequiresVariant => false;
         public virtual GenericMysteryDish BaseMysteryDish => default;
         public virtual MenuPhase MenuPhase => MenuPhase.Main;
+        public virtual bool PreventIngredientReturns => false;
 
         public override void OnRegister(Dish gameDataObject)
         {

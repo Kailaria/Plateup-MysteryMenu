@@ -145,7 +145,6 @@ namespace KitchenMysteryMenu.Systems
                     Type = type,
                     HasBeenProvided = false
                 });
-                break;
             }
         }
 

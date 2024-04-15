@@ -58,5 +58,6 @@ namespace KitchenMysteryMenu.Customs.Dishes.Desserts
         };
         public override MenuPhase MenuPhase => MenuPhase.Dessert;
         public override GenericMysteryDish BaseMysteryDish => (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryIceCreamServingDish>();
+        public override bool PreventIngredientReturns => true;
     }
 }
