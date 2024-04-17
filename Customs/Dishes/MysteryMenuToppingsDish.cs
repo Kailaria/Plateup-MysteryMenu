@@ -27,7 +27,7 @@ namespace KitchenMysteryMenu.Customs.Dishes
     {
         protected override string NameTag => "Toppings";
         public override DishType Type => DishType.Extra;
-        public override DishCustomerChange CustomerMultiplier => DishCustomerChange.SmallDecrease;
+        public override DishCustomerChange CustomerMultiplier => DishCustomerChange.LargeDecrease;
         public override Unlock.RewardLevel ExpReward => Unlock.RewardLevel.Medium;
         public override UnlockGroup UnlockGroup => UnlockGroup.Dish;
         public override bool IsUnlockable => true;
