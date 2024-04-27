@@ -14,9 +14,9 @@ using UnityEngine;
 
 namespace KitchenMysteryMenu.Customs.Appliances
 {
-    public class MysteryCakePanProvider : CustomAppliance
+    public class MysteryTrayProviderCakes : CustomAppliance
     {
-        public override string UniqueNameID => "Mystery Cake Pan Provider";
+        public override string UniqueNameID => "Mystery Pastry Tray Provider";
         public override GameObject Prefab => ((Appliance) GDOUtils.GetExistingGDO(ApplianceReferences.SourceCookieTray)).Prefab;
         public override List<IApplianceProperty> Properties => new List<IApplianceProperty>()
         {
