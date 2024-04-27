@@ -20,12 +20,29 @@ namespace KitchenMysteryMenu.Utils
             ItemReferences.CookieTray,
             ItemReferences.BrownieTray,
             ItemReferences.DoughnutTray,
-            ItemReferences.BigCakeTin
+            ItemReferences.CupcakeTray,
+            ItemReferences.BigCakeTin,
+            References.LasagneTray
+        };
+
+        private static HashSet<int> Trays = new HashSet<int>()
+        {
+            ItemReferences.CookieTray,
+            ItemReferences.BrownieTray,
+            ItemReferences.CupcakeTray,
+            ItemReferences.DoughnutTray,
+            ItemReferences.BigCakeTin,
+            References.LasagneTray
         };
 
         public static bool IsLimitedContainer(int providedItem)
         {
             return ReusableItems.Contains(providedItem);
+        }
+
+        public static bool IsTray(int providedItem)
+        {
+            return Trays.Contains(providedItem);
         }
     }
 }

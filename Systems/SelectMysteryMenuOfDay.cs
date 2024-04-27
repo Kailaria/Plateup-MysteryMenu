@@ -124,17 +124,24 @@ namespace KitchenMysteryMenu.Systems
             //newerCombinedEntities.ShuffleInPlace(); // No longer shuffling since randomness will be determined by weight anyway.
 
             List<Entity> mysteryProviderEntityList = new List<Entity>();
+            List<Entity> mysteryTrayProviderEntityList = new List<Entity>();
             for (int j = 0; j < mysteryProviderEntities.Length; j++)
             {
                 if (mysteryProviderComps[j].Type == MysteryMenuType.Mystery)
                 {
                     mysteryProviderEntityList.Add(mysteryProviderEntities[j]);
                 }
+                else if (mysteryProviderComps[j].Type == MysteryMenuType.MysteryPan)
+                {
+                    mysteryTrayProviderEntityList.Add(mysteryProviderEntities[j]);
+                }
             }
             mysteryProviderEntityList.ShuffleInPlace();
+            mysteryTrayProviderEntityList.ShuffleInPlace();
 
             // algo 3: Begin selection & randomization loop until all Mystery Providers have been assigned
             int mysteryProviderIndex = 0;
+            int mysteryTrayProviderIndex = 0;
             int failedAttempts = 0;
             int maxFailedAttempts = 3;
             while (mysteryProviderIndex < mysteryProviderEntityList.Count)
@@ -148,6 +155,7 @@ namespace KitchenMysteryMenu.Systems
                 //      * Inverse is so that each *ingredient* has a total contributed weight of 1 across all recipes that utilize it
                 //      * Prioritize recipes that have not been provided (since that will generally cover ingredients, too, but not always)
                 int numRemainingProviders = mysteryProviderEntityList.Count - mysteryProviderIndex;
+                int numRemainingTrayProviders = mysteryTrayProviderEntityList.Count - mysteryTrayProviderIndex;
                 DetermineMenuPhaseIngredientMinimums(minimumIngredientsPerMenuPhase, currentRecipes, newerCombinedEntities, olderCombinedEntities, numRemainingProviders);
                 WeightRecipesByIngredientSum(currentRecipes, olderCombinedEntities, newerCombinedEntities, minimumIngredientsPerMenuPhase);
 
@@ -178,14 +186,34 @@ namespace KitchenMysteryMenu.Systems
                         // Don't re-add the ingredient if it's already there. 
                         continue;
                     }
-                    var mysteryProviderCItemProvider = EntityManager.GetComponentData<CItemProvider>(mysteryProviderEntityList[mysteryProviderIndex]);
-                    mysteryProviderCItemProvider.SetAsItem(ingredient.ID);
-                    mysteryProviderCItemProvider.PreventReturns = selectedRecipeList
-                        .Where(recipe => recipe.Recipe.MinimumRequiredMysteryIngredients.Contains(ingredient))
-                        .Any(recipe => recipe.Recipe.PreventIngredientReturns);
-                    EntityManager.SetComponentData(mysteryProviderEntityList[mysteryProviderIndex], mysteryProviderCItemProvider);
+                    if (MysteryDishUtils.IsTray(ingredient.ID))
+                    {
+                        if (mysteryTrayProviderIndex >= mysteryTrayProviderEntityList.Count)
+                        {
+                            throw new ArgumentOutOfRangeException($"{LogMsgPrefix} Mystery Tray Provider index out of bounds.");
+                        }
+                        var mysteryTrayProviderCItemProvider = 
+                            EntityManager.GetComponentData<CItemProvider>(mysteryTrayProviderEntityList[mysteryTrayProviderIndex]);
+                        mysteryTrayProviderCItemProvider.SetAsItem(ingredient.ID);
+                        mysteryTrayProviderCItemProvider.PreventReturns = true;
+                        mysteryTrayProviderCItemProvider.AutoPlaceOnHolder = true;
+                        mysteryTrayProviderCItemProvider.Available = 1;
+                        mysteryTrayProviderCItemProvider.Maximum = 1;
+                        EntityManager.SetComponentData(mysteryTrayProviderEntityList[mysteryTrayProviderIndex], mysteryTrayProviderCItemProvider);
+                        mysteryTrayProviderIndex++;
+                    }
+                    else
+                    {
+                        var mysteryProviderCItemProvider = 
+                            EntityManager.GetComponentData<CItemProvider>(mysteryProviderEntityList[mysteryProviderIndex]);
+                        mysteryProviderCItemProvider.SetAsItem(ingredient.ID);
+                        mysteryProviderCItemProvider.PreventReturns = selectedRecipeList
+                            .Where(recipe => recipe.Recipe.MinimumRequiredMysteryIngredients.Contains(ingredient))
+                            .Any(recipe => recipe.Recipe.PreventIngredientReturns);
+                        EntityManager.SetComponentData(mysteryProviderEntityList[mysteryProviderIndex], mysteryProviderCItemProvider);
+                        mysteryProviderIndex++;
+                    }
                     availableItemsForRecipes.Add(ingredient);
-                    mysteryProviderIndex++;
                 }
             }
 
@@ -224,7 +252,8 @@ namespace KitchenMysteryMenu.Systems
             List<MysteryRecipeIngredientCounter> currentRecipes,
             List<MysteryRecipeIngredientCounter> newerCombinedEntities,
             List<MysteryRecipeIngredientCounter> olderCombinedEntities,
-            int numRemainingProviders)
+            int numRemainingProviders,
+            int numRemainingTrayProviders)
         {
             // Use MenuPhase.Complete to hold the amount of floating providers after minimums are accounted for.
             // However, DON'T modify the actual amounts within the dictionary outside of this method. Only add the actual
