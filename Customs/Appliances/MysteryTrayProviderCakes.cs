@@ -16,15 +16,23 @@ namespace KitchenMysteryMenu.Customs.Appliances
 {
     public class MysteryTrayProviderCakes : CustomAppliance
     {
-        public override string UniqueNameID => "Mystery Pastry Tray Provider";
+        public override string UniqueNameID => "Mystery Tray Provider";
         public override GameObject Prefab => ((Appliance) GDOUtils.GetExistingGDO(ApplianceReferences.SourceCookieTray)).Prefab;
         public override List<IApplianceProperty> Properties => new List<IApplianceProperty>()
         {
             new CMysteryMenuProvider() {
-                Type = Utils.MysteryMenuType.MysteryPan
+                Type = Utils.MysteryMenuType.MysteryTray
+            },
+            new CItemProvider() {
+                ProvidedItem = 0,
+                Available = 0,
+                Maximum = 1,
+                PreventReturns = true
             },
             new CItemHolder()
         };
+        public override List<Appliance.ApplianceProcesses> Processes => 
+            ((Appliance) GDOUtils.GetExistingGDO(ApplianceReferences.SourceCookieTray)).Processes.ToList();
         public override bool IsNonInteractive => false;
         public override OccupancyLayer Layer => OccupancyLayer.Default;
         public override bool IsPurchasable => false;

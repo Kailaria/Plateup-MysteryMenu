@@ -9,12 +9,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KitchenMysteryMenu.Customs.Dishes.Cakes
+namespace KitchenMysteryMenu.Customs.Dishes.Coffee
 {
-    public class MysteryCakesCoffeeCookieDish : GenericMysteryDish
+    public class MysteryCoffeeIcedDish : GenericMysteryDish
     {
-        protected override string NameTag => "Cake - Coffee Cookies";
-        public override Dish OrigDish => (Dish)GDOUtils.GetExistingGDO(DishReferences.Cakes);
+        protected override string NameTag => "Coffee - Iced";
+        public override Dish OrigDish => (Dish)GDOUtils.GetExistingGDO(DishReferences.CoffeeIced);
         public override DishType Type => DishType.Dessert;
         public override DishCustomerChange CustomerMultiplier => DishCustomerChange.None;
         public override Unlock.RewardLevel ExpReward => Unlock.RewardLevel.None;
@@ -26,18 +26,17 @@ namespace KitchenMysteryMenu.Customs.Dishes.Cakes
         public override Dictionary<Locale, string> Recipe => new()
         {
             { Locale.English,
-                "<color=yellow>Requires ingredients:</color> Cookie Tray, Flour, Egg, Sugar, Coffee\n" +
-                $"Mix {References.ColorTextCakeBatter} in a mixing bowl. Brew a cup of coffee. Combine the coffee in the " +
-                "cake batter mixing bowl, and then pour into cookie tray. Cook the tray of cookies.\n" +
-                $"Portion up to 4 times and serve to customers ordering coffee flavour {References.PinkTintCakesText} for dessert."
-            }
+                "<color=yellow>Requires ingredients:</color> Coffee Cup, Ice\n" +
+                "Place a cup of coffee on a coffee machine to brew. Wait for Ice to build up in the Ice Dispenser. " +
+                "Place the cup of coffee on the dispenser and combine to make an Iced Coffee, then serve as a dessert.\n" +
+                $"Counts as a {References.ColorTextHotDrink}."}
         };
         public override List<(Locale, UnlockInfo)> InfoList => new()
         {
             (Locale.English, new UnlockInfo()
             {
-                Name = "Mystery - Cakes - Coffee Cookies",
-                Description = "Adds coffee cookies as a dessert when flour, egg, sugar, coffee, and a cookie tray are present",
+                Name = "Mystery - Iced Coffee",
+                Description = "Adds iced coffee as a dessert when coffee cups and ice are present",
                 FlavourText = $"{References.DishCardDoNotAddFlavorText}"
             })
         };
@@ -46,24 +45,20 @@ namespace KitchenMysteryMenu.Customs.Dishes.Cakes
         {
             new()
             {
-                Item = (Item)GDOUtils.GetExistingGDO(ItemReferences.CoffeeFlavour),
+                Item = (Item)GDOUtils.GetExistingGDO(ItemReferences.IcedCoffee),
                 Phase = MenuPhase.Dessert,
                 Weight = 1
             }
         };
         public override HashSet<Item> MinimumRequiredMysteryIngredients => new HashSet<Item>()
         {
-            (Item) GDOUtils.GetExistingGDO(ItemReferences.CookieTray),
-            (Item) GDOUtils.GetExistingGDO(ItemReferences.Flour),
-            (Item) GDOUtils.GetExistingGDO(ItemReferences.Sugar),
-            (Item) GDOUtils.GetExistingGDO(ItemReferences.Egg),
             (Item) GDOUtils.GetExistingGDO(ItemReferences.CoffeeCup)
         };
         public override List<Unlock> HardcodedRequirements => new()
         {
-            GDOUtils.GetCastedGDO<Dish, MysteryMenuCoffeeCakesPiesDish>()
+            GDOUtils.GetCastedGDO<Dish, MysteryMenuCoffeeCakeVarietyDish>()
         };
         public override MenuPhase MenuPhase => MenuPhase.Dessert;
-        public override bool HasTrayIngredient => true;
+        public override GenericMysteryDish BaseMysteryDish => (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryCoffeeBaseDish>();
     }
 }

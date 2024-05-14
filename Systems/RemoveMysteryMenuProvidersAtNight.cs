@@ -35,7 +35,8 @@ namespace KitchenMysteryMenu.Systems
 
             for (int i = 0; i < providerEntities.Length; i++)
             {
-                if (providerMysteryProviders[i].Type == MysteryMenuType.Mystery)
+                if (providerMysteryProviders[i].Type == MysteryMenuType.Mystery || 
+                    providerMysteryProviders[i].Type == MysteryMenuType.MysteryTray)
                 {
                     // This probably makes more sense when the prefab is set up properly. For now, just do it the same way.
                     var cItemProvider = providerItemProviders[i];
@@ -43,6 +44,10 @@ namespace KitchenMysteryMenu.Systems
                     // Issue #5: empty out the items from the providers so that they can't be used to determine what static ingredients
                     //      are available or not when new static dish cards are selected. Might want to revert it to the default instead?
                     cItemProvider.SetAsItem(0);
+                    if (providerMysteryProviders[i].Type == MysteryMenuType.MysteryTray)
+                    {
+                        cItemProvider.AutoPlaceOnHolder = false;
+                    }
                     EntityManager.SetComponentData(providerEntities[i], cItemProvider);
                 }
             }

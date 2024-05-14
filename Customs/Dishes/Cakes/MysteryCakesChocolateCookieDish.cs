@@ -11,9 +11,9 @@ using System.Threading.Tasks;
 
 namespace KitchenMysteryMenu.Customs.Dishes.Cakes
 {
-    public class MysteryCakesCoffeeCookieDish : GenericMysteryDish
+    public class MysteryCakesChocolateCookieDish : GenericMysteryDish
     {
-        protected override string NameTag => "Cake - Coffee Cookies";
+        protected override string NameTag => "Cake - Chocolate Cookies";
         public override Dish OrigDish => (Dish)GDOUtils.GetExistingGDO(DishReferences.Cakes);
         public override DishType Type => DishType.Dessert;
         public override DishCustomerChange CustomerMultiplier => DishCustomerChange.None;
@@ -26,18 +26,17 @@ namespace KitchenMysteryMenu.Customs.Dishes.Cakes
         public override Dictionary<Locale, string> Recipe => new()
         {
             { Locale.English,
-                "<color=yellow>Requires ingredients:</color> Cookie Tray, Flour, Egg, Sugar, Coffee\n" +
-                $"Mix {References.ColorTextCakeBatter} in a mixing bowl. Brew a cup of coffee. Combine the coffee in the " +
+                "<color=yellow>Requires ingredients:</color> Cookie Tray, Flour, Egg, Sugar, Chocolate\n" +
+                $"Mix {References.ColorTextCakeBatter} in a mixing bowl. Melt (cook) chocolate. Combine the chocolate in the " +
                 "cake batter mixing bowl, and then pour into cookie tray. Cook the tray of cookies.\n" +
-                $"Portion up to 4 times and serve to customers ordering coffee flavour {References.PinkTintCakesText} for dessert."
-            }
+                $"Portion up to 4 times and serve to customers ordering chocolate flavour {References.PinkTintCakesText} for dessert."}
         };
         public override List<(Locale, UnlockInfo)> InfoList => new()
         {
             (Locale.English, new UnlockInfo()
             {
-                Name = "Mystery - Cakes - Coffee Cookies",
-                Description = "Adds coffee cookies as a dessert when flour, egg, sugar, coffee, and a cookie tray are present",
+                Name = "Mystery - Cakes - Chocolate Cookies",
+                Description = "Adds chocolate cookies as a dessert when flour, egg, sugar, chocolate, and a cookie tray are present",
                 FlavourText = $"{References.DishCardDoNotAddFlavorText}"
             })
         };
@@ -46,7 +45,7 @@ namespace KitchenMysteryMenu.Customs.Dishes.Cakes
         {
             new()
             {
-                Item = (Item)GDOUtils.GetExistingGDO(ItemReferences.CoffeeFlavour),
+                Item = (Item)GDOUtils.GetExistingGDO(ItemReferences.ChocolateFlavour),
                 Phase = MenuPhase.Dessert,
                 Weight = 1
             }
@@ -57,13 +56,14 @@ namespace KitchenMysteryMenu.Customs.Dishes.Cakes
             (Item) GDOUtils.GetExistingGDO(ItemReferences.Flour),
             (Item) GDOUtils.GetExistingGDO(ItemReferences.Sugar),
             (Item) GDOUtils.GetExistingGDO(ItemReferences.Egg),
-            (Item) GDOUtils.GetExistingGDO(ItemReferences.CoffeeCup)
+            (Item) GDOUtils.GetExistingGDO(ItemReferences.Chocolate)
         };
         public override List<Unlock> HardcodedRequirements => new()
         {
-            GDOUtils.GetCastedGDO<Dish, MysteryMenuCoffeeCakesPiesDish>()
+            GDOUtils.GetCastedGDO<Dish, MysteryMenuCoffeeCakeVarietyDish>()
         };
         public override MenuPhase MenuPhase => MenuPhase.Dessert;
         public override bool HasTrayIngredient => true;
+        public override int BaseResultingItem => ItemReferences.Cookie;
     }
 }

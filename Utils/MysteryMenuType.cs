@@ -11,6 +11,6 @@ namespace KitchenMysteryMenu.Utils
         Static = 0,
         Fish = 1,
         Mystery = 2,
-        MysteryPan = 3
+        MysteryTray = 3
     }
 }

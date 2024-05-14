@@ -11,10 +11,10 @@ using System.Threading.Tasks;
 
 namespace KitchenMysteryMenu.Customs.Dishes.Cakes
 {
-    public class MysteryCakesCoffeeCookieDish : GenericMysteryDish
+    public class MysteryCakesCoffeeSpongeCakeDish : GenericMysteryDish
     {
-        protected override string NameTag => "Cake - Coffee Cookies";
-        public override Dish OrigDish => (Dish)GDOUtils.GetExistingGDO(DishReferences.Cakes);
+        protected override string NameTag => "Cake - Coffee Sponge Cake";
+        public override Dish OrigDish => (Dish)GDOUtils.GetExistingGDO(DishReferences.BigCake);
         public override DishType Type => DishType.Dessert;
         public override DishCustomerChange CustomerMultiplier => DishCustomerChange.None;
         public override Unlock.RewardLevel ExpReward => Unlock.RewardLevel.None;
@@ -26,18 +26,18 @@ namespace KitchenMysteryMenu.Customs.Dishes.Cakes
         public override Dictionary<Locale, string> Recipe => new()
         {
             { Locale.English,
-                "<color=yellow>Requires ingredients:</color> Cookie Tray, Flour, Egg, Sugar, Coffee\n" +
-                $"Mix {References.ColorTextCakeBatter} in a mixing bowl. Brew a cup of coffee. Combine the coffee in the " +
-                "cake batter mixing bowl, and then pour into cookie tray. Cook the tray of cookies.\n" +
-                $"Portion up to 4 times and serve to customers ordering coffee flavour {References.PinkTintCakesText} for dessert."
+                "<color=yellow>Requires ingredients:</color> Sponge Cake Tin (tray), Flour, Egg, Sugar, Milk, Coffee Cup\n" +
+                $"Mix {References.ColorTextCakeBatter} in a mixing bowl. Add milk to the Cake Batter, then pour into cake tin and cook the sponge cake.\n" +
+                "Brew a cup of coffee. Combine the baked cake with the cup of coffee. " +
+                $"Portion (up to 6 times) and serve to customers ordering coffee flavour {References.PinkTintCakesText} for dessert."
             }
         };
         public override List<(Locale, UnlockInfo)> InfoList => new()
         {
             (Locale.English, new UnlockInfo()
             {
-                Name = "Mystery - Cakes - Coffee Cookies",
-                Description = "Adds coffee cookies as a dessert when flour, egg, sugar, coffee, and a cookie tray are present",
+                Name = "Mystery - Cakes - Coffee Sponge Cake",
+                Description = "Adds coffee sponge cake as a dessert when flour, egg, sugar, milk, coffee, and a cake tin are present",
                 FlavourText = $"{References.DishCardDoNotAddFlavorText}"
             })
         };
@@ -53,10 +53,11 @@ namespace KitchenMysteryMenu.Customs.Dishes.Cakes
         };
         public override HashSet<Item> MinimumRequiredMysteryIngredients => new HashSet<Item>()
         {
-            (Item) GDOUtils.GetExistingGDO(ItemReferences.CookieTray),
+            (Item) GDOUtils.GetExistingGDO(ItemReferences.BigCakeTin),
             (Item) GDOUtils.GetExistingGDO(ItemReferences.Flour),
             (Item) GDOUtils.GetExistingGDO(ItemReferences.Sugar),
             (Item) GDOUtils.GetExistingGDO(ItemReferences.Egg),
+            (Item) GDOUtils.GetExistingGDO(ItemReferences.Milk),
             (Item) GDOUtils.GetExistingGDO(ItemReferences.CoffeeCup)
         };
         public override List<Unlock> HardcodedRequirements => new()

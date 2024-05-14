@@ -22,6 +22,7 @@ namespace KitchenMysteryMenu.Utils
             ItemReferences.DoughnutTray,
             ItemReferences.CupcakeTray,
             ItemReferences.BigCakeTin,
+            ItemReferences.ExtraCakeStand,
             References.LasagneTray
         };
 
@@ -32,6 +33,7 @@ namespace KitchenMysteryMenu.Utils
             ItemReferences.CupcakeTray,
             ItemReferences.DoughnutTray,
             ItemReferences.BigCakeTin,
+            ItemReferences.ExtraCakeStand,
             References.LasagneTray
         };
 
@@ -43,6 +45,27 @@ namespace KitchenMysteryMenu.Utils
         public static bool IsTray(int providedItem)
         {
             return Trays.Contains(providedItem);
+        }
+
+        public static string ColorizeSpriteTextToCake(string innerStr)
+        {
+            return ColorizeSpriteText(innerStr, References.ColorCakeHex, References.SpriteCakeTint1);
+        }
+
+        public static string ColorizeSpriteTextToHotDrink(string innerStr)
+        {
+            return ColorizeSpriteText(innerStr, References.ColorHotDrinkHex, References.SpriteFillCoffeeTint1);
+        }
+
+        public static string ColorizeSpriteText(string innerStr, string color, string spriteStrWithTint)
+        {
+            string spriteAndTextStr = $"{spriteStrWithTint}{innerStr}";
+            return $"{ColorizeText(spriteAndTextStr, color)}";
+        }
+
+        public static string ColorizeText(string innerStr, string color)
+        {
+            return $"<color={color}>{innerStr}</color>";
         }
     }
 }

@@ -80,7 +80,9 @@ namespace KitchenMysteryMenu.Systems
             Mod.Logger.LogInfo("Handling new menu item");
             using var nonHandledMenuItems = NonHandledMenuItems.ToEntityArray(Allocator.Temp);
             using var cMenuItems = NonHandledMenuItems.ToComponentDataArray<CMenuItem>(Allocator.Temp);
-            for (int i = 0; i < nonHandledMenuItems.Length; i++)
+            int matchCount = 0;
+            int matchMax = dishData.UnlocksMenuItems.Count;
+            for (int i = 0; i < nonHandledMenuItems.Length && matchCount < matchMax; i++)
             {
                 var entity = nonHandledMenuItems[i];
                 var menuItem = cMenuItems[i];
@@ -145,6 +147,7 @@ namespace KitchenMysteryMenu.Systems
                     Type = type,
                     HasBeenProvided = false
                 });
+                matchCount++;
             }
         }
 

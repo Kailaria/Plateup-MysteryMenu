@@ -12,10 +12,10 @@ using UnityEngine;
 
 namespace KitchenMysteryMenu.Customs.Ingredients
 {
-    public class MysteryCookieTray : GenericMysteryItem
+    public class MysteryTeapot : GenericMysteryItem
     {
-        public override Item ExistingGDO => (Item)GDOUtils.GetExistingGDO(ItemReferences.CookieTray);
-        protected override string NameTag => "Cookie Tray";
-        public override Appliance DedicatedProvider => GDOUtils.GetCastedGDO<Appliance, MysteryTrayProviderCakes>();
+        public override Item ExistingGDO => (Item)GDOUtils.GetExistingGDO(ItemReferences.TeaPot);
+        protected override string NameTag => "Mystery Teapot";
+        public override Appliance DedicatedProvider => GDOUtils.GetCastedGDO<Appliance, MysteryIngredientProviderCakes3>();
     }
 }

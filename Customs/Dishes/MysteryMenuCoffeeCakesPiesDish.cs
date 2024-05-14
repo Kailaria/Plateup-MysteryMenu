@@ -18,6 +18,7 @@ using KitchenMysteryMenu.Customs.Dishes.Starters;
 using KitchenMysteryMenu.Customs.Dishes.Desserts;
 using KitchenMysteryMenu.Customs.Appliances;
 using KitchenMysteryMenu.Customs.Dishes.Cakes;
+using KitchenMysteryMenu.Customs.Dishes.Coffee;
 
 namespace KitchenMysteryMenu.Customs.Dishes
 {
@@ -34,9 +35,9 @@ namespace KitchenMysteryMenu.Customs.Dishes
         public override int Difficulty => 3;
         public override HashSet<Item> MinimumIngredients => new()
         {
-            // Add X Mystery Ingredients (normally requires flour, egg, sugar, [flavor]; 
-            GDOUtils.GetCastedGDO<Item, MysteryIngredientProviderCakes>(),
-            GDOUtils.GetCastedGDO<Item, MysteryTrayProviderCakes>(),
+            // Add X Mystery Ingredients (normally requires at minimum: flour, egg, sugar, [flavor])
+            GDOUtils.GetCastedGDO<Item, MysterySugar>(),
+            GDOUtils.GetCastedGDO<Item, MysteryCookieTray>(),
             (Item)GDOUtils.GetExistingGDO(ItemReferences.CoffeeCup),
             (Item)GDOUtils.GetExistingGDO(ItemReferences.MixingBowlEmpty)
         };
@@ -49,14 +50,23 @@ namespace KitchenMysteryMenu.Customs.Dishes
         public override HashSet<GenericMysteryDish> ContainedMysteryRecipes => new()
         {
             // Add the Mystery versions of Coffee, Coffee-flavored cookies, cupcakes, and sponge cakes, and Pies
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryCakeBatterRecipe>(),
             (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryCakesCoffeeCookieDish>(),
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryCakesCoffeeCupcakeDish>(),
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryCakesCoffeeSpongeCakeDish>(),
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryCoffeeBaseDish>(),
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryCoffeeCakeStandDish>(),
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryApplePieDish>(),
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryCherryPieDish>(),
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryPumpkinPieDish>(),
         };
 
         public override Dictionary<Locale, string> Recipe => new()
         {
-            { Locale.English, "<color=#00ffff>New possible menu items:</color> <i>Desserts</i> - Cherry Pie, Apple Pie, Pumpkin Pie, Coffee\n" +
-                "<i>Cake flavour</i> - Coffee\n" +
-                "<i>Cake forms</i> - Cookies, Cupcakes, or Sponge Cake\n" +
+            { Locale.English, "<color=#00ffff>New possible menu items:</color> <i>Desserts</i> - Cherry Pie, Apple Pie, Pumpkin Pie\n" +
+                $"{References.ColorTextHotDrinks} - Coffee, Coffee - Cake Stand (extra)\n" +
+                $"{References.ColorTextCakeFlavour} - Coffee\n" +
+                $"{References.ColorTextCakeForms} - Cookies, Cupcakes, or Sponge Cake. (Also includes the base recipe of Cake Batter)\n" +
                 "Adds one extra Mystery Ingredient Provider and one Mystery Tray Provider."
             }
         };
@@ -65,8 +75,9 @@ namespace KitchenMysteryMenu.Customs.Dishes
             (Locale.English, new UnlockInfo()
             {
                 Name = "Mystery - Coffee Cakes & Pies",
-                Description = "Adds Cherry Pie, Apple Pie, Pumpkin Pie, and Coffee as possible desserts.\n" +
-                "Also adds Coffee as a possible <color=pink>Cake</color> flavour, with the ability to make either Cookies, Cupcakes, or Sponge Cake.\n" +
+                Description = "Adds Cherry Pie, Apple Pie, Pumpkin Pie, and Coffee as possible desserts, with Cake Stand as a " +
+                $"possible extra for any {References.SpriteFillCoffee} Hot Drink.\n" +
+                $"Also adds Coffee as a possible {References.SpriteCake} Cake flavour, with the ability to make either Cookies, Cupcakes, or Sponge Cake.\n" +
                 "Provides one additional Mystery Ingredient Provider and one Mystery Tray Provider.",
                 FlavourText = ""
             })

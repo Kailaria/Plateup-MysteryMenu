@@ -41,6 +41,11 @@ namespace KitchenMysteryMenu.Systems
 
         protected override void OnUpdate()
         {
+            CreateMysteryMenu();
+        }
+
+        public void CreateMysteryMenu()
+        {
             Mod.Logger.LogInfo($"{LogMsgPrefix} Begin start-of-day Update");
 
             // Borrowing a lot of code from SelectFishOfDay, but dish & menu selection will need to be vastly different
@@ -131,7 +136,7 @@ namespace KitchenMysteryMenu.Systems
                 {
                     mysteryProviderEntityList.Add(mysteryProviderEntities[j]);
                 }
-                else if (mysteryProviderComps[j].Type == MysteryMenuType.MysteryPan)
+                else if (mysteryProviderComps[j].Type == MysteryMenuType.MysteryTray)
                 {
                     mysteryTrayProviderEntityList.Add(mysteryProviderEntities[j]);
                 }
@@ -144,9 +149,10 @@ namespace KitchenMysteryMenu.Systems
             int mysteryTrayProviderIndex = 0;
             int failedAttempts = 0;
             int maxFailedAttempts = 3;
-            while (mysteryProviderIndex < mysteryProviderEntityList.Count)
+            while (mysteryProviderIndex < mysteryProviderEntityList.Count || mysteryTrayProviderIndex < mysteryTrayProviderEntityList.Count)
             {
-                Mod.Logger.LogInfo($"{LogMsgPrefix} Provider Loop - Provider index {mysteryProviderIndex} of {mysteryProviderEntities.Length}");
+                Mod.Logger.LogInfo($"{LogMsgPrefix} Provider Loop - Ingredient Provider index {mysteryProviderIndex} of {mysteryProviderEntityList.Count}; " +
+                    $"Tray Provider index {mysteryTrayProviderIndex} of {mysteryTrayProviderEntityList.Count}");
                 // algo 3a: Determine available Mystery MenuItem entities that are satisfied with all available ingredients (including those
                 //          provided by Mystery Providers)
                 AddRecipesToCurrent(currentRecipes, olderCombinedEntities, newerCombinedEntities, availableItemsForRecipes);
@@ -157,7 +163,7 @@ namespace KitchenMysteryMenu.Systems
                 int numRemainingProviders = mysteryProviderEntityList.Count - mysteryProviderIndex;
                 int numRemainingTrayProviders = mysteryTrayProviderEntityList.Count - mysteryTrayProviderIndex;
                 DetermineMenuPhaseIngredientMinimums(minimumIngredientsPerMenuPhase, currentRecipes, newerCombinedEntities, olderCombinedEntities, numRemainingProviders);
-                WeightRecipesByIngredientSum(currentRecipes, olderCombinedEntities, newerCombinedEntities, minimumIngredientsPerMenuPhase);
+                WeightRecipesByIngredientSum(currentRecipes, olderCombinedEntities, newerCombinedEntities, minimumIngredientsPerMenuPhase, numRemainingTrayProviders);
 
                 // algo 3c: Randomly select more recipes, one at a time, until the Mystery Providers have all been given their assignments for the day.
                 // algo 3d: Ensure that the only recipes that can be selected are those that require at most the number of available ingredient providers,
@@ -165,7 +171,7 @@ namespace KitchenMysteryMenu.Systems
                 //      * i.e. 2 available providers during a given randomization => only recipes that need 1-2 more ingredients to be valid
                 //      * Need to make sure to account for MenuItemTypes (TODO after the algo works for mains alone)
                 //      * Need to make sure to account for RequiresVariant/Parent ***HANDLED***
-                var selectedRecipeList = SelectRandomRecipe(currentRecipes, newerCombinedEntities, olderCombinedEntities, minimumIngredientsPerMenuPhase);
+                var selectedRecipeList = SelectRandomRecipe(currentRecipes, newerCombinedEntities, olderCombinedEntities, minimumIngredientsPerMenuPhase, numRemainingTrayProviders);
 
                 // algo 3e: Given the selected recipe(s), assign the ingredients to Mystery Providers that have not already been provided, whether randomly
                 //          or permanently, and add the new ingredients to the availableItemsForRecipes set.
@@ -195,10 +201,10 @@ namespace KitchenMysteryMenu.Systems
                         var mysteryTrayProviderCItemProvider = 
                             EntityManager.GetComponentData<CItemProvider>(mysteryTrayProviderEntityList[mysteryTrayProviderIndex]);
                         mysteryTrayProviderCItemProvider.SetAsItem(ingredient.ID);
+                        mysteryTrayProviderCItemProvider.Maximum = 1;
+                        mysteryTrayProviderCItemProvider.Available = 1;
                         mysteryTrayProviderCItemProvider.PreventReturns = true;
                         mysteryTrayProviderCItemProvider.AutoPlaceOnHolder = true;
-                        mysteryTrayProviderCItemProvider.Available = 1;
-                        mysteryTrayProviderCItemProvider.Maximum = 1;
                         EntityManager.SetComponentData(mysteryTrayProviderEntityList[mysteryTrayProviderIndex], mysteryTrayProviderCItemProvider);
                         mysteryTrayProviderIndex++;
                     }
@@ -252,8 +258,7 @@ namespace KitchenMysteryMenu.Systems
             List<MysteryRecipeIngredientCounter> currentRecipes,
             List<MysteryRecipeIngredientCounter> newerCombinedEntities,
             List<MysteryRecipeIngredientCounter> olderCombinedEntities,
-            int numRemainingProviders,
-            int numRemainingTrayProviders)
+            int numRemainingProviders)
         {
             // Use MenuPhase.Complete to hold the amount of floating providers after minimums are accounted for.
             // However, DON'T modify the actual amounts within the dictionary outside of this method. Only add the actual
@@ -283,10 +288,12 @@ namespace KitchenMysteryMenu.Systems
                 }
                 if (recipe.IsMenuItem())
                 {
+                    int missingTrayCount = recipe.MissingIngredients.Count(item => MysteryDishUtils.IsTray(item.ID));
+                    int missingIngredientCount = Math.Max(0, recipe.MissingIngredients.Count - missingTrayCount);
                     if (!minimumIngredientsPerMenuPhase.TryGetValue(recipe.MenuItem.Phase, out int currentMinimum) ||
-                         recipe.MissingIngredients.Count < currentMinimum)
+                         missingIngredientCount < currentMinimum)
                     {
-                        minimumIngredientsPerMenuPhase[recipe.MenuItem.Phase] = recipe.MissingIngredients.Count;
+                        minimumIngredientsPerMenuPhase[recipe.MenuItem.Phase] = missingIngredientCount;
                     }
                 }
                 else if (recipe.IsAvailableIngredient())
@@ -296,10 +303,12 @@ namespace KitchenMysteryMenu.Systems
                     var parentMenuItem = recipe.GetParentRecipes(combinedEntities).FirstOrDefault(r => r.IsMenuItem());
                     if (parentMenuItem != default && parentMenuItem.RequiresVariant)
                     {
+                        int missingTrayCount = recipe.MissingIngredients.Count(item => MysteryDishUtils.IsTray(item.ID));
+                        int missingIngredientCount = Math.Max(0, recipe.MissingIngredients.Count - missingTrayCount);
                         if (!minimumIngredientsPerMenuPhase.TryGetValue(parentMenuItem.MenuItem.Phase, out int currentMinimum) ||
-                            recipe.MissingIngredients.Count < currentMinimum)
+                            missingIngredientCount < currentMinimum)
                         {
-                            minimumIngredientsPerMenuPhase[parentMenuItem.MenuItem.Phase] = recipe.MissingIngredients.Count;
+                            minimumIngredientsPerMenuPhase[parentMenuItem.MenuItem.Phase] = missingIngredientCount;
                         }
                     }
                 }
@@ -384,7 +393,8 @@ namespace KitchenMysteryMenu.Systems
             List<MysteryRecipeIngredientCounter> currentRecipes,
             List<MysteryRecipeIngredientCounter> olderCombinedEntities,
             List<MysteryRecipeIngredientCounter> newerCombinedEntities,
-            Dictionary<MenuPhase, int> minimumIngredientsPerMenuPhase)
+            Dictionary<MenuPhase, int> minimumIngredientsPerMenuPhase,
+            int numRemainingTrayProviders)
         {
             Mod.Logger.LogInfo($"{LogMsgPrefix} Weighting Recipes by Ingredient-Sum");
 
@@ -402,9 +412,9 @@ namespace KitchenMysteryMenu.Systems
             //  or have the ability to be selected if their prereq dish could be also selected.
             //  If these conditions are met, then consider the entity valid for weighting purposes.
             var allValidEntities = allCombinedEntities
-                .Where(e => e.CanBeSelected(e.GetUsableProviderCount(minimumIngredientsPerMenuPhase)) && 
+                .Where(e => e.CanBeSelected(e.GetUsableProviderCount(minimumIngredientsPerMenuPhase), numRemainingTrayProviders) && 
                     (e.CanBeServed(currentRecipes) || 
-                        e.CouldBeServed(e.GetUsableProviderCount(minimumIngredientsPerMenuPhase), allCombinedEntities, currentRecipes)))
+                        e.CouldBeServed(e.GetUsableProviderCount(minimumIngredientsPerMenuPhase), numRemainingTrayProviders, allCombinedEntities, currentRecipes)))
                 .ToList();
 
             // Get the phases with the maximal amount of minimum ingredients to increase the odds of pulling in more menu phases than just
@@ -453,7 +463,8 @@ namespace KitchenMysteryMenu.Systems
             List<MysteryRecipeIngredientCounter> currentRecipes,
             List<MysteryRecipeIngredientCounter> newerCombinedEntities,
             List<MysteryRecipeIngredientCounter> olderCombinedEntities,
-            Dictionary<MenuPhase, int> minimumIngredientsPerMenuPhase)
+            Dictionary<MenuPhase, int> minimumIngredientsPerMenuPhase,
+            int numRemainingTrayProviders)
         {
             var methodPrefix = "SelectRandomRecipe()";
             Mod.Logger.LogInfo($"{LogMsgPrefix} Selecting a random recipe");
@@ -461,9 +472,9 @@ namespace KitchenMysteryMenu.Systems
             allCombinedEntities.AddRange(newerCombinedEntities);
             allCombinedEntities.AddRange(olderCombinedEntities);
             float totalNewWeight = newerCombinedEntities
-                .Where(e => e.CanBeSelected(e.GetUsableProviderCount(minimumIngredientsPerMenuPhase)) && 
+                .Where(e => e.CanBeSelected(e.GetUsableProviderCount(minimumIngredientsPerMenuPhase), numRemainingTrayProviders) && 
                         (e.CanBeServed(currentRecipes) || 
-                            e.CouldBeServed(e.GetUsableProviderCount(minimumIngredientsPerMenuPhase), allCombinedEntities, currentRecipes)))
+                            e.CouldBeServed(e.GetUsableProviderCount(minimumIngredientsPerMenuPhase), numRemainingTrayProviders, allCombinedEntities, currentRecipes)))
                 .Sum(e => e.Weight);
             float randomNew = UnityEngine.Random.Range(0f, totalNewWeight);
             float currentNew = 0f;
@@ -481,7 +492,7 @@ namespace KitchenMysteryMenu.Systems
                 {
                     Mod.Logger.LogInfo($"{LogMsgPrefix} Found a newer recipe! Name = {{{recipe.Recipe.UniqueNameID}}}; " +
                         $"missingIngredients: {{{recipe.MissingIngredients.Count}}}");
-                    if (recipe.CanBeSelected(numRemainingProviders))
+                    if (recipe.CanBeSelected(numRemainingProviders, numRemainingTrayProviders))
                     {
                         if (recipe.CanBeServed(currentRecipes))
                         {
@@ -490,7 +501,7 @@ namespace KitchenMysteryMenu.Systems
                             found = true;
                             break;
                         }
-                        if (recipe.CouldBeServed(numRemainingProviders, allCombinedEntities, currentRecipes, out var parentRecipes))
+                        if (recipe.CouldBeServed(numRemainingProviders, numRemainingTrayProviders, allCombinedEntities, currentRecipes, out var parentRecipes))
                         {
                             Mod.Logger.LogInfo($"{LogMsgPrefix} {methodPrefix} - It can be selected and served with {{count = {parentRecipes.Count()}}} parent recipes!");
                             recipeList.Add(recipe);
@@ -515,9 +526,9 @@ namespace KitchenMysteryMenu.Systems
             }
 
             float totalOldWeight = olderCombinedEntities
-                .Where(e => e.CanBeSelected(e.GetUsableProviderCount(minimumIngredientsPerMenuPhase)) &&
+                .Where(e => e.CanBeSelected(e.GetUsableProviderCount(minimumIngredientsPerMenuPhase), numRemainingTrayProviders) &&
                     (e.CanBeServed(currentRecipes) || 
-                        e.CouldBeServed(e.GetUsableProviderCount(minimumIngredientsPerMenuPhase), allCombinedEntities, currentRecipes)))
+                        e.CouldBeServed(e.GetUsableProviderCount(minimumIngredientsPerMenuPhase), numRemainingTrayProviders, allCombinedEntities, currentRecipes)))
                 .Sum(e => e.Weight);
             float randomOld = UnityEngine.Random.Range(0f, totalOldWeight);
             float currentOld = 0f;
@@ -534,7 +545,7 @@ namespace KitchenMysteryMenu.Systems
                 {
                     Mod.Logger.LogInfo($"{LogMsgPrefix} Found an older recipe! Name = {{{recipe.Recipe.UniqueNameID}}}; " +
                         $"missingIngredients: {{{recipe.MissingIngredients.Count}}}");
-                    if (recipe.CanBeSelected(numRemainingProviders))
+                    if (recipe.CanBeSelected(numRemainingProviders, numRemainingTrayProviders))
                     {
                         if (recipe.CanBeServed(currentRecipes))
                         {
@@ -543,7 +554,7 @@ namespace KitchenMysteryMenu.Systems
                             found = true;
                             break;
                         }
-                        if (recipe.CouldBeServed(numRemainingProviders, allCombinedEntities, currentRecipes, out var parentRecipes))
+                        if (recipe.CouldBeServed(numRemainingProviders, numRemainingTrayProviders, allCombinedEntities, currentRecipes, out var parentRecipes))
                         {
                             Mod.Logger.LogInfo($"{LogMsgPrefix} {methodPrefix} - It can be selected and served with {{count = {parentRecipes.Count()}}} parent recipes!");
                             recipeList.Add(recipe);
@@ -676,9 +687,23 @@ namespace KitchenMysteryMenu.Systems
 
             public bool CanBeSelected(int availableProviderCount)
             {
-                Mod.Logger.LogInfo($"[MRIC.CanBeSelected()] Recipe = {{{Recipe.UniqueNameID}}}, " +
+                Mod.Logger.LogInfo($"[MRIC.CanBeSelected(int)] Recipe = {{{Recipe.UniqueNameID}}}, " +
                     $"MissingIngredientCount = {{{MissingIngredients.Count}}}, Available Providers = {{{availableProviderCount}}}");
                 return MissingIngredients.Count <= availableProviderCount;
+            }
+
+            public bool CanBeSelected(int availableIngredientProviderCount, int availableTrayProviderCount)
+            {
+                if (Recipe.HasTrayIngredient)
+                {
+                    int missingTrayCount = MissingIngredients.Count(item => MysteryDishUtils.IsTray(item.ID));
+                    Mod.Logger.LogInfo($"[MRIC.CanBeSelected(int, int)] Recipe = {{{Recipe.UniqueNameID}}}, " +
+                        $"MissingIngredientCount = {{{MissingIngredients.Count - missingTrayCount}}}, Available Ingredient Providers = {{{availableIngredientProviderCount}}}, " +
+                        $"Missing Tray Count = {{{missingTrayCount}}}, Available Tray Providers = {{{availableTrayProviderCount}}}");
+                    return (MissingIngredients.Count - missingTrayCount) <= availableIngredientProviderCount &&
+                        missingTrayCount <= availableTrayProviderCount;
+                }
+                return CanBeSelected(availableIngredientProviderCount);
             }
 
             /**
@@ -721,12 +746,12 @@ namespace KitchenMysteryMenu.Systems
              * When the Recipe can't be served with *only* the current recipes, check to see if it *could* be served if non-current prerequisite recipes 
              *  can *also* be selected as a group.
              */
-            public bool CouldBeServed(int availableProviderCount, IEnumerable<MysteryRecipeIngredientCounter> nonCurrentRecipes, IEnumerable<MysteryRecipeIngredientCounter> currentRecipes)
+            public bool CouldBeServed(int availableIngredientProviderCount, int availableTrayProviderCount, IEnumerable<MysteryRecipeIngredientCounter> nonCurrentRecipes, IEnumerable<MysteryRecipeIngredientCounter> currentRecipes)
             {
-                return CouldBeServed(availableProviderCount, nonCurrentRecipes, currentRecipes, out _);
+                return CouldBeServed(availableIngredientProviderCount, availableTrayProviderCount, nonCurrentRecipes, currentRecipes, out _);
             }
 
-            public bool CouldBeServed(int availableProviderCount, IEnumerable<MysteryRecipeIngredientCounter> nonCurrentRecipes, IEnumerable<MysteryRecipeIngredientCounter> currentRecipes, out List<MysteryRecipeIngredientCounter> parentRecipes)
+            public bool CouldBeServed(int availableIngredientProviderCount, int availableTrayProviderCount, IEnumerable<MysteryRecipeIngredientCounter> nonCurrentRecipes, IEnumerable<MysteryRecipeIngredientCounter> currentRecipes, out List<MysteryRecipeIngredientCounter> parentRecipes)
             {
                 var logKey = "[MRIC.CouldBeServed()]";
                 var allUnlockedRecipes = nonCurrentRecipes.Concat(currentRecipes);
@@ -752,7 +777,7 @@ namespace KitchenMysteryMenu.Systems
                 if (IsMenuItem())
                 {
                     Mod.Logger.LogInfo($"{logKey} MenuItem {{{Recipe.UniqueNameID}}} - ");
-                    return CanBeSelected(availableProviderCount);
+                    return CanBeSelected(availableIngredientProviderCount, availableTrayProviderCount);
                 }
                 // This is where we ensure that the parent recipes get added and accounted for
                 if (IsAvailableIngredient())
@@ -765,7 +790,7 @@ namespace KitchenMysteryMenu.Systems
                     Mod.Logger.LogInfo($"{logKey} AvailableIngredient {{Recipe = {Recipe.UniqueNameID}, MenuItem = " +
                         $"{Recipe.IngredientsUnlocks.First(iu => iu.Ingredient.ID == DishOption.Ingredient && iu.MenuItem.ID == DishOption.MenuItem).MenuItem.name}," +
                         $" ParentRecipes = {parentRecipes}, ParentDistinctMissingIngredientSum = {parentMissingIngredientSum}}}");
-                    return CanBeSelected(availableProviderCount - parentMissingIngredientSum);
+                    return CanBeSelected(availableIngredientProviderCount - parentMissingIngredientSum, availableTrayProviderCount);
                 }
                 // Possible Extras always need their parent recipe to be "Could Be Served", and as such
                 if (IsPossibleExtra())
@@ -777,7 +802,7 @@ namespace KitchenMysteryMenu.Systems
                     Mod.Logger.LogInfo($"{logKey} PossibleExtra {{Recipe = {Recipe.UniqueNameID}, MenuItem = " +
                         $"{Recipe.ExtraOrderUnlocks.First(iu => iu.Ingredient.ID == DishExtra.Ingredient && iu.MenuItem.ID == DishExtra.MenuItem).MenuItem.name}," +
                         $" ParentRecipes = {parentRecipes}, ParentDistinctMissingIngredientSum = {parentMissingIngredientSum}}}");
-                    return CanBeSelected(availableProviderCount - parentMissingIngredientSum);
+                    return CanBeSelected(availableIngredientProviderCount - parentMissingIngredientSum, availableTrayProviderCount);
                 }
                 Mod.Logger.LogInfo($"{logKey} Recipe {{{Recipe.UniqueNameID}}} could not be served. It's not a menu item or available ingredient.");
                 return false;
