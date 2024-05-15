@@ -70,7 +70,7 @@ namespace KitchenMysteryMenu.Customs.Dishes.Steaks
         };
         public override List<Unlock> HardcodedRequirements => new()
         {
-            GDOUtils.GetCastedGDO<Dish, MysteryMenuSaucesDish>()
+            GDOUtils.GetCastedGDO<Dish, MysteryMenuSaucesSoupsDish>()
         };
     }
 }

@@ -55,5 +55,6 @@ namespace KitchenMysteryMenu.Customs.Dishes.Dumplings
         {
             GDOUtils.GetCastedGDO<Dish, MysteryMenuCondimentsDish>()
         };
+        public override GenericMysteryDish BaseMysteryDish => (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryDumplingsBaseDish>();
     }
 }

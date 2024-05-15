@@ -28,7 +28,11 @@ namespace KitchenMysteryMenu.Customs.Dishes
          *   like Pies and Stir Fry to ensure that their normal bases aren't needed to be available in order to be served.
          */
         public virtual bool RequiresVariant => false;
+        public virtual bool HasTrayIngredient => false;
         public virtual GenericMysteryDish BaseMysteryDish => default;
+        public virtual int BaseResultingItem => 0;
+        public virtual MenuPhase MenuPhase => MenuPhase.Main;
+        public virtual bool PreventIngredientReturns => false;
 
         public override void OnRegister(Dish gameDataObject)
         {

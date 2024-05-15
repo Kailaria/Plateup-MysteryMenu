@@ -10,6 +10,7 @@ namespace KitchenMysteryMenu.Utils
     {
         Static = 0,
         Fish = 1,
-        Mystery = 2
+        Mystery = 2,
+        MysteryTray = 3
     }
 }

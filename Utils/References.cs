@@ -17,6 +17,25 @@ namespace KitchenMysteryMenu.Utils
 
         public static string DishCardDoNotAddFlavorText = "(alsoAddsRecipes card, do not add with Cards Manager)";
 
+        // Sprites, colors, and colorized text
+        public static string SpriteCake = "<sprite name=\"cake\">";//"<nobr><space=-0.2em><sprite name=\"cake\" tint=1>Cake</nobr>";
+        public static string SpriteCakeTint1 = "<sprite name=\"cake\" tint=1>";
+        public static string SpriteFillCoffee = "<sprite name=\"fill_coffee\">";
+        public static string SpriteFillCoffeeTint1 = "<sprite name=\"fill_coffee\" tint=1>";
+
+        public static string ColorCakeHex = "#F376D4"; // OFFICIAL FROM DATA
+        public static string ColorHotDrinkHex = "#B8802F"; // Specific to this mod
+
+        public static string PinkTintCakeText = "$cake$";
+        public static string PinkTintCakesText = "$cakes$";
+        public static string ColorTextCakeBatter = MysteryDishUtils.ColorizeSpriteTextToCake("Cake Batter");
+        public static string ColorTextCakeFlavour = MysteryDishUtils.ColorizeSpriteTextToCake("Cake Flavour");
+        public static string ColorTextCakeFlavours = MysteryDishUtils.ColorizeSpriteTextToCake("Cake Flavours");
+        public static string ColorTextCakeForm = MysteryDishUtils.ColorizeSpriteTextToCake("Cake Form");
+        public static string ColorTextCakeForms = MysteryDishUtils.ColorizeSpriteTextToCake("Cake Forms");
+        public static string ColorTextHotDrink = MysteryDishUtils.ColorizeSpriteTextToHotDrink("Hot Drink");
+        public static string ColorTextHotDrinks = MysteryDishUtils.ColorizeSpriteTextToHotDrink("Hot Drinks");
+
         // Temporary until KitchenLib updates w/ Spaghetti
         public static int SpaghettiBaseDish = 1764920765;
         public static int SpaghettiBologneseDish = -1501485763;

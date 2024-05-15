@@ -55,5 +55,6 @@ namespace KitchenMysteryMenu.Customs.Dishes.Burger
         {
             GDOUtils.GetCastedGDO<Dish, MysteryMenuToppingsDish>()
         };
+        public override GenericMysteryDish BaseMysteryDish => (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryBurgerBaseDish>();
     }
 }

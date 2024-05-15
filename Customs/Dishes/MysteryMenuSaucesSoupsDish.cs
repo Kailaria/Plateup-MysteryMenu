@@ -14,14 +14,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using KitchenMysteryMenu.Customs.Dishes.Starters;
 
 namespace KitchenMysteryMenu.Customs.Dishes
 {
-    public class MysteryMenuSaucesDish : GenericMysteryDishCard
+    public class MysteryMenuSaucesSoupsDish : GenericMysteryDishCard
     {
-        protected override string NameTag => "Sauces";
+        protected override string NameTag => "Sauces and Soups";
         public override DishType Type => DishType.Extra;
-        public override DishCustomerChange CustomerMultiplier => DishCustomerChange.SmallDecrease;
+        public override DishCustomerChange CustomerMultiplier => DishCustomerChange.LargeDecrease;
         public override Unlock.RewardLevel ExpReward => Unlock.RewardLevel.Medium;
         public override UnlockGroup UnlockGroup => UnlockGroup.Dish;
         public override bool IsUnlockable => true;
@@ -47,6 +48,12 @@ namespace KitchenMysteryMenu.Customs.Dishes
         public override HashSet<GenericMysteryDish> ContainedMysteryRecipes => new()
         {
             // Add the Mystery versions of every sauce
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryBroccoliCheeseSoupDish>(),
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryCarrotSoupDish>(),
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryMeatSoupDish>(),
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryPumpkinSoupDish>(),
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryTomatoSoupDish>(),
+
             (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysterySteakSauceMushroomSauceDish>(),
             (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysterySteakSauceRedWineJusDish>(),
 
@@ -61,16 +68,18 @@ namespace KitchenMysteryMenu.Customs.Dishes
         {
             { Locale.English, "<color=#00ffff>New possible menu items:</color>  <i>Any Steak</i> - Mushroom Sauce" +
                 ", Red Wine Jus;  <i>Turkey</i> - Gravy, Cranberry Sauce;  <i>Spaghetti</i> - Bolognese, Cheesy Spaghetti\n" +
-                "Adds two extra Mystery Providers."
+                "<i>Starters</i> - Broccoli Cheese Soup, Carrot Soup, Meat Soup, Tomato Soup\n" +
+                "Adds two extra Mystery Ingredient Providers."
             }
         };
         public override List<(Locale, UnlockInfo)> InfoList => new()
         {
             (Locale.English, new UnlockInfo()
             {
-                Name = "Mystery - Sauces",
+                Name = "Mystery - Sauces & Soups",
                 Description = "Adds Mushroom Sauce and Red Wine Jus as possible Extras for Steaks, Gravy and Cranberry Sauce " +
                 "as possible Extras for Turkey, and Bolognese Sauce and Cheesy Spaghetti as alternative Mains with Spaghetti.\n" +
+                "Also adds Broccoli Cheese Soup, Carrot Soup, Meat Soup, and Tomato Soup as possible starters.\n" +
                 "Provides two additional Mystery Ingredient Providers.",
                 FlavourText = ""
             })

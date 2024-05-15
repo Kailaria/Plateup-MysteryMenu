@@ -21,7 +21,7 @@ namespace KitchenMysteryMenu.Customs.Dishes
     {
         protected override string NameTag => "Carnivorous Variety";
         public override DishType Type => DishType.Main;
-        public override DishCustomerChange CustomerMultiplier => DishCustomerChange.SmallDecrease;
+        public override DishCustomerChange CustomerMultiplier => DishCustomerChange.LargeDecrease;
         public override Unlock.RewardLevel ExpReward => Unlock.RewardLevel.Medium;
         public override UnlockGroup UnlockGroup => UnlockGroup.Dish;
         public override bool IsUnlockable => true;
@@ -59,7 +59,7 @@ namespace KitchenMysteryMenu.Customs.Dishes
         {
             { Locale.English, "<color=#00ffff>New possible menu items:</color> Thin-Cut Steak, Thick-Cut Steak, Bone-In Steak, " +
                 "Spiny Fish, Oysters, Fish Fillet, Crab Cakes, Steak Stir Fry\n" +
-                "Adds one extra Mystery Provider."
+                "Adds one extra Mystery Ingredient Provider."
             }
         };
         public override List<(Locale, UnlockInfo)> InfoList => new()

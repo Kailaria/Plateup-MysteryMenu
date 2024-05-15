@@ -27,7 +27,7 @@ namespace KitchenMysteryMenu.Customs.Dishes
     {
         protected override string NameTag => "Toppings";
         public override DishType Type => DishType.Extra;
-        public override DishCustomerChange CustomerMultiplier => DishCustomerChange.SmallDecrease;
+        public override DishCustomerChange CustomerMultiplier => DishCustomerChange.LargeDecrease;
         public override Unlock.RewardLevel ExpReward => Unlock.RewardLevel.Medium;
         public override UnlockGroup UnlockGroup => UnlockGroup.Dish;
         public override bool IsUnlockable => true;
@@ -74,7 +74,7 @@ namespace KitchenMysteryMenu.Customs.Dishes
         {
             { Locale.English, "<color=#00ffff>New possible menu items:</color> Breakfast - Beans, Eggs, Tomato, Mushroom;" +
                 " Burger - Cheese, Tomato, Onion; Dumplings - Seaweed; Salad - Onion, Olives; Turkey - Stuffing\n" +
-                "Adds one extra Mystery Provider."
+                "Adds one extra Mystery Ingredient Provider."
             }
         };
         public override List<(Locale, UnlockInfo)> InfoList => new()
