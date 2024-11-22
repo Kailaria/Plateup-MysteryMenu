@@ -14,6 +14,7 @@ using KitchenMysteryMenu.Customs.Dishes.Salad;
 using KitchenMysteryMenu.Customs.Dishes.Spaghetti;
 using KitchenMysteryMenu.Customs.Dishes.Steaks;
 using KitchenMysteryMenu.Customs.Dishes.StirFry;
+using KitchenMysteryMenu.Customs.Dishes.Tacos;
 using KitchenMysteryMenu.Customs.Dishes.Turkey;
 using KitchenMysteryMenu.Customs.Ingredients;
 using KitchenMysteryMenu.Utils;
@@ -59,7 +60,8 @@ namespace KitchenMysteryMenu.Customs.Dishes
             GDOUtils.GetCastedGDO<Item, MysteryFlour>(),
             (Item)GDOUtils.GetExistingGDO(ItemReferences.Plate),
             (Item)GDOUtils.GetExistingGDO(ItemReferences.Wok),
-            (Item)GDOUtils.GetExistingGDO(ItemReferences.Pot)
+            (Item)GDOUtils.GetExistingGDO(ItemReferences.Pot),
+            (Item)GDOUtils.GetExistingGDO(ItemReferences.TacoTray)
             //,
             //(Item)GDOUtils.GetExistingGDO(ItemReferences.Pot)
         };
@@ -92,7 +94,8 @@ namespace KitchenMysteryMenu.Customs.Dishes
             (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryStirFryRiceDish>(),
             (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryStirFryBroccoliDish>(),
             (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryStirFryCarrotDish>(),
-
+            
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryTacosBaseDish>(),
             (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryTurkeyBaseDish>()
         };
 

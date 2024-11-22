@@ -23,7 +23,7 @@ namespace KitchenMysteryMenu.Utils
             ItemReferences.CupcakeTray,
             ItemReferences.BigCakeTin,
             ItemReferences.ExtraCakeStand,
-            References.LasagneTray
+            ItemReferences.LasagneTray
         };
 
         private static HashSet<int> Trays = new HashSet<int>()
@@ -34,7 +34,7 @@ namespace KitchenMysteryMenu.Utils
             ItemReferences.DoughnutTray,
             ItemReferences.BigCakeTin,
             ItemReferences.ExtraCakeStand,
-            References.LasagneTray
+            ItemReferences.LasagneTray
         };
 
         public static bool IsLimitedContainer(int providedItem)

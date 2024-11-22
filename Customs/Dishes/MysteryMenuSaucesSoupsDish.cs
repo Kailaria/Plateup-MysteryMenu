@@ -68,7 +68,7 @@ namespace KitchenMysteryMenu.Customs.Dishes
         {
             { Locale.English, "<color=#00ffff>New possible menu items:</color>  <i>Any Steak</i> - Mushroom Sauce" +
                 ", Red Wine Jus;  <i>Turkey</i> - Gravy, Cranberry Sauce;  <i>Spaghetti</i> - Bolognese, Cheesy Spaghetti\n" +
-                "<i>Starters</i> - Broccoli Cheese Soup, Carrot Soup, Meat Soup, Tomato Soup\n" +
+                "<i>Starters</i> - Broccoli Cheese Soup, Carrot Soup, Meat Soup, Pumpkin Soup, Tomato Soup\n" +
                 "Adds two extra Mystery Ingredient Providers."
             }
         };
@@ -79,7 +79,7 @@ namespace KitchenMysteryMenu.Customs.Dishes
                 Name = "Mystery - Sauces & Soups",
                 Description = "Adds Mushroom Sauce and Red Wine Jus as possible Extras for Steaks, Gravy and Cranberry Sauce " +
                 "as possible Extras for Turkey, and Bolognese Sauce and Cheesy Spaghetti as alternative Mains with Spaghetti.\n" +
-                "Also adds Broccoli Cheese Soup, Carrot Soup, Meat Soup, and Tomato Soup as possible starters.\n" +
+                "Also adds Broccoli Cheese Soup, Carrot Soup, Meat Soup, Pumpkin Soup, and Tomato Soup as possible starters.\n" +
                 "Provides two additional Mystery Ingredient Providers.",
                 FlavourText = ""
             })

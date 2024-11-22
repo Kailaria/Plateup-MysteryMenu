@@ -13,7 +13,7 @@ namespace KitchenMysteryMenu.Customs.Dishes.Spaghetti
     public class MysterySpaghettiBologneseDish : GenericMysteryDish
     {
         protected override string NameTag => "Mystery Spaghetti Bolognese Dish";
-        public override Dish OrigDish => (Dish)GDOUtils.GetExistingGDO(References.SpaghettiBologneseDish);
+        public override Dish OrigDish => (Dish)GDOUtils.GetExistingGDO(DishReferences.SpaghettiBolognese);
         public override DishType Type => DishType.Main;
         public override DishCustomerChange CustomerMultiplier => DishCustomerChange.None;
         public override Unlock.RewardLevel ExpReward => Unlock.RewardLevel.None;
@@ -45,7 +45,7 @@ namespace KitchenMysteryMenu.Customs.Dishes.Spaghetti
         {
             new()
             {
-                Item = (Item)GDOUtils.GetExistingGDO(References.SpaghettiBolognesePlated),
+                Item = (Item)GDOUtils.GetExistingGDO(ItemGroupReferences.SpaghettiBolognesePlated),
                 Phase = MenuPhase.Main,
                 Weight = 1
             }
@@ -53,8 +53,8 @@ namespace KitchenMysteryMenu.Customs.Dishes.Spaghetti
         public override HashSet<Item> MinimumRequiredMysteryIngredients => new HashSet<Item>()
         {
             (Item) GDOUtils.GetExistingGDO(ItemReferences.Tomato),
-            (Item) GDOUtils.GetExistingGDO(References.SpaghettiRaw),
-            (Item) GDOUtils.GetExistingGDO(References.Mince)
+            (Item) GDOUtils.GetExistingGDO(ItemReferences.Spaghetti),
+            (Item) GDOUtils.GetExistingGDO(ItemReferences.Mince)
         };
         public override List<Unlock> HardcodedRequirements => new()
         {

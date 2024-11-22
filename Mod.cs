@@ -20,6 +20,7 @@ using KitchenMysteryMenu.Customs.Dishes.Spaghetti;
 using KitchenMysteryMenu.Customs.Dishes.Starters;
 using KitchenMysteryMenu.Customs.Dishes.Steaks;
 using KitchenMysteryMenu.Customs.Dishes.StirFry;
+using KitchenMysteryMenu.Customs.Dishes.Tacos;
 using KitchenMysteryMenu.Customs.Dishes.Turkey;
 using KitchenMysteryMenu.Customs.Ingredients;
 using KitchenMysteryMenu.Customs.ItemGroups;
@@ -252,6 +253,13 @@ namespace KitchenMysteryMenu
             AddGameDataObject<MysteryStirFryMushroomDish>();
             AddGameDataObject<MysteryStirFrySteakDish>();
             AddGameDataObject<MysteryStirFrySoySauceDish>();
+
+            // Mystery Tacos Dishes
+            AddGameDataObject<MysteryTacosBaseDish>();
+            AddGameDataObject<MysteryTacosToppingCheeseDish>();
+            AddGameDataObject<MysteryTacosToppingLettuceDish>();
+            AddGameDataObject<MysteryTacosToppingOnionDish>();
+            AddGameDataObject<MysteryTacosToppingTomatoDish>();
 
             // Mystery Turkey Dishes
             AddGameDataObject<MysteryTurkeyBaseDish>();
