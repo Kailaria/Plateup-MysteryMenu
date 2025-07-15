@@ -23,6 +23,11 @@ namespace KitchenMysteryMenu.Customs.Dishes.Desserts
         public override bool RequiredNoDishItem => true;
         public override bool IsAvailableAsLobbyOption => false;
         public override int Difficulty => 2;
+        public override HashSet<Process> RequiredProcesses => new()
+        {
+            (Process)GDOUtils.GetExistingGDO(ProcessReferences.Knead),
+            (Process)GDOUtils.GetExistingGDO(ProcessReferences.RequireOven)
+        };
         public override Dictionary<Locale, string> Recipe => new()
         {
             { Locale.English,

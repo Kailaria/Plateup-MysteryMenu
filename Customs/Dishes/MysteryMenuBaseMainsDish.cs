@@ -62,8 +62,6 @@ namespace KitchenMysteryMenu.Customs.Dishes
             (Item)GDOUtils.GetExistingGDO(ItemReferences.Wok),
             (Item)GDOUtils.GetExistingGDO(ItemReferences.Pot),
             (Item)GDOUtils.GetExistingGDO(ItemReferences.TacoTray)
-            //,
-            //(Item)GDOUtils.GetExistingGDO(ItemReferences.Pot)
         };
         public override HashSet<Process> RequiredProcesses => new()
         {

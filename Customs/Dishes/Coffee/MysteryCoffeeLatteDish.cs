@@ -23,6 +23,10 @@ namespace KitchenMysteryMenu.Customs.Dishes.Coffee
         public override bool RequiredNoDishItem => true;
         public override bool IsAvailableAsLobbyOption => false;
         public override int Difficulty => 3;
+        public override HashSet<Process> RequiredProcesses => new()
+        {
+            (Process)GDOUtils.GetExistingGDO(ProcessReferences.FrothMilk)
+        };
         public override Dictionary<Locale, string> Recipe => new()
         {
             { Locale.English,
