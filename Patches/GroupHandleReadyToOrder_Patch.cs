@@ -31,7 +31,8 @@ namespace KitchenMysteryMenu.Patches
         [HarmonyPatch("Initialise")]
         public static void Initialise_Postfix(ref GroupHandleReadyToOrder __instance)
         {
-            // Add CDisabled components to ensure only truly available mystery .
+            // Add CDisabled components to ensure only truly available, non-disabled mystery dishes are accounted for
+            //  when determining if a customer will order a side or starter.
             Type t_CSB = typeof(ComponentSystemBase);
             MethodInfo m_GetEntityQuery = t_CSB.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance)
                 .Where(mi => mi.Name.Equals("GetEntityQuery") && mi.GetParameters().Any(p => p.ParameterType == typeof(EntityQueryDesc[])))

@@ -24,6 +24,7 @@ namespace KitchenMysteryMenu.Systems
         EntityQuery MysteryExtras;
         EntityQuery DisabledMenuItems;
         EntityQuery StaticItemProviders;
+        EntityQuery StaticVariableProviders;
 
         protected override void Initialise()
         {
@@ -31,7 +32,10 @@ namespace KitchenMysteryMenu.Systems
             MysteryItemProviders = GetEntityQuery(typeof(CItemProvider), typeof(CMysteryMenuProvider));
             StaticItemProviders = GetEntityQuery(new QueryHelper()
                 .All(typeof(CItemProvider))
-                .None(typeof(CMysteryMenuProvider), typeof(CDynamicMenuProvider)));
+                .None(typeof(CMysteryMenuProvider), typeof(CDynamicMenuProvider), typeof(CVariableProvider)));
+            StaticVariableProviders = GetEntityQuery(new QueryHelper()
+                .All(typeof(CItemProvider), typeof(CVariableProvider))
+                .None(typeof(CMysteryMenuProvider)));
             MenuItems = GetEntityQuery(typeof(CMenuItem), typeof(CMysteryMenuItem));
             MysteryOptions = GetEntityQuery(typeof(CAvailableIngredient), typeof(CMysteryMenuItemOption), typeof(CMysteryMenuItem));
             MysteryExtras = GetEntityQuery(typeof(CPossibleExtra), typeof(CMysteryMenuItemOption), typeof(CMysteryMenuItem));
@@ -235,6 +239,9 @@ namespace KitchenMysteryMenu.Systems
             HashSet<Item> availableItemsForRecipes = new HashSet<Item>();
             using var staticProviderEntities = StaticItemProviders.ToEntityArray(Allocator.Temp);
             using var staticItemProviderComps = StaticItemProviders.ToComponentDataArray<CItemProvider>(Allocator.Temp);
+            using var staticVariableEntities = StaticVariableProviders.ToEntityArray(Allocator.Temp);
+            using var staticVariableVariableProviderComps = StaticVariableProviders.ToComponentDataArray<CVariableProvider>(Allocator.Temp);
+            Mod.Logger.LogInfo($"{LogMsgPrefix} Step 1a: Fill with static items from non-variable providers");
             for (int i = 0; i < staticProviderEntities.Length; i++)
             {
                 int providedItemID = staticItemProviderComps[i].ProvidedItem;
@@ -247,6 +254,29 @@ namespace KitchenMysteryMenu.Systems
                 if (success)
                 {
                     availableItemsForRecipes.Add(item);
+                }
+            }
+
+            Mod.Logger.LogInfo($"{LogMsgPrefix} Step 1b: Fill with static items from variable providers");
+            for (int i = 0; i < staticVariableEntities.Length; i++)
+            {
+                int providedItemID = staticVariableVariableProviderComps[i].Provide;
+                var success = GameData.Main.TryGet(providedItemID, out Item item);
+                if (success)
+                {
+                    availableItemsForRecipes.Add(item);
+                }
+                int providedItemID2 = staticVariableVariableProviderComps[i].Provide2;
+                success = GameData.Main.TryGet(providedItemID2, out Item item2);
+                if (success)
+                {
+                    availableItemsForRecipes.Add(item2);
+                }
+                int providedItemID3 = staticVariableVariableProviderComps[i].Provide3;
+                success = GameData.Main.TryGet(providedItemID3, out Item item3);
+                if (success)
+                {
+                    availableItemsForRecipes.Add(item3);
                 }
             }
             Mod.Logger.LogInfo($"{LogMsgPrefix} Number of relevant static ingredients = {availableItemsForRecipes.Count}");

@@ -36,7 +36,7 @@ namespace KitchenMysteryMenu.Patches
         [HarmonyPatch("Initialise")]
         public static void Initialise_Postfix(ref AssignMenuRequests __instance)
         {
-            // Add CDisabled components to ensure only truly available mystery .
+            // Add CDisabled components to ensure only truly available mystery dishes will be ordered.
             Type t_CSB = typeof(ComponentSystemBase);
             MethodInfo m_GetEntityQuery = t_CSB.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance)
                 .Where(mi => mi.Name.Equals("GetEntityQuery") && mi.GetParameters().Any(p => p.ParameterType == typeof(EntityQueryDesc[])))
