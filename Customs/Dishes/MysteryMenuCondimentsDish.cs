@@ -53,8 +53,8 @@ namespace KitchenMysteryMenu.Customs.Dishes
 
         public override Dictionary<Locale, string> Recipe => new()
         {
-            { Locale.English, "<color=#00ffff>New possible menu items:</color>  <i>Hot Dogs</i> - Extra Ketchup, Extra Mustard;  " +
-                "<i>Dumplings</i> - Soy Sauce;  <i>Stir Fry</i> - Soy Sauce\n" +
+            { Locale.English, "<color=#00ffff>New possible menu items:</color>  <i>Hot Dogs</i> - Extra Ketchup, Extra Mustard.  " +
+                "<i>Dumplings</i> - Soy Sauce.  <i>Stir Fry</i> - Soy Sauce\n" +
                 "Adds one extra Mystery Ingredient Provider."
             }
         };
