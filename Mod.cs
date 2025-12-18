@@ -75,6 +75,7 @@ namespace KitchenMysteryMenu
             AddGameDataObject<MysteryIngredientProviderCakes>();
             AddGameDataObject<MysteryIngredientProviderCakes2>();
             AddGameDataObject<MysteryIngredientProviderCakes3>();
+            AddGameDataObject<MysteryIngredientProviderComplexities>();
             AddGameDataObject<MysteryIngredientProviderExtra2>();
             AddGameDataObject<MysteryIngredientProviderExtra3>();
             AddGameDataObject<MysteryIngredientProviderExtra4>();
@@ -83,6 +84,7 @@ namespace KitchenMysteryMenu
             AddGameDataObject<MysteryIngredientProviderExtra7>();
             AddGameDataObject<MysteryIngredientProviderSides>();
             AddGameDataObject<MysteryTrayProviderCakes>();
+            AddGameDataObject<MysteryTrayProviderComplexities>();
         }
 
         private void AddIngredientGDOs()
@@ -93,6 +95,7 @@ namespace KitchenMysteryMenu
             AddGameDataObject<MysteryFlour>();
             AddGameDataObject<MysteryIceCreamStrawberry>();
             AddGameDataObject<MysteryIceCreamVanilla>();
+            AddGameDataObject<MysteryLasagnePastaSheet>();
             AddGameDataObject<MysteryMeat>();
             AddGameDataObject<MysteryMushroom>();
             AddGameDataObject<MysteryOnion>();
@@ -104,14 +107,16 @@ namespace KitchenMysteryMenu
             AddGameDataObject<MysteryWine>();
 
             AddGameDataObject<MysteryCookieTray>();
+            AddGameDataObject<MysteryDoughnutTray>();
         }
 
         private void AddItemGroupGDOs()
         {
             // For the HQ Kitchen to work with minimal extra code
-            AddGameDataObject<MysteryDough>();
-            AddGameDataObject<MysteryPieMeatRaw>();
-            AddGameDataObject<MysteryPieMeatRawBlindBaked>();
+            // TODO: replace this with a version of the algorithm for HQ Kitchen
+            //AddGameDataObject<MysteryDough>();
+            //AddGameDataObject<MysteryPieMeatRaw>();
+            //AddGameDataObject<MysteryPieMeatRawBlindBaked>();
         }
 
         private void AddDishGDOs()
@@ -125,6 +130,7 @@ namespace KitchenMysteryMenu
             AddGameDataObject<MysteryMenuCondimentsDish>();
             AddGameDataObject<MysteryMenuSaucesSoupsDish>();
             AddGameDataObject<MysteryMenuSidesDish>();
+            AddGameDataObject<MysteryMenuSubstitutionsComplexityDish>();
             AddGameDataObject<MysteryMenuToppingsDish>();
             AddGameDataObject<MysteryMenuVeggieVariationsDish>();
 
@@ -170,6 +176,7 @@ namespace KitchenMysteryMenu
             AddGameDataObject<MysteryBurgerToppingCheeseDish>();
             AddGameDataObject<MysteryBurgerToppingOnionDish>();
             AddGameDataObject<MysteryBurgerToppingTomatoDish>();
+            AddGameDataObject<MysteryBurgerFreshPattyMeatDish>();
 
             // Mystery Cakes Dishes
             AddGameDataObject<MysteryCakeBatterRecipe>();

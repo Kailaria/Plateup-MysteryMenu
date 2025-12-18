@@ -32,7 +32,7 @@ namespace KitchenMysteryMenu.Customs.Dishes.Spaghetti
         {
             { Locale.English,
                 "<color=yellow>Requires ingredients:</color> Tomato, Spaghetti\n" +
-                "Put raw spaghetti into a pot with water and boil, then empty the water into the trash. " +
+                "Put raw spaghetti into a pot with water and boil, then empty the water into a sink or bin. " +
                 "Chop tomato twice to make sauce. Combine boiled pasta on a plate with the sauce." }
         };
         public override List<(Locale, UnlockInfo)> InfoList => new()
