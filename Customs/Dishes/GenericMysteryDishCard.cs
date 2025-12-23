@@ -1,6 +1,7 @@
 ﻿using KitchenData;
 using KitchenLib.Customs;
 using KitchenMysteryMenu.Utils;
+using MysteryMenu.Customs.Dishes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +23,8 @@ namespace KitchenMysteryMenu.Customs.Dishes
             ContainedMysteryRecipes.Select(r => r.GameDataObject).ToList();
         public override HashSet<Dish.IngredientUnlock> ExtraOrderUnlocks =>
             ContainedMysteryRecipes.SelectMany(r => r.ExtraOrderUnlocks).ToHashSet();
+        public virtual HashSet<SubstitutionIngredientSet> SubstitutionIngredientSets =>
+            ContainedMysteryRecipes.SelectMany(r => r.SubstitutionIngredientSets).ToHashSet();
 
         public override void OnRegister(Dish gameDataObject)
         {

@@ -15,7 +15,7 @@ namespace KitchenMysteryMenu.Utils
         public static readonly DynamicMenuType DynamicMenuTypeMystery = (DynamicMenuType)VariousUtils.GetID($"{Mod.MOD_GUID}:{((Dish)MysteryMenuBaseDish).Name}");
         public static readonly int MaxIngredientCountForMinimumRecipe = 5;
 
-        public static string DishCardDoNotAddFlavorText = "(alsoAddsRecipes card, do not add with Cards Manager)";
+        public static string DishCardDoNotAddFlavorText = "(This is an \"alsoAddsRecipes\" card. <b>DO NOT ADD</b> with Cards Manager)";
 
         // Sprites, colors, and colorized text
         public static string SpriteCake = "<sprite name=\"cake\">";//"<nobr><space=-0.2em><sprite name=\"cake\" tint=1>Cake</nobr>";

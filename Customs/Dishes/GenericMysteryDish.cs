@@ -1,6 +1,7 @@
 ﻿using KitchenData;
 using KitchenLib.Customs;
 using KitchenMysteryMenu.Utils;
+using MysteryMenu.Customs.Dishes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +20,8 @@ namespace KitchenMysteryMenu.Customs.Dishes
         public override bool IsUnlockable => false;
         public override bool IsAvailableAsLobbyOption => false;
 
-        public abstract HashSet<Item> MinimumRequiredMysteryIngredients { get; }
+        public virtual HashSet<Item> MinimumRequiredMysteryIngredients => default;
+        public virtual HashSet<SubstitutionIngredientSet> SubstitutionIngredientSets => default;
 
         public override HashSet<Process> RequiredProcesses => OrigDish.RequiredProcesses;
         /**

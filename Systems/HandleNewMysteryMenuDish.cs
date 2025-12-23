@@ -23,6 +23,7 @@ namespace KitchenMysteryMenu.Systems
         private EntityQuery NonHandledMenuItems;
         private EntityQuery NonHandledMenuOptions;
         private EntityQuery NonHandledPossibleExtras;
+        private EntityQuery HandledSubstitutionSetsQuery;
 
         protected override void Initialise()
         {
@@ -39,6 +40,7 @@ namespace KitchenMysteryMenu.Systems
             NonHandledPossibleExtras = GetEntityQuery(new QueryHelper()
                 .All(typeof(CPossibleExtra))
                 .None(typeof(CMysteryMenuItemOption), typeof(CNonMysteryExtra)));
+            HandledSubstitutionSetsQuery = GetEntityQuery(typeof(CMysteryMenuSubstitutionSet));
             RequireForUpdate(MysteryProviders);
             RequireForUpdate(NewPendingMysteryDishes);
         }
@@ -72,6 +74,10 @@ namespace KitchenMysteryMenu.Systems
             if (dishData.ExtraOrderUnlocks.Count > 0)
             {
                 HandleNewExtras(dishData, genericMysteryDish, genericMysteryDishCard);
+            }
+            if (genericMysteryDish != default && genericMysteryDish.SubstitutionIngredientSets.Count > 0)
+            {
+                HandleNewSubstitutions(dishData, genericMysteryDish, genericMysteryDishCard);
             }
         }
 
@@ -246,6 +252,43 @@ namespace KitchenMysteryMenu.Systems
                     HasBeenProvided = false
                 });
                 EntityManager.AddComponent<CMysteryMenuItemOption>(entity);
+            }
+        }
+
+        private void HandleNewSubstitutions(Dish dishData, GenericMysteryDish genericMysteryDish, GenericMysteryDishCard genericMysteryDishCard)
+        {
+            using var handledSubstitutionSetEntities = HandledSubstitutionSetsQuery.ToEntityArray(Allocator.Temp);
+            using var handledSubstitutionSetComps = HandledSubstitutionSetsQuery.ToComponentDataArray<CMysteryMenuSubstitutionSet>(Allocator.Temp);
+
+            // We know that GMD is non-default before coming in here, so we can freely access it w/o safety checks
+            Mod.Logger.LogInfo($"Handling new Mystery Dish subsitution ingredient set.");
+            bool found = false;
+            for (int i = 0; i < handledSubstitutionSetComps.Length; i++)
+            {
+                var component = handledSubstitutionSetComps[i];
+                if (component.SourceMysteryDishID == genericMysteryDish.GameDataObject.ID)
+                {
+                    found = true;
+                    break;
+                }
+            }
+
+            if (found)
+            {
+                Mod.Logger.LogWarning($"Found a matching entity, which shouldn't happen...");
+                return;
+            }
+
+            foreach (var substitutionSet in genericMysteryDish.SubstitutionIngredientSets)
+            {
+                Mod.Logger.LogInfo($"Creating new entity and component for substitution set " +
+                    $"{{GMD = {genericMysteryDish.UniqueNameID}, Subbed Item = {substitutionSet.Item.name}}}");
+                var newEntity = EntityManager.CreateEntity();
+                EntityManager.AddComponentData(newEntity, new CMysteryMenuSubstitutionSet()
+                {
+                    SourceMysteryDishID = genericMysteryDish.GameDataObject.ID,
+                    SubstitutedItemID = substitutionSet.Item.ID
+                });
             }
         }
     }
