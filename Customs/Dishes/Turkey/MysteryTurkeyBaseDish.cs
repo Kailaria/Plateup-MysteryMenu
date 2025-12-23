@@ -24,6 +24,10 @@ namespace KitchenMysteryMenu.Customs.Dishes.Turkey
         public override bool RequiredNoDishItem => false;
         public override bool IsAvailableAsLobbyOption => false;
         public override int Difficulty => 1;
+        public override HashSet<Process> RequiredProcesses => new()
+        {
+            (Process)GDOUtils.GetExistingGDO(ProcessReferences.RequireOven)
+        };
         public override Dictionary<Locale, string> Recipe => new()
         {
             { Locale.English, "<color=yellow>Requires ingredient:</color> Turkey\n" + 

@@ -20,6 +20,7 @@ using KitchenMysteryMenu.Customs.Dishes.Steaks;
 using KitchenMysteryMenu.Customs.Dishes.Dumplings;
 using KitchenMysteryMenu.Customs.Dishes.Burger;
 using KitchenMysteryMenu.Customs.Dishes.Breakfast;
+using KitchenMysteryMenu.Customs.Dishes.Tacos;
 
 namespace KitchenMysteryMenu.Customs.Dishes
 {
@@ -67,13 +68,19 @@ namespace KitchenMysteryMenu.Customs.Dishes
             (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysterySteakToppingMushroomDish>(),
             (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysterySteakToppingTomatoDish>(),
 
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryTacosToppingCheeseDish>(),
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryTacosToppingLettuceDish>(),
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryTacosToppingOnionDish>(),
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryTacosToppingTomatoDish>(),
+
             (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryTurkeyStuffingDish>(),
         };
 
         public override Dictionary<Locale, string> Recipe => new()
         {
             { Locale.English, "<color=#00ffff>New possible menu items:</color> Breakfast - Beans, Eggs, Tomato, Mushroom;" +
-                " Burger - Cheese, Tomato, Onion; Dumplings - Seaweed; Salad - Onion, Olives; Turkey - Stuffing\n" +
+                " Burger - Cheese, Tomato, Onion; Dumplings - Seaweed; Salad - Onion, Olives; Tacos - Cheese, Lettuce, Onion, Tomato; " +
+                "Turkey - Stuffing\n" +
                 "Adds one extra Mystery Ingredient Provider."
             }
         };
@@ -84,8 +91,8 @@ namespace KitchenMysteryMenu.Customs.Dishes
                 Name = "Mystery - Toppings",
                 Description = "Adds Beans, Eggs, Tomato, and Mushroom as possible Breakfast toppings; Cheese, Tomato, " +
                 "and Onion as possible Burger toppings; Mushroom and Tomato as possible Steak toppings; Seaweed as a " +
-                "possible topping for Dumplings; Onion and Olives as possible Salad toppings; and Stuffing as a possible " +
-                "Turkey topping.\n" +
+                "possible topping for Dumplings; Onion and Olives as possible Salad toppings; Cheese, Lettuce, Onion, and Tomato" +
+                "as possible Tacos toppings; and Stuffing as a possible Turkey topping.\n" +
                 "Provides one additional Mystery Ingredient Provider.",
                 FlavourText = ""
             })

@@ -8,12 +8,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KitchenMysteryMenu.Customs.Dishes.Turkey
+namespace KitchenMysteryMenu.Customs.Dishes.Spaghetti
 {
-    public class MysteryNutRoastDish : GenericMysteryDish
+    public class MysterySpaghettiLasagneDish : GenericMysteryDish
     {
-        protected override string NameTag => "Nut Roast";
-        public override Dish OrigDish => (Dish)GDOUtils.GetExistingGDO(DishReferences.NutRoastBase);
+        protected override string NameTag => "Mystery Lasagne Dish";
+        public override Dish OrigDish => (Dish)GDOUtils.GetExistingGDO(DishReferences.Lasagne);
         public override DishType Type => DishType.Main;
         public override DishCustomerChange CustomerMultiplier => DishCustomerChange.None;
         public override Unlock.RewardLevel ExpReward => Unlock.RewardLevel.None;
@@ -23,24 +23,20 @@ namespace KitchenMysteryMenu.Customs.Dishes.Turkey
         public override bool RequiredNoDishItem => false;
         public override bool IsAvailableAsLobbyOption => false;
         public override int Difficulty => 3;
-        public override HashSet<Process> RequiredProcesses => new()
-        {
-            (Process)GDOUtils.GetExistingGDO(ProcessReferences.Chop),
-            (Process)GDOUtils.GetExistingGDO(ProcessReferences.RequireOven)
-        };
         public override Dictionary<Locale, string> Recipe => new()
         {
             { Locale.English,
-                "<color=yellow>Requires ingredients:</color> Onion, Nuts\n" +
-                "Chop onions. Chop nuts. Combine and cook.\n" +
-                "Portion nut roast onto a plate. Serves 3 portions." }
+                "<color=yellow>Requires ingredients:</color> Lasagne Tray (Tray), Lasagne Pasta Sheets, Butter, Flour, Milk, Cheese, Mince, Tomato\n" +
+                "Make  <i>White Sauce</i> and  <i>Bolognese Sauce</i>.\n" +
+                "Take a Lasange Tray, add the following in order: Bolognese, Lasagne Pasta Sheet, White Sauce; repeat a second time.\n" +
+                "Cook the lasagne, then portion & plate to serve. Provides 4 portions per batch." }
         };
         public override List<(Locale, UnlockInfo)> InfoList => new()
         {
             (Locale.English, new UnlockInfo()
             {
-                Name = "Mystery - Nut Roast",
-                Description = "Adds nut roast as a main when <b>Nuts</b> and <b>Onions</b> are present",
+                Name = "Mystery - Lasagne",
+                Description = "Adds Lasagne as a main when <b>Tomato</b>, <b>Mince</b>, <b>Butter</b>, <b>Flour</b>, <b>Milk</b>, and <b>Lasagne Pasta Sheets</b> are present",
                 FlavourText = $"{References.DishCardDoNotAddFlavorText}"
             })
         };
@@ -49,19 +45,24 @@ namespace KitchenMysteryMenu.Customs.Dishes.Turkey
         {
             new()
             {
-                Item = (Item)GDOUtils.GetExistingGDO(ItemGroupReferences.NutRoastPlated),
+                Item = (Item)GDOUtils.GetExistingGDO(ItemGroupReferences.LasagnePlated),
                 Phase = MenuPhase.Main,
                 Weight = 1
             }
         };
         public override HashSet<Item> MinimumRequiredMysteryIngredients => new HashSet<Item>()
         {
-            (Item) GDOUtils.GetExistingGDO(ItemReferences.NutsIngredient),
-            (Item) GDOUtils.GetExistingGDO(ItemReferences.Onion),
+            (Item) GDOUtils.GetExistingGDO(ItemReferences.Tomato),
+            (Item) GDOUtils.GetExistingGDO(ItemReferences.Mince),
+            (Item) GDOUtils.GetExistingGDO(ItemReferences.Milk),
+            (Item) GDOUtils.GetExistingGDO(ItemReferences.Flour),
+            (Item) GDOUtils.GetExistingGDO(ItemReferences.LasagnePastaSheet),
+            (Item) GDOUtils.GetExistingGDO(ItemReferences.Butter),
+            (Item) GDOUtils.GetExistingGDO(ItemReferences.LasagneTray)
         };
         public override List<Unlock> HardcodedRequirements => new()
         {
-            GDOUtils.GetCastedGDO<Dish, MysteryMenuVeggieVariationsDish>()
+            GDOUtils.GetCastedGDO<Dish, MysteryMenuSubstitutionsComplexityDish>()
         };
     }
 }

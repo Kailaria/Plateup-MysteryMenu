@@ -13,7 +13,7 @@ namespace KitchenMysteryMenu.Customs.Dishes.Spaghetti
     public class MysterySpaghettiBaseDish : GenericMysteryDish
     {
         protected override string NameTag => "Mystery Spaghetti Dish";
-        public override Dish OrigDish => (Dish)GDOUtils.GetExistingGDO(References.SpaghettiBaseDish);
+        public override Dish OrigDish => (Dish)GDOUtils.GetExistingGDO(DishReferences.PomodoroBase);
         public override DishType Type => DishType.Base;
         public override DishCustomerChange CustomerMultiplier => DishCustomerChange.None;
         public override Unlock.RewardLevel ExpReward => Unlock.RewardLevel.None;
@@ -23,11 +23,16 @@ namespace KitchenMysteryMenu.Customs.Dishes.Spaghetti
         public override bool RequiredNoDishItem => false;
         public override bool IsAvailableAsLobbyOption => false;
         public override int Difficulty => 2;
+        public override HashSet<Process> RequiredProcesses => new()
+        {
+            (Process)GDOUtils.GetExistingGDO(ProcessReferences.Chop),
+            (Process)GDOUtils.GetExistingGDO(ProcessReferences.RequireOven)
+        };
         public override Dictionary<Locale, string> Recipe => new()
         {
             { Locale.English,
                 "<color=yellow>Requires ingredients:</color> Tomato, Spaghetti\n" +
-                "Put raw spaghetti into a pot with water and boil, then empty the water into the trash. " +
+                "Put raw spaghetti into a pot with water and boil, then empty the water into a sink or bin. " +
                 "Chop tomato twice to make sauce. Combine boiled pasta on a plate with the sauce." }
         };
         public override List<(Locale, UnlockInfo)> InfoList => new()
@@ -44,7 +49,7 @@ namespace KitchenMysteryMenu.Customs.Dishes.Spaghetti
         {
             new()
             {
-                Item = (Item)GDOUtils.GetExistingGDO(References.SpaghettiPomodoroPlated/*Spaghetti Pomodoro Plated*/),
+                Item = (Item)GDOUtils.GetExistingGDO(ItemGroupReferences.PomodoroPlated),
                 Phase = MenuPhase.Main,
                 Weight = 1
             }
@@ -52,7 +57,7 @@ namespace KitchenMysteryMenu.Customs.Dishes.Spaghetti
         public override HashSet<Item> MinimumRequiredMysteryIngredients => new HashSet<Item>()
         {
             (Item) GDOUtils.GetExistingGDO(ItemReferences.Tomato),
-            (Item) GDOUtils.GetExistingGDO(References.SpaghettiRaw)
+            (Item) GDOUtils.GetExistingGDO(ItemReferences.Spaghetti)
         };
         public override List<Unlock> HardcodedRequirements => new()
         {

@@ -1,6 +1,5 @@
 ﻿using HarmonyLib;
 using Kitchen;
-using KitchenData;
 using KitchenLib.Utils;
 using KitchenMysteryMenu.Components;
 using Sirenix.Utilities;
@@ -17,22 +16,23 @@ namespace KitchenMysteryMenu.Patches
     [HarmonyPatch(typeof(GroupHandleReadyToOrder))]
     public class GroupHandleReadyToOrder_Patch
     {
-        private static object[] MenuItemsStarterParameters = new object[]
-        {
-            new [] { new QueryHelper().All(typeof(CMenuItemStarter))
-                .None(typeof(CDisabledMenuItem),typeof(CDisabledMysteryMenu)).Build() }
-        };
-        private static object[] MenuItemsSideParameters = new object[]
+        private static object[] SidesParameters = new object[]
         {
             new [] { new QueryHelper().All(typeof(CMenuItemSide))
-                .None(typeof(CDisabledMenuItem),typeof(CDisabledMysteryMenu)).Build() }
+                .None(typeof(CDisabledMysteryMenu)).Build() }
+        };
+        private static object[] StartersParameters = new object[]
+        {
+            new [] { new QueryHelper().All(typeof(CMenuItemStarter))
+                .None(typeof(CDisabledMysteryMenu)).Build() }
         };
 
         [HarmonyPostfix]
         [HarmonyPatch("Initialise")]
         public static void Initialise_Postfix(ref GroupHandleReadyToOrder __instance)
         {
-            // Add CDisabled components to ensure only truly available mystery .
+            // Add CDisabled components to ensure only truly available, non-disabled mystery dishes are accounted for
+            //  when determining if a customer will order a side or starter.
             Type t_CSB = typeof(ComponentSystemBase);
             MethodInfo m_GetEntityQuery = t_CSB.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance)
                 .Where(mi => mi.Name.Equals("GetEntityQuery") && mi.GetParameters().Any(p => p.ParameterType == typeof(EntityQueryDesc[])))
@@ -43,13 +43,13 @@ namespace KitchenMysteryMenu.Patches
 
             try
             {
-                var MenuItemsStarterQuery = (EntityQuery) m_GetEntityQuery.Invoke(__instance, MenuItemsStarterParameters);
-                ReflectionUtils.GetField<GroupHandleReadyToOrder>("Starters", BindingFlags.NonPublic | BindingFlags.Instance)
-                    .SetValue(__instance, MenuItemsStarterQuery);
-
-                var MenuItemsSideQuery = (EntityQuery) m_GetEntityQuery.Invoke(__instance, MenuItemsSideParameters);
+                var SidesQuery = m_GetEntityQuery.Invoke(__instance, SidesParameters);
                 ReflectionUtils.GetField<GroupHandleReadyToOrder>("Sides", BindingFlags.NonPublic | BindingFlags.Instance)
-                    .SetValue(__instance, MenuItemsSideQuery);
+                    .SetValue(__instance, SidesQuery);
+
+                var StartersQuery = m_GetEntityQuery.Invoke(__instance, StartersParameters);
+                ReflectionUtils.GetField<GroupHandleReadyToOrder>("Starters", BindingFlags.NonPublic | BindingFlags.Instance)
+                    .SetValue(__instance, StartersQuery);
             } catch (Exception e)
             {
                 Mod.Logger.LogError("GroupHandleReadyToOrder_Initialise_Postfix failed");

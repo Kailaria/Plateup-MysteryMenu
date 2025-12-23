@@ -24,6 +24,10 @@ namespace KitchenMysteryMenu.Customs.Dishes.Steaks
         public override bool RequiredNoDishItem => false;
         public override bool IsAvailableAsLobbyOption => false;
         public override int Difficulty => 1;
+        public override HashSet<Process> RequiredProcesses => new()
+        {
+            (Process)GDOUtils.GetExistingGDO(ProcessReferences.RequireOven)
+        };
         public override Dictionary<Locale, string> Recipe => new()
         {
             { Locale.English,

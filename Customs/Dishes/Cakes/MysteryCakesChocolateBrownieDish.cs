@@ -9,12 +9,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KitchenMysteryMenu.Customs.Dishes.Desserts
+namespace KitchenMysteryMenu.Customs.Dishes.Cakes
 {
-    public class MysteryApplePieDish : GenericMysteryDish
+    public class MysteryCakesChocolateBrownieDish : GenericMysteryDish
     {
-        protected override string NameTag => "Apple Pie";
-        public override Dish OrigDish => (Dish)GDOUtils.GetExistingGDO(DishReferences.PieApple);
+        protected override string NameTag => "Cake - Chocolate Brownie";
+        public override Dish OrigDish => (Dish)GDOUtils.GetExistingGDO(DishReferences.Brownies);
         public override DishType Type => DishType.Dessert;
         public override DishCustomerChange CustomerMultiplier => DishCustomerChange.None;
         public override Unlock.RewardLevel ExpReward => Unlock.RewardLevel.None;
@@ -22,26 +22,21 @@ namespace KitchenMysteryMenu.Customs.Dishes.Desserts
         public override bool IsUnlockable => false;
         public override bool RequiredNoDishItem => true;
         public override bool IsAvailableAsLobbyOption => false;
-        public override int Difficulty => 2;
-        public override HashSet<Process> RequiredProcesses => new()
-        {
-            (Process)GDOUtils.GetExistingGDO(ProcessReferences.Chop),
-            (Process)GDOUtils.GetExistingGDO(ProcessReferences.Knead),
-            (Process)GDOUtils.GetExistingGDO(ProcessReferences.RequireOven)
-        };
+        public override int Difficulty => 3;
         public override Dictionary<Locale, string> Recipe => new()
         {
             { Locale.English,
-                "<color=yellow>Requires ingredients:</color> Flour, Apples\n" +
-                "Knead flour (or add water) to make dough, then knead into pie crust and cook. " +
-                "Chop an apple, combine with the cooked crust, and cook again. Serve as a dessert."}
+                "<color=yellow>Requires ingredients:</color> Brownie tray (tray), Flour, Egg, Sugar, Chocolate\n" +
+                $"Mix {References.ColorTextCakeBatter} in a mixing bowl. Melt (cook) chocolate, add to the mixing bowl, and pour into brownie tray.\n" +
+                $"Portion and serve to customers ordering chocolate flavour {References.PinkTintCakesText} for dessert. Provides 6 portions."
+            }
         };
         public override List<(Locale, UnlockInfo)> InfoList => new()
         {
             (Locale.English, new UnlockInfo()
             {
-                Name = "Mystery - Dessert - Apple Pie",
-                Description = "Adds apple pie as a dessert when flour and apples are present",
+                Name = "Mystery - Cakes - Chocolate Brownie",
+                Description = "Adds chocolate brownies as a dessert when flour, egg, sugar, chocolate, and a brownie tray are present",
                 FlavourText = $"{References.DishCardDoNotAddFlavorText}"
             })
         };
@@ -50,20 +45,24 @@ namespace KitchenMysteryMenu.Customs.Dishes.Desserts
         {
             new()
             {
-                Item = (Item)GDOUtils.GetExistingGDO(ItemReferences.PieAppleCooked),
+                Item = (Item)GDOUtils.GetExistingGDO(ItemReferences.ChocolateFlavour),
                 Phase = MenuPhase.Dessert,
                 Weight = 1
             }
         };
         public override HashSet<Item> MinimumRequiredMysteryIngredients => new HashSet<Item>()
         {
+            (Item) GDOUtils.GetExistingGDO(ItemReferences.BrownieTray),
             (Item) GDOUtils.GetExistingGDO(ItemReferences.Flour),
-            (Item) GDOUtils.GetExistingGDO(ItemReferences.Apple)
+            (Item) GDOUtils.GetExistingGDO(ItemReferences.Sugar),
+            (Item) GDOUtils.GetExistingGDO(ItemReferences.Egg),
+            (Item) GDOUtils.GetExistingGDO(ItemReferences.Chocolate)
         };
         public override List<Unlock> HardcodedRequirements => new()
         {
-            GDOUtils.GetCastedGDO<Dish, MysteryMenuCoffeeCakesPiesDish>()
+            GDOUtils.GetCastedGDO<Dish, MysteryMenuSubstitutionsComplexityDish>()
         };
         public override MenuPhase MenuPhase => MenuPhase.Dessert;
+        public override bool HasTrayIngredient => true;
     }
 }

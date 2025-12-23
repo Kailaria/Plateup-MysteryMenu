@@ -3,6 +3,8 @@ using KitchenData;
 using KitchenMysteryMenu.Components;
 using KitchenMysteryMenu.Customs.Dishes;
 using KitchenMysteryMenu.Utils;
+using MysteryMenu.Customs.Dishes;
+using Sirenix.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +13,7 @@ using System.Threading.Tasks;
 using Unity.Collections;
 using Unity.Entities;
 using UnityEngine;
+using static Steamworks.InventoryRecipe;
 
 namespace KitchenMysteryMenu.Systems
 {
@@ -22,8 +25,10 @@ namespace KitchenMysteryMenu.Systems
         EntityQuery MenuItems;
         EntityQuery MysteryOptions;
         EntityQuery MysteryExtras;
+        EntityQuery MysterySubstitutionSets;
         EntityQuery DisabledMenuItems;
         EntityQuery StaticItemProviders;
+        EntityQuery StaticVariableProviders;
 
         protected override void Initialise()
         {
@@ -31,10 +36,14 @@ namespace KitchenMysteryMenu.Systems
             MysteryItemProviders = GetEntityQuery(typeof(CItemProvider), typeof(CMysteryMenuProvider));
             StaticItemProviders = GetEntityQuery(new QueryHelper()
                 .All(typeof(CItemProvider))
-                .None(typeof(CMysteryMenuProvider), typeof(CDynamicMenuProvider)));
+                .None(typeof(CMysteryMenuProvider), typeof(CDynamicMenuProvider), typeof(CVariableProvider)));
+            StaticVariableProviders = GetEntityQuery(new QueryHelper()
+                .All(typeof(CItemProvider), typeof(CVariableProvider))
+                .None(typeof(CMysteryMenuProvider)));
             MenuItems = GetEntityQuery(typeof(CMenuItem), typeof(CMysteryMenuItem));
             MysteryOptions = GetEntityQuery(typeof(CAvailableIngredient), typeof(CMysteryMenuItemOption), typeof(CMysteryMenuItem));
             MysteryExtras = GetEntityQuery(typeof(CPossibleExtra), typeof(CMysteryMenuItemOption), typeof(CMysteryMenuItem));
+            MysterySubstitutionSets = GetEntityQuery(typeof(CMysteryMenuSubstitutionSet));
             DisabledMenuItems = GetEntityQuery(typeof(CMysteryMenuItem), typeof(CDisabledMysteryMenu));
             RequireForUpdate(MenuItems);
         }
@@ -65,6 +74,9 @@ namespace KitchenMysteryMenu.Systems
             using var mysteryExtraRecipes = MysteryExtras.ToComponentDataArray<CMysteryMenuItem>(Allocator.Temp);
             using var mysteryExtraExtraComps = MysteryExtras.ToComponentDataArray<CPossibleExtra>(Allocator.Temp);
 
+            using var mysterySubstitutionEntities = MysterySubstitutionSets.ToEntityArray(Allocator.Temp);
+            using var mysterySubstitutionSetComps = MysterySubstitutionSets.ToComponentDataArray<CMysteryMenuSubstitutionSet>(Allocator.Temp);
+
             // algo 1: Determine existing, permanently available ingredients
             //      (ignore all possible Dynamic dishes; but this parenthetical should be handled already by HandleNewMysteryMenuDish)
             HashSet<Item> availableItemsForRecipes = FillAvailableItemsFromStaticProviders();
@@ -72,7 +84,20 @@ namespace KitchenMysteryMenu.Systems
 
             // algo 2: Sort MysteryMenuItems by whether they've been provided or not
             // algo 2.5: While sorting, work out which menu phases are possible and already being served.
+            // algo 2.7: while sorting, apply substitutions while creating each MRIC
             Dictionary<MenuPhase, int> minimumIngredientsPerMenuPhase = new Dictionary<MenuPhase, int>();
+
+            Mod.Logger.LogInfo($"{LogMsgPrefix} Loading substitution sets.");
+            List<SubstitutionIngredientSet> currentSubstitutionIngredientSets = new List<SubstitutionIngredientSet>();
+            for (int i = 0; i < mysterySubstitutionSetComps.Length; i++)
+            {
+                var substitutionSetDish = MysteryDishCrossReference.GetMysteryDishById(mysterySubstitutionSetComps[i].SourceMysteryDishID);
+                SubstitutionIngredientSet substitutionSet = substitutionSetDish.SubstitutionIngredientSets.FirstOrDefault();
+                if (substitutionSet != default)
+                {
+                    currentSubstitutionIngredientSets.Add(substitutionSet);
+                }
+            }
 
             Mod.Logger.LogInfo($"{LogMsgPrefix} Sorting CMysteryMenuItem");
             List<MysteryRecipeIngredientCounter> olderMysteryMenuItemEntities = new List<MysteryRecipeIngredientCounter>();
@@ -81,14 +106,18 @@ namespace KitchenMysteryMenu.Systems
             {
                 if (menuItemMysteryComps[i].Type == MysteryMenuType.Mystery)
                 {
+                    var curRecipe = new MysteryRecipeIngredientCounter(menuItemEntities[i], menuItemItemComps[i], menuItemMysteryComps[i].SourceMysteryDish);
+                    curRecipe.ApplySubstitutionSets(currentSubstitutionIngredientSets);
                     (menuItemMysteryComps[i].HasBeenProvided ? olderMysteryMenuItemEntities : newerMysteryMenuItemEntities)
-                        .Add(new MysteryRecipeIngredientCounter(menuItemEntities[i], menuItemItemComps[i], menuItemMysteryComps[i].SourceMysteryDish));
+                        .Add(curRecipe);
                 }
                 else
                 {
                     // It's not a mystery menu item, so we'll assume its phase is always available since it presumably has static providers.
                     //  and fish will handle its own disabling after mystery stops providing each type fish.
-                    currentRecipes.Add(new MysteryRecipeIngredientCounter(menuItemEntities[i], menuItemItemComps[i], menuItemMysteryComps[i].SourceMysteryDish));
+                    var curRecipe = new MysteryRecipeIngredientCounter(menuItemEntities[i], menuItemItemComps[i], menuItemMysteryComps[i].SourceMysteryDish);
+                    curRecipe.ApplySubstitutionSets(currentSubstitutionIngredientSets);
+                    currentRecipes.Add(curRecipe);
                     minimumIngredientsPerMenuPhase[menuItemItemComps[i].Phase] = 0;
                 }
             }
@@ -99,8 +128,10 @@ namespace KitchenMysteryMenu.Systems
             {
                 if (mysteryOptionRecipes[i].Type == MysteryMenuType.Mystery)
                 {
+                    var curRecipe = new MysteryRecipeIngredientCounter(mysteryOptionEntities[i], mysteryOptionIngredients[i], mysteryOptionRecipes[i].SourceMysteryDish);
+                    curRecipe.ApplySubstitutionSets(currentSubstitutionIngredientSets);
                     (mysteryOptionRecipes[i].HasBeenProvided ? olderMysteryOptionEntities : newerMysteryOptionEntities)
-                        .Add(new MysteryRecipeIngredientCounter(mysteryOptionEntities[i], mysteryOptionIngredients[i], mysteryOptionRecipes[i].SourceMysteryDish));
+                        .Add(curRecipe);
                 }
             }
             
@@ -110,8 +141,10 @@ namespace KitchenMysteryMenu.Systems
             {
                 if (mysteryExtraRecipes[i].Type == MysteryMenuType.Mystery)
                 {
+                    var curRecipe = new MysteryRecipeIngredientCounter(mysteryExtraEntities[i], mysteryExtraExtraComps[i], mysteryExtraRecipes[i].SourceMysteryDish);
+                    curRecipe.ApplySubstitutionSets(currentSubstitutionIngredientSets);
                     (mysteryExtraRecipes[i].HasBeenProvided ? olderMysteryExtraEntities : newerMysteryExtraEntities)
-                        .Add(new MysteryRecipeIngredientCounter(mysteryExtraEntities[i], mysteryExtraExtraComps[i], mysteryExtraRecipes[i].SourceMysteryDish));
+                        .Add(curRecipe);
                 }
             }
 
@@ -147,6 +180,7 @@ namespace KitchenMysteryMenu.Systems
             // algo 3: Begin selection & randomization loop until all Mystery Providers have been assigned
             int mysteryProviderIndex = 0;
             int mysteryTrayProviderIndex = 0;
+            bool doTrayProviderDuplication = false;
             int failedAttempts = 0;
             int maxFailedAttempts = 3;
             while (mysteryProviderIndex < mysteryProviderEntityList.Count || mysteryTrayProviderIndex < mysteryTrayProviderEntityList.Count)
@@ -177,6 +211,14 @@ namespace KitchenMysteryMenu.Systems
                 //          or permanently, and add the new ingredients to the availableItemsForRecipes set.
                 if (selectedRecipeList == default)
                 {
+                    if (mysteryProviderIndex >= mysteryProviderEntityList.Count &&
+                        mysteryTrayProviderIndex < mysteryTrayProviderEntityList.Count)
+                    {
+                        Mod.Logger.LogInfo($"{LogMsgPrefix} Ingredient Provider list is fully accounted for, tell Trays to fill with duplicates.");
+                        // Tell the Provider filler to just duplicate what's in Tray slot one.
+                        doTrayProviderDuplication = true;
+                        break;
+                    }
                     failedAttempts++;
                     if (failedAttempts < maxFailedAttempts)
                     {
@@ -184,6 +226,7 @@ namespace KitchenMysteryMenu.Systems
                     }
                     throw new ArgumentNullException($"{LogMsgPrefix} Failed to properly fill all mystery providers after {failedAttempts} failed attempts.");
                 }
+
                 var selectedRecipesIngredients = selectedRecipeList.SelectMany(r => r.Recipe.MinimumRequiredMysteryIngredients).ToHashSet();
                 foreach(var ingredient in selectedRecipesIngredients)
                 {
@@ -192,13 +235,37 @@ namespace KitchenMysteryMenu.Systems
                         // Don't re-add the ingredient if it's already there. 
                         continue;
                     }
-                    if (MysteryDishUtils.IsTray(ingredient.ID))
+                    // Handle substitutions. Algorithm has already determined there should be enough providers.
+                    if (currentSubstitutionIngredientSets.Any(subSet => subSet.Item.ID == ingredient.ID))
+                    {
+                        Mod.Logger.LogInfo($"{LogMsgPrefix} Handling substitution of ingredient {{{ingredient.name}}}.");
+                        var relevantSubstitutionSet = currentSubstitutionIngredientSets.Where(subSet => subSet.Item.ID == ingredient.ID).FirstOrDefault();
+                        if (relevantSubstitutionSet != null)
+                        {
+                            foreach (var subItem in relevantSubstitutionSet.SubstitutionItems)
+                            {
+                                if (availableItemsForRecipes.Any(avaItem => avaItem.ID == subItem.ID))
+                                {
+                                    continue;
+                                }
+                                if (mysteryProviderIndex >= mysteryProviderEntityList.Count)
+                                {
+                                    throw new ArgumentOutOfRangeException($"{LogMsgPrefix} Mystery Ingredient Provider index out of bounds while handling substitutions.");
+                                }
+                                FillIngredientProvider(mysteryProviderEntityList, mysteryProviderIndex, selectedRecipeList, subItem);
+                                mysteryProviderIndex++;
+                                availableItemsForRecipes.Add(subItem);
+                            }
+                        }
+                    }
+                    else if (MysteryDishUtils.IsTray(ingredient.ID))
                     {
                         if (mysteryTrayProviderIndex >= mysteryTrayProviderEntityList.Count)
                         {
                             throw new ArgumentOutOfRangeException($"{LogMsgPrefix} Mystery Tray Provider index out of bounds.");
                         }
-                        var mysteryTrayProviderCItemProvider = 
+                        Mod.Logger.LogInfo($"{LogMsgPrefix} Filling Tray Slot {{{mysteryTrayProviderIndex}}} with {{{ingredient.name}}}");
+                        var mysteryTrayProviderCItemProvider =
                             EntityManager.GetComponentData<CItemProvider>(mysteryTrayProviderEntityList[mysteryTrayProviderIndex]);
                         mysteryTrayProviderCItemProvider.SetAsItem(ingredient.ID);
                         mysteryTrayProviderCItemProvider.Maximum = 1;
@@ -207,20 +274,32 @@ namespace KitchenMysteryMenu.Systems
                         mysteryTrayProviderCItemProvider.AutoPlaceOnHolder = true;
                         EntityManager.SetComponentData(mysteryTrayProviderEntityList[mysteryTrayProviderIndex], mysteryTrayProviderCItemProvider);
                         mysteryTrayProviderIndex++;
+                        availableItemsForRecipes.Add(ingredient);
                     }
                     else
                     {
-                        var mysteryProviderCItemProvider = 
-                            EntityManager.GetComponentData<CItemProvider>(mysteryProviderEntityList[mysteryProviderIndex]);
-                        mysteryProviderCItemProvider.SetAsItem(ingredient.ID);
-                        mysteryProviderCItemProvider.PreventReturns = selectedRecipeList
-                            .Where(recipe => recipe.Recipe.MinimumRequiredMysteryIngredients.Contains(ingredient))
-                            .Any(recipe => recipe.Recipe.PreventIngredientReturns);
-                        EntityManager.SetComponentData(mysteryProviderEntityList[mysteryProviderIndex], mysteryProviderCItemProvider);
+                        FillIngredientProvider(mysteryProviderEntityList, mysteryProviderIndex, selectedRecipeList, ingredient);
                         mysteryProviderIndex++;
+                        availableItemsForRecipes.Add(ingredient);
                     }
-                    availableItemsForRecipes.Add(ingredient);
                 }
+            }
+
+            // algo 3f: Fill out the remaining tray slots if we need to duplicate them
+            while (mysteryTrayProviderIndex < mysteryTrayProviderEntityList.Count && doTrayProviderDuplication)
+            {
+                Mod.Logger.LogInfo($"{LogMsgPrefix} Filling Tray Slot {{{mysteryTrayProviderIndex}}} with previous tray's item");
+                var mysteryTrayProviderCItemProvider =
+                    EntityManager.GetComponentData<CItemProvider>(mysteryTrayProviderEntityList[mysteryTrayProviderIndex]);
+                var prevMysteryTrayProviderCItemProvider =
+                    EntityManager.GetComponentData<CItemProvider>(mysteryTrayProviderEntityList[mysteryTrayProviderIndex - 1]);
+                mysteryTrayProviderCItemProvider.SetAsItem(prevMysteryTrayProviderCItemProvider.ProvidedItem);
+                mysteryTrayProviderCItemProvider.Maximum = 1;
+                mysteryTrayProviderCItemProvider.Available = 1;
+                mysteryTrayProviderCItemProvider.PreventReturns = true;
+                mysteryTrayProviderCItemProvider.AutoPlaceOnHolder = true;
+                EntityManager.SetComponentData(mysteryTrayProviderEntityList[mysteryTrayProviderIndex], mysteryTrayProviderCItemProvider);
+                mysteryTrayProviderIndex++;
             }
 
             // algo 4: With all Mystery providers assigned, make a final sweep to determine the available recipes, and disable those that cannot be fulfilled
@@ -229,12 +308,27 @@ namespace KitchenMysteryMenu.Systems
             DisableUnusedRecipes(olderCombinedEntities);
         }
 
+        private void FillIngredientProvider(List<Entity> mysteryProviderEntityList, int mysteryProviderIndex, List<MysteryRecipeIngredientCounter> selectedRecipeList, Item ingredient)
+        {
+            Mod.Logger.LogInfo($"{LogMsgPrefix} Filling Ingredient Slot {{{mysteryProviderIndex}}} with {{{ingredient.name}}}");
+            var mysteryProviderCItemProvider =
+                EntityManager.GetComponentData<CItemProvider>(mysteryProviderEntityList[mysteryProviderIndex]);
+            mysteryProviderCItemProvider.SetAsItem(ingredient.ID);
+            mysteryProviderCItemProvider.PreventReturns = selectedRecipeList
+                .Where(recipe => recipe.Recipe.MinimumRequiredMysteryIngredients.Contains(ingredient))
+                .Any(recipe => recipe.Recipe.PreventIngredientReturns);
+            EntityManager.SetComponentData(mysteryProviderEntityList[mysteryProviderIndex], mysteryProviderCItemProvider);
+        }
+
         private HashSet<Item> FillAvailableItemsFromStaticProviders()
         {
             Mod.Logger.LogInfo($"{LogMsgPrefix} Step 1: Fill available items from static providers (if any)");
             HashSet<Item> availableItemsForRecipes = new HashSet<Item>();
             using var staticProviderEntities = StaticItemProviders.ToEntityArray(Allocator.Temp);
             using var staticItemProviderComps = StaticItemProviders.ToComponentDataArray<CItemProvider>(Allocator.Temp);
+            using var staticVariableEntities = StaticVariableProviders.ToEntityArray(Allocator.Temp);
+            using var staticVariableVariableProviderComps = StaticVariableProviders.ToComponentDataArray<CVariableProvider>(Allocator.Temp);
+            Mod.Logger.LogInfo($"{LogMsgPrefix} Step 1a: Fill with static items from non-variable providers");
             for (int i = 0; i < staticProviderEntities.Length; i++)
             {
                 int providedItemID = staticItemProviderComps[i].ProvidedItem;
@@ -247,6 +341,29 @@ namespace KitchenMysteryMenu.Systems
                 if (success)
                 {
                     availableItemsForRecipes.Add(item);
+                }
+            }
+
+            Mod.Logger.LogInfo($"{LogMsgPrefix} Step 1b: Fill with static items from variable providers");
+            for (int i = 0; i < staticVariableEntities.Length; i++)
+            {
+                int providedItemID = staticVariableVariableProviderComps[i].Provide;
+                var success = GameData.Main.TryGet(providedItemID, out Item item);
+                if (success)
+                {
+                    availableItemsForRecipes.Add(item);
+                }
+                int providedItemID2 = staticVariableVariableProviderComps[i].Provide2;
+                success = GameData.Main.TryGet(providedItemID2, out Item item2);
+                if (success)
+                {
+                    availableItemsForRecipes.Add(item2);
+                }
+                int providedItemID3 = staticVariableVariableProviderComps[i].Provide3;
+                success = GameData.Main.TryGet(providedItemID3, out Item item3);
+                if (success)
+                {
+                    availableItemsForRecipes.Add(item3);
                 }
             }
             Mod.Logger.LogInfo($"{LogMsgPrefix} Number of relevant static ingredients = {availableItemsForRecipes.Count}");
@@ -605,6 +722,7 @@ namespace KitchenMysteryMenu.Systems
             public CPossibleExtra DishExtra;
             public GenericMysteryDish Recipe;
             public HashSet<Item> MissingIngredients;
+            //public int MissingNonTrayIngredientsActualCount;
             public bool RequiresVariant => Recipe.RequiresVariant;
             public float Weight;
 
@@ -628,7 +746,8 @@ namespace KitchenMysteryMenu.Systems
                 Instantiate(entity, sourceDishID, default, default, dishExtra);
             }
 
-            private void Instantiate(Entity entity, int sourceDishID, CMenuItem menuItem, CAvailableIngredient dishOption, CPossibleExtra dishExtra)
+            private void Instantiate(Entity entity, int sourceDishID, CMenuItem menuItem, CAvailableIngredient dishOption, 
+                CPossibleExtra dishExtra)
             {
                 Entity = entity;
                 Recipe = MysteryDishCrossReference.GetMysteryDishById(sourceDishID);
@@ -684,6 +803,31 @@ namespace KitchenMysteryMenu.Systems
                 }
                 return availableProviderCount;
             }
+
+            public void ApplySubstitutionSets(List<SubstitutionIngredientSet> substitutionIngredientSets)
+            {
+                foreach (var substitutionIngredientSet in substitutionIngredientSets) {
+                    if (MissingIngredients.Any(mi => mi.ID == substitutionIngredientSet.Item.ID)) {
+                        Mod.Logger.LogInfo($"[MRIC.ApplySubstitutionSet] Applying substitution set for item {{{substitutionIngredientSet.Item.name}}} in recipe" +
+                            $" {{{Recipe.UniqueNameID}}} with {{{String.Join(", ", substitutionIngredientSet.SubstitutionItems)}}}");
+                        MissingIngredients.RemoveWhere(item => item.ID == substitutionIngredientSet.Item.ID);
+                        MissingIngredients.AddRange(substitutionIngredientSet.SubstitutionItems);
+                        Mod.Logger.LogInfo($"[MRIC.ApplySubstitutionSet] New MissingIngredients set: Count = {{{MissingIngredients.Count}}}, {{{String.Join(", ", MissingIngredients)}}}");
+                    }
+                }
+            }
+
+            //public int GetActualMissingIngredientsCount()
+            //{
+            //    int count = MissingIngredients.Count;
+            //    foreach (var substitutionRecipe in RelevantSubstitutionRecipes)
+            //    {
+            //        // Remove one from count for the ingredient being replaced, then add count for every replacement.
+            //        count += substitutionRecipe.MissingIngredients.Count - 1;
+            //    }
+
+            //    return count;
+            //}
 
             public bool CanBeSelected(int availableProviderCount)
             {
@@ -789,7 +933,7 @@ namespace KitchenMysteryMenu.Systems
                     int parentMissingIngredientSum = parentMissingIngredients.Count();
                     Mod.Logger.LogInfo($"{logKey} AvailableIngredient {{Recipe = {Recipe.UniqueNameID}, MenuItem = " +
                         $"{Recipe.IngredientsUnlocks.First(iu => iu.Ingredient.ID == DishOption.Ingredient && iu.MenuItem.ID == DishOption.MenuItem).MenuItem.name}," +
-                        $" ParentRecipes = {parentRecipes}, ParentDistinctMissingIngredientSum = {parentMissingIngredientSum}}}");
+                        $" ParentRecipes = {String.Join(", ", parentRecipes)}, ParentDistinctMissingIngredientSum = {parentMissingIngredientSum}}}");
                     return CanBeSelected(availableIngredientProviderCount - parentMissingIngredientSum, availableTrayProviderCount);
                 }
                 // Possible Extras always need their parent recipe to be "Could Be Served", and as such
@@ -801,7 +945,7 @@ namespace KitchenMysteryMenu.Systems
                     int parentMissingIngredientSum = parentMissingIngredients.Count();
                     Mod.Logger.LogInfo($"{logKey} PossibleExtra {{Recipe = {Recipe.UniqueNameID}, MenuItem = " +
                         $"{Recipe.ExtraOrderUnlocks.First(iu => iu.Ingredient.ID == DishExtra.Ingredient && iu.MenuItem.ID == DishExtra.MenuItem).MenuItem.name}," +
-                        $" ParentRecipes = {parentRecipes}, ParentDistinctMissingIngredientSum = {parentMissingIngredientSum}}}");
+                        $" ParentRecipes = {String.Join(", ", parentRecipes)}, ParentDistinctMissingIngredientSum = {parentMissingIngredientSum}}}");
                     return CanBeSelected(availableIngredientProviderCount - parentMissingIngredientSum, availableTrayProviderCount);
                 }
                 Mod.Logger.LogInfo($"{logKey} Recipe {{{Recipe.UniqueNameID}}} could not be served. It's not a menu item or available ingredient.");
@@ -927,6 +1071,11 @@ namespace KitchenMysteryMenu.Systems
                 : (IsAvailableIngredient() ? "AvailableIngredient" 
                 : (IsPossibleExtra() ? "PossibleExtra" 
                 : "type not found"));
+
+            public override string ToString()
+            {
+                return $"MRIC: Type {{{TypeName}}}, Recipe name {{{Recipe.UniqueNameID}}}, Missing Ingredients {{{String.Join(", ", MissingIngredients)}}}";
+            }
         }
     }
 }

@@ -20,6 +20,7 @@ using KitchenMysteryMenu.Customs.Dishes.Spaghetti;
 using KitchenMysteryMenu.Customs.Dishes.Starters;
 using KitchenMysteryMenu.Customs.Dishes.Steaks;
 using KitchenMysteryMenu.Customs.Dishes.StirFry;
+using KitchenMysteryMenu.Customs.Dishes.Tacos;
 using KitchenMysteryMenu.Customs.Dishes.Turkey;
 using KitchenMysteryMenu.Customs.Ingredients;
 using KitchenMysteryMenu.Customs.ItemGroups;
@@ -74,6 +75,7 @@ namespace KitchenMysteryMenu
             AddGameDataObject<MysteryIngredientProviderCakes>();
             AddGameDataObject<MysteryIngredientProviderCakes2>();
             AddGameDataObject<MysteryIngredientProviderCakes3>();
+            AddGameDataObject<MysteryIngredientProviderComplexities>();
             AddGameDataObject<MysteryIngredientProviderExtra2>();
             AddGameDataObject<MysteryIngredientProviderExtra3>();
             AddGameDataObject<MysteryIngredientProviderExtra4>();
@@ -82,6 +84,7 @@ namespace KitchenMysteryMenu
             AddGameDataObject<MysteryIngredientProviderExtra7>();
             AddGameDataObject<MysteryIngredientProviderSides>();
             AddGameDataObject<MysteryTrayProviderCakes>();
+            AddGameDataObject<MysteryTrayProviderComplexities>();
         }
 
         private void AddIngredientGDOs()
@@ -92,6 +95,7 @@ namespace KitchenMysteryMenu
             AddGameDataObject<MysteryFlour>();
             AddGameDataObject<MysteryIceCreamStrawberry>();
             AddGameDataObject<MysteryIceCreamVanilla>();
+            AddGameDataObject<MysteryLasagnePastaSheet>();
             AddGameDataObject<MysteryMeat>();
             AddGameDataObject<MysteryMushroom>();
             AddGameDataObject<MysteryOnion>();
@@ -103,14 +107,16 @@ namespace KitchenMysteryMenu
             AddGameDataObject<MysteryWine>();
 
             AddGameDataObject<MysteryCookieTray>();
+            AddGameDataObject<MysteryDoughnutTray>();
         }
 
         private void AddItemGroupGDOs()
         {
             // For the HQ Kitchen to work with minimal extra code
-            AddGameDataObject<MysteryDough>();
-            AddGameDataObject<MysteryPieMeatRaw>();
-            AddGameDataObject<MysteryPieMeatRawBlindBaked>();
+            // TODO: replace this with a version of the algorithm for HQ Kitchen
+            //AddGameDataObject<MysteryDough>();
+            //AddGameDataObject<MysteryPieMeatRaw>();
+            //AddGameDataObject<MysteryPieMeatRawBlindBaked>();
         }
 
         private void AddDishGDOs()
@@ -124,6 +130,7 @@ namespace KitchenMysteryMenu
             AddGameDataObject<MysteryMenuCondimentsDish>();
             AddGameDataObject<MysteryMenuSaucesSoupsDish>();
             AddGameDataObject<MysteryMenuSidesDish>();
+            AddGameDataObject<MysteryMenuSubstitutionsComplexityDish>();
             AddGameDataObject<MysteryMenuToppingsDish>();
             AddGameDataObject<MysteryMenuVeggieVariationsDish>();
 
@@ -169,20 +176,25 @@ namespace KitchenMysteryMenu
             AddGameDataObject<MysteryBurgerToppingCheeseDish>();
             AddGameDataObject<MysteryBurgerToppingOnionDish>();
             AddGameDataObject<MysteryBurgerToppingTomatoDish>();
+            AddGameDataObject<MysteryBurgerFreshPattyMeatDish>();
 
             // Mystery Cakes Dishes
             AddGameDataObject<MysteryCakeBatterRecipe>();
             AddGameDataObject<MysteryCakesCoffeeCookieDish>();
             AddGameDataObject<MysteryCakesCoffeeCupcakeDish>();
+            AddGameDataObject<MysteryCakesCoffeeDoughnutDish>();
             AddGameDataObject<MysteryCakesCoffeeSpongeCakeDish>();
+            AddGameDataObject<MysteryCakesChocolateBrownieDish>();
             AddGameDataObject<MysteryCakesChocolateCookieDish>();
             AddGameDataObject<MysteryCakesChocolateCupcakeDish>();
+            AddGameDataObject<MysteryCakesChocolateDoughnutDish>();
             AddGameDataObject<MysteryCakesChocolateSpongeCakeDish>();
             AddGameDataObject<MysteryCakesLemonCookieDish>();
             AddGameDataObject<MysteryCakesLemonCupcakeDish>();
+            AddGameDataObject<MysteryCakesLemonDoughnutDish>();
             AddGameDataObject<MysteryCakesLemonSpongeCakeDish>();
 
-            // Mystery Cakes Dishes
+            // Mystery Coffee Dishes
             AddGameDataObject<MysteryCoffeeBaseDish>();
             AddGameDataObject<MysteryCoffeeCakeStandDish>();
             AddGameDataObject<MysteryCoffeeExtraMilkDish>();
@@ -232,6 +244,7 @@ namespace KitchenMysteryMenu
             AddGameDataObject<MysterySpaghettiBaseDish>();
             AddGameDataObject<MysterySpaghettiBologneseDish>();
             AddGameDataObject<MysterySpaghettiCheesyDish>();
+            AddGameDataObject<MysterySpaghettiLasagneDish>();
 
             // Mystery Steak Dishes
             AddGameDataObject<MysterySteakBaseDish>();
@@ -252,6 +265,13 @@ namespace KitchenMysteryMenu
             AddGameDataObject<MysteryStirFryMushroomDish>();
             AddGameDataObject<MysteryStirFrySteakDish>();
             AddGameDataObject<MysteryStirFrySoySauceDish>();
+
+            // Mystery Tacos Dishes
+            AddGameDataObject<MysteryTacosBaseDish>();
+            AddGameDataObject<MysteryTacosToppingCheeseDish>();
+            AddGameDataObject<MysteryTacosToppingLettuceDish>();
+            AddGameDataObject<MysteryTacosToppingOnionDish>();
+            AddGameDataObject<MysteryTacosToppingTomatoDish>();
 
             // Mystery Turkey Dishes
             AddGameDataObject<MysteryTurkeyBaseDish>();
