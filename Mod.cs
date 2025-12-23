@@ -182,15 +182,19 @@ namespace KitchenMysteryMenu
             AddGameDataObject<MysteryCakeBatterRecipe>();
             AddGameDataObject<MysteryCakesCoffeeCookieDish>();
             AddGameDataObject<MysteryCakesCoffeeCupcakeDish>();
+            AddGameDataObject<MysteryCakesCoffeeDoughnutDish>();
             AddGameDataObject<MysteryCakesCoffeeSpongeCakeDish>();
+            AddGameDataObject<MysteryCakesChocolateBrownieDish>();
             AddGameDataObject<MysteryCakesChocolateCookieDish>();
             AddGameDataObject<MysteryCakesChocolateCupcakeDish>();
+            AddGameDataObject<MysteryCakesChocolateDoughnutDish>();
             AddGameDataObject<MysteryCakesChocolateSpongeCakeDish>();
             AddGameDataObject<MysteryCakesLemonCookieDish>();
             AddGameDataObject<MysteryCakesLemonCupcakeDish>();
+            AddGameDataObject<MysteryCakesLemonDoughnutDish>();
             AddGameDataObject<MysteryCakesLemonSpongeCakeDish>();
 
-            // Mystery Cakes Dishes
+            // Mystery Coffee Dishes
             AddGameDataObject<MysteryCoffeeBaseDish>();
             AddGameDataObject<MysteryCoffeeCakeStandDish>();
             AddGameDataObject<MysteryCoffeeExtraMilkDish>();
@@ -240,6 +244,7 @@ namespace KitchenMysteryMenu
             AddGameDataObject<MysterySpaghettiBaseDish>();
             AddGameDataObject<MysterySpaghettiBologneseDish>();
             AddGameDataObject<MysterySpaghettiCheesyDish>();
+            AddGameDataObject<MysterySpaghettiLasagneDish>();
 
             // Mystery Steak Dishes
             AddGameDataObject<MysterySteakBaseDish>();

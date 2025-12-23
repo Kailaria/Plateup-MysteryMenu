@@ -51,13 +51,15 @@ namespace KitchenMysteryMenu.Customs.Dishes
 
         public override HashSet<GenericMysteryDish> ContainedMysteryRecipes => new()
         {
-            // Add the Mystery versions of Lasagne, Doughnuts, Brownies, Fresh Burger Patties (Meat), and Fresh Patties (Mince)
+            // Add the Mystery versions of Lasagne, Doughnuts, Brownies, Fresh Burger Patties (Meat)
             (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryBurgerFreshPattyMeatDish>(),
-            //(GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryCakesChocolateCupcakeDish>(),
-            //(GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryCakesChocolateSpongeCakeDish>(),
-            //(GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryCakesLemonCookieDish>(),
-            //(GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryCakesLemonCupcakeDish>(),
-            //(GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryCakesLemonSpongeCakeDish>(),
+
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysterySpaghettiLasagneDish>(),
+
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryCakesChocolateBrownieDish>(),
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryCakesChocolateDoughnutDish>(),
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryCakesCoffeeDoughnutDish>(),
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryCakesLemonDoughnutDish>(),
 
             //(GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryCoffeeExtraMilkDish>(),
             //(GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryCoffeeExtraSugarDish>(),
@@ -70,8 +72,8 @@ namespace KitchenMysteryMenu.Customs.Dishes
         {
             { Locale.English,
                 $"<color=#00ffff>New possible menu items:</color> {References.ColorTextCakeForms} - Doughnuts, Brownies\n" +
-                $"Mains - Lasagne -- " + //Toppings - Giant Sandwiches, Giant Sundaes, Turkey Club Sandwich\n" +
-                $"Substitute recipes - Fresh Burger Patties\n" +
+                $"Mains - Lasagne -- " + //Toppings - Giant Sandwiches, Giant Sundaes\n" +
+                $"Substitute recipes - Fresh Burger Patties\n" + //Starchy Spaghetti, Homemade Ice Cream & Sundaes
                 "Adds one extra Mystery Ingredient Provider and one extra Mystery Tray Provider."
             }
         };
