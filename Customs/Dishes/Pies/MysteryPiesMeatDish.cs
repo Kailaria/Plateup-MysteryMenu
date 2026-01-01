@@ -56,7 +56,7 @@ namespace KitchenMysteryMenu.Customs.Dishes.Pies
             (Item) GDOUtils.GetExistingGDO(ItemReferences.Flour),
             (Item) GDOUtils.GetExistingGDO(ItemReferences.Meat)
         };
-        public override bool RequiresVariant => false;
+        public override bool RequiresBaseVariant => false;
         public override GenericMysteryDish BaseMysteryDish => (GenericMysteryDish) GDOUtils.GetCustomGameDataObject<MysteryPiesBaseDish>();
     }
 }

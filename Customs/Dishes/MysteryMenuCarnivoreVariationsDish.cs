@@ -4,6 +4,7 @@ using KitchenLib.References;
 using KitchenLib.Utils;
 using KitchenMysteryMenu;
 using KitchenMysteryMenu.Customs.Dishes.Fish;
+using KitchenMysteryMenu.Customs.Dishes.Sandwiches;
 using KitchenMysteryMenu.Customs.Dishes.Steaks;
 using KitchenMysteryMenu.Customs.Dishes.StirFry;
 using KitchenMysteryMenu.Customs.Ingredients;
@@ -42,7 +43,7 @@ namespace KitchenMysteryMenu.Customs.Dishes
 
         public override HashSet<GenericMysteryDish> ContainedMysteryRecipes => new()
         {
-            // Add the Mystery versions of every steak & fish variant plus steak stir fry
+            // Add the Mystery versions of every steak & fish variant plus steak stir fry and Toast Sandwiches
             (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysterySteakThinDish>(),
             (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysterySteakThickDish>(),
             (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysterySteakBonedDish>(),
@@ -53,12 +54,17 @@ namespace KitchenMysteryMenu.Customs.Dishes
             (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryFishSpinyDish>(),
 
             (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryStirFrySteakDish>(),
+
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysterySandwichToastDish>(),
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysterySandwichToastHamSliceDish>(),
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysterySandwichToastLettuceDish>(),
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysterySandwichToastTomatoDish>(),
         };
 
         public override Dictionary<Locale, string> Recipe => new()
         {
             { Locale.English, "<color=#00ffff>New possible menu items:</color> Thin-Cut Steak, Thick-Cut Steak, Bone-In Steak, " +
-                "Spiny Fish, Oysters, Fish Fillet, Crab Cakes, Steak Stir Fry\n" +
+                "Spiny Fish, Oysters, Fish Fillet, Crab Cakes, Steak Stir Fry, Toast Sandwich\n" +
                 "Adds one extra Mystery Ingredient Provider."
             }
         };
@@ -68,7 +74,7 @@ namespace KitchenMysteryMenu.Customs.Dishes
             {
                 Name = "Mystery - Carnivorous Variations",
                 Description = "Adds Thin Steak, Thick Steak, Bone-in Steak, Spiny Fish, Fish Fillet, Oysters, Crab Cakes, " +
-                "and Steak Stir Fry as possible Mains. Provides one additional Mystery Ingredient Provider.",
+                "Steak Stir Fry, and Toast Sandwiches as possible Mains. Provides one additional Mystery Ingredient Provider.",
                 FlavourText = "Also known as: Surf & Turf"
             })
         };

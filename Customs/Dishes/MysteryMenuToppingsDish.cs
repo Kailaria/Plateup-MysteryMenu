@@ -21,6 +21,7 @@ using KitchenMysteryMenu.Customs.Dishes.Dumplings;
 using KitchenMysteryMenu.Customs.Dishes.Burger;
 using KitchenMysteryMenu.Customs.Dishes.Breakfast;
 using KitchenMysteryMenu.Customs.Dishes.Tacos;
+using KitchenMysteryMenu.Customs.Dishes.Sandwiches;
 
 namespace KitchenMysteryMenu.Customs.Dishes
 {
@@ -29,13 +30,13 @@ namespace KitchenMysteryMenu.Customs.Dishes
         protected override string NameTag => "Toppings";
         public override DishType Type => DishType.Extra;
         public override DishCustomerChange CustomerMultiplier => DishCustomerChange.LargeDecrease;
-        public override Unlock.RewardLevel ExpReward => Unlock.RewardLevel.Medium;
+        public override Unlock.RewardLevel ExpReward => Unlock.RewardLevel.Large;
         public override UnlockGroup UnlockGroup => UnlockGroup.Dish;
         public override bool IsUnlockable => true;
         public override Item RequiredDishItem => (Item)GDOUtils.GetExistingGDO(ItemReferences.Plate);
         public override bool RequiredNoDishItem => false;
         public override bool IsAvailableAsLobbyOption => false;
-        public override int Difficulty => 4;
+        public override int Difficulty => 5;
         public override HashSet<Item> MinimumIngredients => new()
         {
             // Add X Mystery Ingredients
@@ -65,6 +66,21 @@ namespace KitchenMysteryMenu.Customs.Dishes
             (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysterySaladToppingOnionDish>(),
             (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysterySaladToppingOliveDish>(),
 
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysterySandwichCheeseDish>(),
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysterySandwichEggDish>(),
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysterySandwichOliveDish>(),
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysterySandwichPickleDish>(),
+
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysterySandwichGiantCheeseDish>(),
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysterySandwichGiantEggDish>(),
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysterySandwichGiantOliveDish>(),
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysterySandwichGiantPickleDish>(),
+
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysterySandwichToastCheeseDish>(),
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysterySandwichToastEggDish>(),
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysterySandwichToastOliveDish>(),
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysterySandwichToastPickleDish>(),
+
             (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysterySteakToppingMushroomDish>(),
             (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysterySteakToppingTomatoDish>(),
 
@@ -78,9 +94,9 @@ namespace KitchenMysteryMenu.Customs.Dishes
 
         public override Dictionary<Locale, string> Recipe => new()
         {
-            { Locale.English, "<color=#00ffff>New possible menu items:</color> Breakfast - Beans, Eggs, Tomato, Mushroom;" +
-                " Burger - Cheese, Tomato, Onion; Dumplings - Seaweed; Salad - Onion, Olives; Tacos - Cheese, Lettuce, Onion, Tomato; " +
-                "Turkey - Stuffing\n" +
+            { Locale.English, "<color=#00ffff>New possible menu items:</color> Breakfast - Beans, Eggs, Tomato, Mushroom; " +
+                "Burger - Cheese, Tomato, Onion; Dumplings - Seaweed; Salad - Onion, Olives; Sandwich - Cheese, Egg, Olive, Pickle; " +
+                "Steak - Mushroom, Tomato; Tacos - Cheese, Lettuce, Onion, Tomato; Turkey - Stuffing\n" +
                 "Adds one extra Mystery Ingredient Provider."
             }
         };
@@ -91,7 +107,8 @@ namespace KitchenMysteryMenu.Customs.Dishes
                 Name = "Mystery - Toppings",
                 Description = "Adds Beans, Eggs, Tomato, and Mushroom as possible Breakfast toppings; Cheese, Tomato, " +
                 "and Onion as possible Burger toppings; Mushroom and Tomato as possible Steak toppings; Seaweed as a " +
-                "possible topping for Dumplings; Onion and Olives as possible Salad toppings; Cheese, Lettuce, Onion, and Tomato" +
+                "possible topping for Dumplings; Onion and Olives as possible Salad toppings; Cheese, Egg, Olive, and " +
+                "Pickle as possible Sandwich toppings; Cheese, Lettuce, Onion, and Tomato " +
                 "as possible Tacos toppings; and Stuffing as a possible Turkey topping.\n" +
                 "Provides one additional Mystery Ingredient Provider.",
                 FlavourText = ""

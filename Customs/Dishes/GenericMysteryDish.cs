@@ -29,17 +29,25 @@ namespace KitchenMysteryMenu.Customs.Dishes
          * Override as true if the base dish is not enough to be ordered on its own. Especially useful for plated dishes
          *   like Pies and Stir Fry to ensure that their normal bases aren't needed to be available in order to be served.
          */
-        public virtual bool RequiresVariant => false;
+        public virtual bool RequiresBaseVariant => false;
         public virtual bool HasTrayIngredient => false;
         public virtual GenericMysteryDish BaseMysteryDish => default;
         public virtual int BaseResultingItem => 0;
         public virtual MenuPhase MenuPhase => MenuPhase.Main;
-        public virtual bool PreventIngredientReturns => false;
+        public virtual HashSet<Item> PreventIngredientReturns => default;
+        public virtual List<RestaurantStatus> AddsStatuses => default;
 
         public override void OnRegister(Dish gameDataObject)
         {
             base.OnRegister(gameDataObject);
             MysteryDishCrossReference.RegisterDish(this);
+        }
+
+        public override void AttachDependentProperties(GameData gameData, GameDataObject gameDataObject)
+        {
+            base.AttachDependentProperties(gameData, gameDataObject);
+            Dish dish = (Dish)gameDataObject;
+            OverrideVariable(dish, "AddsStatuses", AddsStatuses);
         }
     }
 }

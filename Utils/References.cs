@@ -36,21 +36,49 @@ namespace KitchenMysteryMenu.Utils
         public static string ColorTextHotDrink = MysteryDishUtils.ColorizeSpriteTextToHotDrink("Hot Drink");
         public static string ColorTextHotDrinks = MysteryDishUtils.ColorizeSpriteTextToHotDrink("Hot Drinks");
 
-        // Temporary until KitchenLib updates w/ Spaghetti -- No longer necessary in Fully Loaded update
-        //public static int SpaghettiBaseDish = 1764920765;
-        //public static int SpaghettiBologneseDish = -1501485763;
-        //public static int SpaghettiCheesyDish = 1651927267;
-        //public static int LasagneDish = 803049136;
+        // Temporary until KitchenLib updates w/ Sandos & Sundaes
+        // Dishes
+        public static int SandwichBaseDish = -1272159363;
+        public static int SandwichCheeseDish = -469306490;
+        public static int SandwichEggDish = 525953646;
+        public static int SandwichMayoDish = -778718372;
+        public static int SandwichToastDish = -72176411;
+        public static int SandwichToppersDish = 368792675;
+        public static int SandwichGiantDish = -1795285445;
+        public static int SandwichTurkeyClubDish = 641008296;
 
-        //public static int SpaghettiPomodoroPlated = 1900532137;
-        //public static int SpaghettiBolognesePlated = -1711635749;
-        //public static int SpaghettiCheesyPlated = -383718493;
-        //public static int LasagnePlated = 82891941;
+        public static int SundaeBaseDish = 934171642;
+        public static int SundaeSyrupsDish = 431260200;
+        public static int SundaeToppingsDish = 1879652468;
+        public static int SundaeGiantDish = -690833761;
+        
+        public static int SundaeHomemadeVariantDish = -1451591918;
+        public static int SpaghettiStarchyVariantDish = -1974675533;
 
-        //public static int SpaghettiRaw = -823534126;
-        //public static int Mince = -2047874552;
-        //public static int Butter = 1605072344;
-        //public static int LasagnePastaSheet = 1521319349;
-        //public static int LasagneTray = -2080052245;
+        // Menu Items
+        public static int SandwichPiecemeal = 359143701;
+        public static int SandwichGiantPiecemeal = -527624731;
+        public static int SandwichToastPiecemeal = 1453228675;
+        public static int SandwichClubPiecemeal = -1370653249;
+        public static int SundaePiecemeal = 1695786399;
+        public static int SundaeGiantPiecemeal = -1990180123;
+
+        // Ingredients
+        public static int HamSliced = 164425076;
+        public static int Pickle = 1384381531;
+        public static int SundaeGlass = 1116040881;
+        public static int Strawberry = 578808284;
+        public static int ChocolcateSyrup = 2105393112; // bottle
+        public static int StrawberrySyrup = -764053970; // bottle
+        public static int ChocolateSyrupServing = 118697218;
+        public static int StrawberrySyrupServing = -1927341553;
+
+        // Processes
+        public static int ProcessFreeze = -1853370850;
+
+        // Statuses
+        public static int StatusBlockSinkBins = 8388643;
+
+        // END TEMP BLOCK
     }
 }

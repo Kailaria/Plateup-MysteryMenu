@@ -15,6 +15,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using KitchenMysteryMenu.Customs.Dishes.Starters;
+using KitchenMysteryMenu.Customs.Dishes.Sandwiches;
 
 namespace KitchenMysteryMenu.Customs.Dishes
 {
@@ -62,12 +63,16 @@ namespace KitchenMysteryMenu.Customs.Dishes
 
             (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysterySpaghettiBologneseDish>(),
             (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysterySpaghettiCheesyDish>(),
+
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysterySandwichMayoDish>(),
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysterySandwichGiantMayoDish>(),
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysterySandwichToastMayoDish>(),
         };
 
         public override Dictionary<Locale, string> Recipe => new()
         {
             { Locale.English, "<color=#00ffff>New possible menu items:</color>  <i>Any Steak</i> - Mushroom Sauce" +
-                ", Red Wine Jus;  <i>Turkey</i> - Gravy, Cranberry Sauce;  <i>Spaghetti</i> - Bolognese, Cheesy Spaghetti\n" +
+                ", Red Wine Jus --  <i>Turkey</i> - Gravy, Cranberry Sauce --  <i>Spaghetti</i> - Bolognese, Cheesy Spaghetti --  <i>Sandwiches</i> - Mayo\n" +
                 "<i>Starters</i> - Broccoli Cheese Soup, Carrot Soup, Meat Soup, Pumpkin Soup, Tomato Soup\n" +
                 "Adds two extra Mystery Ingredient Providers."
             }
@@ -78,7 +83,7 @@ namespace KitchenMysteryMenu.Customs.Dishes
             {
                 Name = "Mystery - Sauces & Soups",
                 Description = "Adds Mushroom Sauce and Red Wine Jus as possible Extras for Steaks, Gravy and Cranberry Sauce " +
-                "as possible Extras for Turkey, and Bolognese Sauce and Cheesy Spaghetti as alternative Mains with Spaghetti.\n" +
+                "as possible Extras for Turkey, Mayo as a possible Extra for Sandwiches, and Bolognese Sauce and Cheesy Spaghetti as alternative Mains with Spaghetti.\n" +
                 "Also adds Broccoli Cheese Soup, Carrot Soup, Meat Soup, Pumpkin Soup, and Tomato Soup as possible starters.\n" +
                 "Provides two additional Mystery Ingredient Providers.",
                 FlavourText = ""

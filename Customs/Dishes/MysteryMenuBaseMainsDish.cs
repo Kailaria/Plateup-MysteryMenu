@@ -11,6 +11,7 @@ using KitchenMysteryMenu.Customs.Dishes.HotDog;
 using KitchenMysteryMenu.Customs.Dishes.Pies;
 using KitchenMysteryMenu.Customs.Dishes.Pizza;
 using KitchenMysteryMenu.Customs.Dishes.Salad;
+using KitchenMysteryMenu.Customs.Dishes.Sandwiches;
 using KitchenMysteryMenu.Customs.Dishes.Spaghetti;
 using KitchenMysteryMenu.Customs.Dishes.Steaks;
 using KitchenMysteryMenu.Customs.Dishes.StirFry;
@@ -40,7 +41,7 @@ namespace KitchenMysteryMenu.Customs.Dishes
         public override Item RequiredDishItem => (Item)GDOUtils.GetExistingGDO(ItemReferences.Plate);
         public override bool RequiredNoDishItem => false;
         public override bool IsAvailableAsLobbyOption => true;
-        public override int Difficulty => 3;
+        public override int Difficulty => 4;
         public override List<string> StartingNameSet => new()
         {
             "The Ferrous Chef",     // Iron Chef
@@ -85,6 +86,13 @@ namespace KitchenMysteryMenu.Customs.Dishes
 
             (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysterySaladBaseDish>(),
             (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysterySaladTomatoDish>(),
+
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysterySandwichBaseDish>(),
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysterySandwichBreadDish>(),
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysterySandwichHamSliceDish>(),
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysterySandwichLettuceDish>(),
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysterySandwichTomatoDish>(),
+
             (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysterySpaghettiBaseDish>(),
             (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysterySteakBaseDish>(),
 

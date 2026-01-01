@@ -51,13 +51,16 @@ namespace KitchenMysteryMenu.Customs.Dishes.Desserts
         {
             (Item) GDOUtils.GetExistingGDO(ItemReferences.IceCreamVanilla)
         };
-        public override bool RequiresVariant => false;
+        public override bool RequiresBaseVariant => false;
         public override List<Unlock> HardcodedRequirements => new()
         {
             BaseMysteryDish.GameDataObject
         };
         public override MenuPhase MenuPhase => MenuPhase.Dessert;
         public override GenericMysteryDish BaseMysteryDish => (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryIceCreamServingDish>();
-        public override bool PreventIngredientReturns => true;
+        public override HashSet<Item> PreventIngredientReturns => new()
+        {
+            (Item)GDOUtils.GetExistingGDO(ItemReferences.IceCreamVanilla)
+        };
     }
 }

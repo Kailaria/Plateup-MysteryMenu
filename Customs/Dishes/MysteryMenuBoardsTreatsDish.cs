@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using KitchenMysteryMenu.Customs.Dishes.Starters;
 using KitchenMysteryMenu.Customs.Dishes.Desserts;
+using KitchenMysteryMenu.Customs.Dishes.Sundaes;
 
 namespace KitchenMysteryMenu.Customs.Dishes
 {
@@ -55,14 +56,20 @@ namespace KitchenMysteryMenu.Customs.Dishes
             (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryIceCreamServingDish>(),
             (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryIceCreamChocolateDish>(),
             (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryIceCreamStrawberryDish>(),
-            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryIceCreamVanillaDish>()
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryIceCreamVanillaDish>(),
+
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysterySundaeBaseDish>(),
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysterySundaeChocolateIceCreamDish>(),
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysterySundaeGlassDish>(),
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysterySundaeStrawberryIceCreamDish>(),
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysterySundaeVanillaIceCreamDish>()
         };
 
         public override Dictionary<Locale, string> Recipe => new()
         {
             { Locale.English, "<color=#00ffff>New possible menu items:</color>  <i>Starters</i> - Pumpkin Seeds" +
                 ", Bread (Boards), Christmas Crackers, Mandarin Starter.\n" +
-                "<i>Desserts</i> - Ice Cream (each flavor individually), Cheese Boards" +
+                "<i>Desserts</i> - Ice Cream (each flavor individually), Cheese Boards, Sundaes" +
                 "Adds two extra Mystery Ingredient Providers."
             }
         };
@@ -72,7 +79,7 @@ namespace KitchenMysteryMenu.Customs.Dishes
             {
                 Name = "Mystery - Boards & Treats",
                 Description = "Adds Bread Boards, Christmas Crackers, Mandarin Starter, and Pumpkin Seeds as possible starters.\n" +
-                "Adds Cheese Boards and Ice Cream as possible desserts (where each Ice Cream flavor takes up an entire provider)\n" +
+                "Adds Cheese Boards, Ice Cream, and Sundaes as possible desserts (where each Ice Cream flavor takes up an entire provider)\n" +
                 "Provides two additional Mystery Ingredient Providers.",
                 FlavourText = ""
             })

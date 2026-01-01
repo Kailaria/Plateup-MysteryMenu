@@ -19,6 +19,7 @@ using KitchenMysteryMenu.Customs.Dishes.Desserts;
 using KitchenMysteryMenu.Customs.Appliances;
 using KitchenMysteryMenu.Customs.Dishes.Cakes;
 using KitchenMysteryMenu.Customs.Dishes.Coffee;
+using KitchenMysteryMenu.Customs.Dishes.Sundaes;
 
 namespace KitchenMysteryMenu.Customs.Dishes
 {
@@ -64,7 +65,12 @@ namespace KitchenMysteryMenu.Customs.Dishes
             (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryCoffeeExtraSugarDish>(),
             (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryCoffeeIcedDish>(),
             (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryCoffeeLatteDish>(),
-            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryTeaDish>()
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysteryTeaDish>(),
+
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysterySundaeCherryDish>(),
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysterySundaeChocolateSyrupDish>(),
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysterySundaeNutsDish>(),
+            (GenericMysteryDish)GDOUtils.GetCustomGameDataObject<MysterySundaeStrawberrySyrupDish>()
         };
 
         public override Dictionary<Locale, string> Recipe => new()
@@ -72,6 +78,7 @@ namespace KitchenMysteryMenu.Customs.Dishes
             { Locale.English,
                 $"<color=#00ffff>New possible menu items:</color> {References.ColorTextCakeFlavours} - Chocolate, Lemon\n" +
                 $"{References.ColorTextHotDrinks} - Lattes, Iced Coffee, Tea, Extra Milk, Extra Sugar\n" +
+                $"Sundaes - Cherries, Nuts, Chocolate Syrup, Strawberry Syrup" +
                 "Adds two extra Mystery Ingredient Providers."
             }
         };
@@ -79,16 +86,18 @@ namespace KitchenMysteryMenu.Customs.Dishes
         {
             (Locale.English, new UnlockInfo()
             {
-                Name = "Mystery - Coffee & Cake - Varieties",
+                Name = "Mystery - Coffee, Cake, Sundae - Varieties",
                 Description = $"Adds Chocolate and Lemon as possible {References.SpriteCake} Cake flavours.\n" +
                 $"Also adds Lattes, Iced Coffee, and Tea as alternative {References.SpriteFillCoffee} Hot Drinks, and Extra Sugar and Extra Milk for them when available.\n" +
+                $"Finally, adds Cherries, Nuts, Chocolate Syrup, and Strawberry Syrup as possible Sundae toppings." +
                 "Provides two additional Mystery Ingredient Providers.",
                 FlavourText = ""
             })
         };
         public override List<Unlock> HardcodedRequirements => new()
         {
-            GDOUtils.GetCastedGDO<Dish, MysteryMenuCoffeeCakesPiesDish>()
+            GDOUtils.GetCastedGDO<Dish, MysteryMenuCoffeeCakesPiesDish>(),
+            GDOUtils.GetCastedGDO<Dish, MysteryMenuBoardsTreatsDish>()
         };
     }
 }
