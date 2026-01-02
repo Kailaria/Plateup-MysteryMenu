@@ -26,10 +26,19 @@ namespace KitchenMysteryMenu.Customs.Dishes
         public virtual HashSet<SubstitutionIngredientSet> SubstitutionIngredientSets =>
             ContainedMysteryRecipes.SelectMany(r => r.SubstitutionIngredientSets).ToHashSet();
 
+        public virtual List<RestaurantStatus> AddsStatuses => 
+            ContainedMysteryRecipes.Where(r => r.AddsStatuses != default).SelectMany(r => r.AddsStatuses).ToList();
+
         public override void OnRegister(Dish gameDataObject)
         {
             base.OnRegister(gameDataObject);
             MysteryDishCrossReference.RegisterDishCard(this);
+        }
+        public override void AttachDependentProperties(GameData gameData, GameDataObject gameDataObject)
+        {
+            base.AttachDependentProperties(gameData, gameDataObject);
+            Dish dish = (Dish)gameDataObject;
+            OverrideVariable(dish, "AddsStatuses", AddsStatuses);
         }
     }
 }

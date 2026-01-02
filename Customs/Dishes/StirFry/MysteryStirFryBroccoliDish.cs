@@ -56,7 +56,7 @@ namespace KitchenMysteryMenu.Customs.Dishes.StirFry
             (Item) GDOUtils.GetExistingGDO(ItemReferences.BroccoliRaw),
             (Item) GDOUtils.GetExistingGDO(ItemReferences.Rice)
         };
-        public override bool RequiresVariant => false;
+        public override bool RequiresBaseVariant => false;
         public override GenericMysteryDish BaseMysteryDish => (GenericMysteryDish) GDOUtils.GetCustomGameDataObject<MysteryStirFryBaseDish>();
     }
 }

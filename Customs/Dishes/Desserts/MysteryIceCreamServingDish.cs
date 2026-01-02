@@ -49,7 +49,7 @@ namespace KitchenMysteryMenu.Customs.Dishes.Desserts
             }
         };
         public override HashSet<Item> MinimumRequiredMysteryIngredients => new HashSet<Item>();
-        public override bool RequiresVariant => true;
+        public override bool RequiresBaseVariant => true;
         public override List<Unlock> HardcodedRequirements => new()
         {
             GDOUtils.GetCastedGDO<Dish, MysteryMenuBoardsTreatsDish>()
