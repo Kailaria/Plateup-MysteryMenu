@@ -1,9 +1,9 @@
 ﻿using HarmonyLib;
 using Kitchen;
 using KitchenLib.Utils;
-using KitchenMysteryMenu.Components;
-using KitchenMysteryMenu.Customs.Dishes;
-using KitchenMysteryMenu.Utils;
+using KitchenMasteryMenu.Components;
+using KitchenMasteryMenu.Customs.Dishes;
+using KitchenMasteryMenu.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,16 +13,16 @@ using System.Threading.Tasks;
 using Unity.Collections;
 using Unity.Entities;
 
-namespace KitchenMysteryMenu.Patches
+namespace KitchenMasteryMenu.Patches
 {
     [HarmonyPatch(typeof(HandleNewDish))]
     public class HandleNewDish_Patch
     {
-        private static object[] MysteryProvidersParams = new object[]
+        private static object[] MasteryProvidersParams = new object[]
         {
-            new [] { new QueryHelper().All(typeof(CMysteryMenuProvider)).Build() }
+            new [] { new QueryHelper().All(typeof(CMasteryMenuProvider)).Build() }
         };
-        private static EntityQuery MysteryProvidersQuery = default;
+        private static EntityQuery MasteryProvidersQuery = default;
 
         [HarmonyPrefix]
         [HarmonyPatch("OnUpdate")]
@@ -31,14 +31,14 @@ namespace KitchenMysteryMenu.Patches
             Mod.Logger.LogInfo("[HandleNewDish_Patch] - OnUpdate_Prefix entered");
             try
             {
-                if (MysteryProvidersQuery == default)
+                if (MasteryProvidersQuery == default)
                 {
-                    Mod.Logger.LogInfo("[HandleNewDish_Patch] Initializing MysteryProvidersQuery");
+                    Mod.Logger.LogInfo("[HandleNewDish_Patch] Initializing MasteryProvidersQuery");
                     Type t_CSB = typeof(ComponentSystemBase);
                     MethodInfo m_GetEntityQuery = t_CSB.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance)
                         .Where(mi => mi.Name.Equals("GetEntityQuery") && mi.GetParameters().Any(p => p.ParameterType == typeof(EntityQueryDesc[])))
                         .FirstOrDefault();
-                    MysteryProvidersQuery = (EntityQuery)m_GetEntityQuery.Invoke(__instance, MysteryProvidersParams);
+                    MasteryProvidersQuery = (EntityQuery)m_GetEntityQuery.Invoke(__instance, MasteryProvidersParams);
                 }
 
                 EntityQuery NewPendingDishes = (EntityQuery)ReflectionUtils.GetField<HandleNewDish>("NewPendingDishes", BindingFlags.NonPublic | BindingFlags.Instance)
@@ -56,23 +56,23 @@ namespace KitchenMysteryMenu.Patches
                 CNewDish newDish = newDishes[0];
                 Mod.Logger.LogInfo($"[HandleNewDish_Patch] Handling new dish {{ID = {newDish.ID}}}");
 
-                var mysteryDishCard = MysteryDishCrossReference.GetMysteryCardById(newDish.ID);
-                using var mysteryProviderEntities = MysteryProvidersQuery.ToEntityArray(Allocator.Temp);
-                if (mysteryDishCard == default)
+                var MasteryDishCard = MasteryDishCrossReference.GetMasteryCardById(newDish.ID);
+                using var MasteryProviderEntities = MasteryProvidersQuery.ToEntityArray(Allocator.Temp);
+                if (MasteryDishCard == default)
                 {
-                    // Require there to be Mystery Providers to continue adding a NewMysteryDishEntity for a non-mystery dish.
-                    if (mysteryProviderEntities.Length <= 0)
+                    // Require there to be Mastery Providers to continue adding a NewMasteryDishEntity for a non-Mastery dish.
+                    if (MasteryProviderEntities.Length <= 0)
                     {
-                        Mod.Logger.LogInfo($"[HandleNewDish_Patch] No mystery providers found, so no need to handle the dish.");
+                        Mod.Logger.LogInfo($"[HandleNewDish_Patch] No Mastery providers found, so no need to handle the dish.");
                         return true;
                     }
-                    // This is either a one-off Mystery Dish or it's a non-Mystery-related Dish, so just create a single new entity.
-                    CreateNewMysteryDishEntity(__instance, newDish.ID);
+                    // This is either a one-off Mastery Dish or it's a non-Mastery-related Dish, so just create a single new entity.
+                    CreateNewMasteryDishEntity(__instance, newDish.ID);
                     return true;
                 }
 
-                // This is a GenericMysteryDishCard, so it likely has multiple new Dishes and/or IngredientsUnlocks that each need to be handled.
-                HandleMysteryDishCard(__instance, mysteryDishCard);
+                // This is a GenericMasteryDishCard, so it likely has multiple new Dishes and/or IngredientsUnlocks that each need to be handled.
+                HandleMasteryDishCard(__instance, MasteryDishCard);
             }
             catch (Exception e)
             {
@@ -82,20 +82,20 @@ namespace KitchenMysteryMenu.Patches
             return true;
         }
 
-        private static void HandleMysteryDishCard(HandleNewDish __instance, GenericMysteryDishCard mysteryDishCard)
+        private static void HandleMasteryDishCard(HandleNewDish __instance, GenericMasteryDishCard MasteryDishCard)
         {
-            // Create new CNewMysteryDish entities for each contained recipe
-            Mod.Logger.LogInfo($"[HandleNewDish_Patch] Creating {{{mysteryDishCard.ContainedMysteryRecipes.Count}}} CNewMysteryRecipes for card {{{mysteryDishCard.UniqueNameID}}}");
-            foreach (GenericMysteryDish genericMysteryDish in mysteryDishCard.ContainedMysteryRecipes)
+            // Create new CNewMasteryDish entities for each contained recipe
+            Mod.Logger.LogInfo($"[HandleNewDish_Patch] Creating {{{MasteryDishCard.ContainedMasteryRecipes.Count}}} CNewMasteryRecipes for card {{{MasteryDishCard.UniqueNameID}}}");
+            foreach (GenericMasteryDish genericMasteryDish in MasteryDishCard.ContainedMasteryRecipes)
             {
-                CreateNewMysteryDishEntity(__instance, genericMysteryDish.GameDataObject.ID, mysteryDishCard.GameDataObject.ID);
+                CreateNewMasteryDishEntity(__instance, genericMasteryDish.GameDataObject.ID, MasteryDishCard.GameDataObject.ID);
             }
         }
 
-        private static void CreateNewMysteryDishEntity(HandleNewDish __instance, int newDishID, int newCardID = -1)
+        private static void CreateNewMasteryDishEntity(HandleNewDish __instance, int newDishID, int newCardID = -1)
         {
-            var entity = __instance.EntityManager.CreateEntity(typeof(CNewMysteryRecipe));
-            __instance.EntityManager.AddComponentData(entity, new CNewMysteryRecipe
+            var entity = __instance.EntityManager.CreateEntity(typeof(CNewMasteryRecipe));
+            __instance.EntityManager.AddComponentData(entity, new CNewMasteryRecipe
             {
                 DishID = newDishID,
                 CardID = newCardID
@@ -104,11 +104,11 @@ namespace KitchenMysteryMenu.Patches
 
         // [2024-02-03] Don't need to patch Initialise since we're making new entities, not adding component data to existing ones that will just be
         //          deleted in OnUpdate.
-        // Need to patch over HandleNewDish to add a "new Mystery Dish" component to hand off to HandleNewMysteryDish
+        // Need to patch over HandleNewDish to add a "new Mastery Dish" component to hand off to HandleNewMasteryDish
         //private static object[] NewDishParameters = new object[]
         //{
         //    new object[] { 
-        //        new QueryHelper().All(typeof(CNewDish)).None(typeof(CNewMysteryDish)).Build() 
+        //        new QueryHelper().All(typeof(CNewDish)).None(typeof(CNewMasteryDish)).Build() 
         //    }
         //};
 

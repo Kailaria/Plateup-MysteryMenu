@@ -2,40 +2,40 @@ using KitchenLib;
 using KitchenLib.Logging;
 using KitchenLib.Logging.Exceptions;
 using KitchenMods;
-using KitchenMysteryMenu.Customs.Appliances;
-using KitchenMysteryMenu.Customs.Dishes;
-using KitchenMysteryMenu.Customs.Dishes.Breakfast;
-using KitchenMysteryMenu.Customs.Dishes.Burger;
-using KitchenMysteryMenu.Customs.Dishes.Cakes;
-using KitchenMysteryMenu.Customs.Dishes.Coffee;
-using KitchenMysteryMenu.Customs.Dishes.Desserts;
-using KitchenMysteryMenu.Customs.Dishes.Dumplings;
-using KitchenMysteryMenu.Customs.Dishes.Fish;
-using KitchenMysteryMenu.Customs.Dishes.HotDog;
-using KitchenMysteryMenu.Customs.Dishes.Pies;
-using KitchenMysteryMenu.Customs.Dishes.Pizza;
-using KitchenMysteryMenu.Customs.Dishes.Salad;
-using KitchenMysteryMenu.Customs.Dishes.Sandwiches;
-using KitchenMysteryMenu.Customs.Dishes.Sides;
-using KitchenMysteryMenu.Customs.Dishes.Spaghetti;
-using KitchenMysteryMenu.Customs.Dishes.Starters;
-using KitchenMysteryMenu.Customs.Dishes.Steaks;
-using KitchenMysteryMenu.Customs.Dishes.StirFry;
-using KitchenMysteryMenu.Customs.Dishes.Sundaes;
-using KitchenMysteryMenu.Customs.Dishes.Tacos;
-using KitchenMysteryMenu.Customs.Dishes.Turkey;
-using KitchenMysteryMenu.Customs.Ingredients;
-using KitchenMysteryMenu.Customs.ItemGroups;
+using KitchenMasteryMenu.Customs.Appliances;
+using KitchenMasteryMenu.Customs.Dishes;
+using KitchenMasteryMenu.Customs.Dishes.Breakfast;
+using KitchenMasteryMenu.Customs.Dishes.Burger;
+using KitchenMasteryMenu.Customs.Dishes.Cakes;
+using KitchenMasteryMenu.Customs.Dishes.Coffee;
+using KitchenMasteryMenu.Customs.Dishes.Desserts;
+using KitchenMasteryMenu.Customs.Dishes.Dumplings;
+using KitchenMasteryMenu.Customs.Dishes.Fish;
+using KitchenMasteryMenu.Customs.Dishes.HotDog;
+using KitchenMasteryMenu.Customs.Dishes.Pies;
+using KitchenMasteryMenu.Customs.Dishes.Pizza;
+using KitchenMasteryMenu.Customs.Dishes.Salad;
+using KitchenMasteryMenu.Customs.Dishes.Sandwiches;
+using KitchenMasteryMenu.Customs.Dishes.Sides;
+using KitchenMasteryMenu.Customs.Dishes.Spaghetti;
+using KitchenMasteryMenu.Customs.Dishes.Starters;
+using KitchenMasteryMenu.Customs.Dishes.Steaks;
+using KitchenMasteryMenu.Customs.Dishes.StirFry;
+using KitchenMasteryMenu.Customs.Dishes.Sundaes;
+using KitchenMasteryMenu.Customs.Dishes.Tacos;
+using KitchenMasteryMenu.Customs.Dishes.Turkey;
+using KitchenMasteryMenu.Customs.Ingredients;
+using KitchenMasteryMenu.Customs.ItemGroups;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
 
-namespace KitchenMysteryMenu
+namespace KitchenMasteryMenu
 {
     public class Mod : BaseMod, IModSystem
     {
-        public const string MOD_GUID = "kailaria.mysterymenu";
-        public const string MOD_NAME = "MysteryMenu";
+        public const string MOD_GUID = "kailaria.MasteryMenu";
+        public const string MOD_NAME = "MasteryMenu";
         public const string MOD_VERSION = "0.0.1";
         public const string MOD_AUTHOR = "Kailaria";
         public const string MOD_GAMEVERSION = ">=1.1.9";
@@ -69,280 +69,280 @@ namespace KitchenMysteryMenu
 
         private void AddApplianceGDOs()
         {
-            AddGameDataObject<MysteryIngredientProvider>();
-            AddGameDataObject<MysteryIngredientProvider2>();
-            AddGameDataObject<MysteryIngredientProviderExtra>();
-            AddGameDataObject<MysteryIngredientProviderBoard>();
-            AddGameDataObject<MysteryIngredientProviderBoard2>();
-            AddGameDataObject<MysteryIngredientProviderCakes>();
-            AddGameDataObject<MysteryIngredientProviderCakes2>();
-            AddGameDataObject<MysteryIngredientProviderCakes3>();
-            AddGameDataObject<MysteryIngredientProviderComplexities>();
-            AddGameDataObject<MysteryIngredientProviderExtra2>();
-            AddGameDataObject<MysteryIngredientProviderExtra3>();
-            AddGameDataObject<MysteryIngredientProviderExtra4>();
-            AddGameDataObject<MysteryIngredientProviderExtra5>();
-            AddGameDataObject<MysteryIngredientProviderExtra6>();
-            AddGameDataObject<MysteryIngredientProviderExtra7>();
-            AddGameDataObject<MysteryIngredientProviderSides>();
-            AddGameDataObject<MysteryTrayProviderCakes>();
-            AddGameDataObject<MysteryTrayProviderComplexities>();
+            AddGameDataObject<MasteryIngredientProvider>();
+            AddGameDataObject<MasteryIngredientProvider2>();
+            AddGameDataObject<MasteryIngredientProviderExtra>();
+            AddGameDataObject<MasteryIngredientProviderBoard>();
+            AddGameDataObject<MasteryIngredientProviderBoard2>();
+            AddGameDataObject<MasteryIngredientProviderCakes>();
+            AddGameDataObject<MasteryIngredientProviderCakes2>();
+            AddGameDataObject<MasteryIngredientProviderCakes3>();
+            AddGameDataObject<MasteryIngredientProviderComplexities>();
+            AddGameDataObject<MasteryIngredientProviderExtra2>();
+            AddGameDataObject<MasteryIngredientProviderExtra3>();
+            AddGameDataObject<MasteryIngredientProviderExtra4>();
+            AddGameDataObject<MasteryIngredientProviderExtra5>();
+            AddGameDataObject<MasteryIngredientProviderExtra6>();
+            AddGameDataObject<MasteryIngredientProviderExtra7>();
+            AddGameDataObject<MasteryIngredientProviderSides>();
+            AddGameDataObject<MasteryTrayProviderCakes>();
+            AddGameDataObject<MasteryTrayProviderComplexities>();
         }
 
         private void AddIngredientGDOs()
         {
-            AddGameDataObject<MysteryApple>();
-            AddGameDataObject<MysteryCheese>();
-            AddGameDataObject<MysteryChocolate>();
-            AddGameDataObject<MysteryFlour>();
-            AddGameDataObject<MysteryIceCreamStrawberry>();
-            AddGameDataObject<MysteryIceCreamVanilla>();
-            AddGameDataObject<MysteryLasagnePastaSheet>();
-            AddGameDataObject<MysteryMeat>();
-            AddGameDataObject<MysteryMushroom>();
-            AddGameDataObject<MysteryOnion>();
-            AddGameDataObject<MysteryPotato>();
-            AddGameDataObject<MysterySugar>();
-            AddGameDataObject<MysterySoySauce>();
-            AddGameDataObject<MysterySurfNTurf>();
-            AddGameDataObject<MysteryTeapot>();
-            AddGameDataObject<MysteryWine>();
+            AddGameDataObject<MasteryApple>();
+            AddGameDataObject<MasteryCheese>();
+            AddGameDataObject<MasteryChocolate>();
+            AddGameDataObject<MasteryFlour>();
+            AddGameDataObject<MasteryIceCreamStrawberry>();
+            AddGameDataObject<MasteryIceCreamVanilla>();
+            AddGameDataObject<MasteryLasagnePastaSheet>();
+            AddGameDataObject<MasteryMeat>();
+            AddGameDataObject<MasteryMushroom>();
+            AddGameDataObject<MasteryOnion>();
+            AddGameDataObject<MasteryPotato>();
+            AddGameDataObject<MasterySugar>();
+            AddGameDataObject<MasterySoySauce>();
+            AddGameDataObject<MasterySurfNTurf>();
+            AddGameDataObject<MasteryTeapot>();
+            AddGameDataObject<MasteryWine>();
 
-            AddGameDataObject<MysteryCookieTray>();
-            AddGameDataObject<MysteryDoughnutTray>();
+            AddGameDataObject<MasteryCookieTray>();
+            AddGameDataObject<MasteryDoughnutTray>();
         }
 
         private void AddItemGroupGDOs()
         {
             // For the HQ Kitchen to work with minimal extra code
             // TODO: replace this with a version of the algorithm for HQ Kitchen
-            //AddGameDataObject<MysteryDough>();
-            //AddGameDataObject<MysteryPieMeatRaw>();
-            //AddGameDataObject<MysteryPieMeatRawBlindBaked>();
+            //AddGameDataObject<MasteryDough>();
+            //AddGameDataObject<MasteryPieMeatRaw>();
+            //AddGameDataObject<MasteryPieMeatRawBlindBaked>();
         }
 
         private void AddDishGDOs()
         {
-            // Mystery Dish cards
-            AddGameDataObject<MysteryMenuBaseMainsDish>();
-            AddGameDataObject<MysteryMenuBoardsTreatsDish>();
-            AddGameDataObject<MysteryMenuCoffeeCakesPiesDish>();
-            AddGameDataObject<MysteryMenuCoffeeCakeVarietyDish>();
-            AddGameDataObject<MysteryMenuCarnivoreVariationsDish>();
-            AddGameDataObject<MysteryMenuCondimentsDish>();
-            AddGameDataObject<MysteryMenuSaucesSoupsDish>();
-            AddGameDataObject<MysteryMenuSidesDish>();
-            AddGameDataObject<MysteryMenuSubstitutionsComplexityDish>();
-            AddGameDataObject<MysteryMenuToppingsDish>();
-            AddGameDataObject<MysteryMenuVeggieVariationsDish>();
+            // Mastery Dish cards
+            AddGameDataObject<MasteryMenuBaseMainsDish>();
+            AddGameDataObject<MasteryMenuBoardsTreatsDish>();
+            AddGameDataObject<MasteryMenuCoffeeCakesPiesDish>();
+            AddGameDataObject<MasteryMenuCoffeeCakeVarietyDish>();
+            AddGameDataObject<MasteryMenuCarnivoreVariationsDish>();
+            AddGameDataObject<MasteryMenuCondimentsDish>();
+            AddGameDataObject<MasteryMenuSaucesSoupsDish>();
+            AddGameDataObject<MasteryMenuSidesDish>();
+            AddGameDataObject<MasteryMenuSubstitutionsComplexityDish>();
+            AddGameDataObject<MasteryMenuToppingsDish>();
+            AddGameDataObject<MasteryMenuVeggieVariationsDish>();
 
-            // Mystery Starters
-            AddGameDataObject<MysteryBreadBoardDish>();
-            AddGameDataObject<MysteryBroccoliCheeseSoupDish>();
-            AddGameDataObject<MysteryCarrotSoupDish>();
-            AddGameDataObject<MysteryChristmasCrackersDish>();
-            AddGameDataObject<MysteryMandarinStarterDish>();
-            AddGameDataObject<MysteryMeatSoupDish>();
-            AddGameDataObject<MysteryPumpkinSeedDish>();
-            AddGameDataObject<MysteryPumpkinSoupDish>();
-            AddGameDataObject<MysteryTomatoSoupDish>();
+            // Mastery Starters
+            AddGameDataObject<MasteryBreadBoardDish>();
+            AddGameDataObject<MasteryBroccoliCheeseSoupDish>();
+            AddGameDataObject<MasteryCarrotSoupDish>();
+            AddGameDataObject<MasteryChristmasCrackersDish>();
+            AddGameDataObject<MasteryMandarinStarterDish>();
+            AddGameDataObject<MasteryMeatSoupDish>();
+            AddGameDataObject<MasteryPumpkinSeedDish>();
+            AddGameDataObject<MasteryPumpkinSoupDish>();
+            AddGameDataObject<MasteryTomatoSoupDish>();
 
-            // Mystery Sides
-            AddGameDataObject<MysterySideBambooDish>();
-            AddGameDataObject<MysterySideBroccoliDish>();
-            AddGameDataObject<MysterySideChipsDish>();
-            AddGameDataObject<MysterySideCornOnCobDish>();
-            AddGameDataObject<MysterySideMashedPotatoDish>();
-            AddGameDataObject<MysterySideOnionRingsDish>();
-            AddGameDataObject<MysterySideRoastPotatoDish>();
+            // Mastery Sides
+            AddGameDataObject<MasterySideBambooDish>();
+            AddGameDataObject<MasterySideBroccoliDish>();
+            AddGameDataObject<MasterySideChipsDish>();
+            AddGameDataObject<MasterySideCornOnCobDish>();
+            AddGameDataObject<MasterySideMashedPotatoDish>();
+            AddGameDataObject<MasterySideOnionRingsDish>();
+            AddGameDataObject<MasterySideRoastPotatoDish>();
 
-            // Mystery Desserts
-            AddGameDataObject<MysteryApplePieDish>();
-            AddGameDataObject<MysteryCheeseBoardDish>();
-            AddGameDataObject<MysteryCherryPieDish>();
-            AddGameDataObject<MysteryIceCreamChocolateDish>();
-            AddGameDataObject<MysteryIceCreamServingDish>();
-            AddGameDataObject<MysteryIceCreamStrawberryDish>();
-            AddGameDataObject<MysteryIceCreamVanillaDish>();
-            AddGameDataObject<MysteryPumpkinPieDish>();
+            // Mastery Desserts
+            AddGameDataObject<MasteryApplePieDish>();
+            AddGameDataObject<MasteryCheeseBoardDish>();
+            AddGameDataObject<MasteryCherryPieDish>();
+            AddGameDataObject<MasteryIceCreamChocolateDish>();
+            AddGameDataObject<MasteryIceCreamServingDish>();
+            AddGameDataObject<MasteryIceCreamStrawberryDish>();
+            AddGameDataObject<MasteryIceCreamVanillaDish>();
+            AddGameDataObject<MasteryPumpkinPieDish>();
 
-            // Mystery Breakfast Dishes
-            AddGameDataObject<MysteryBreakfastBaseDish>();
-            AddGameDataObject<MysteryBreakfastToppingBeansDish>();
-            AddGameDataObject<MysteryBreakfastToppingEggsDish>();
-            AddGameDataObject<MysteryBreakfastToppingMushroomDish>();
-            AddGameDataObject<MysteryBreakfastToppingTomatoDish>();
+            // Mastery Breakfast Dishes
+            AddGameDataObject<MasteryBreakfastBaseDish>();
+            AddGameDataObject<MasteryBreakfastToppingBeansDish>();
+            AddGameDataObject<MasteryBreakfastToppingEggsDish>();
+            AddGameDataObject<MasteryBreakfastToppingMushroomDish>();
+            AddGameDataObject<MasteryBreakfastToppingTomatoDish>();
 
-            // Mystery Burger Dishes
-            AddGameDataObject<MysteryBurgerBaseDish>();
-            AddGameDataObject<MysteryBurgerToppingCheeseDish>();
-            AddGameDataObject<MysteryBurgerToppingOnionDish>();
-            AddGameDataObject<MysteryBurgerToppingTomatoDish>();
-            AddGameDataObject<MysteryBurgerFreshPattyMeatDish>();
+            // Mastery Burger Dishes
+            AddGameDataObject<MasteryBurgerBaseDish>();
+            AddGameDataObject<MasteryBurgerToppingCheeseDish>();
+            AddGameDataObject<MasteryBurgerToppingOnionDish>();
+            AddGameDataObject<MasteryBurgerToppingTomatoDish>();
+            AddGameDataObject<MasteryBurgerFreshPattyMeatDish>();
 
-            // Mystery Cakes Dishes
-            AddGameDataObject<MysteryCakeBatterRecipe>();
-            AddGameDataObject<MysteryCakesCoffeeCookieDish>();
-            AddGameDataObject<MysteryCakesCoffeeCupcakeDish>();
-            AddGameDataObject<MysteryCakesCoffeeDoughnutDish>();
-            AddGameDataObject<MysteryCakesCoffeeSpongeCakeDish>();
-            AddGameDataObject<MysteryCakesChocolateBrownieDish>();
-            AddGameDataObject<MysteryCakesChocolateCookieDish>();
-            AddGameDataObject<MysteryCakesChocolateCupcakeDish>();
-            AddGameDataObject<MysteryCakesChocolateDoughnutDish>();
-            AddGameDataObject<MysteryCakesChocolateSpongeCakeDish>();
-            AddGameDataObject<MysteryCakesLemonCookieDish>();
-            AddGameDataObject<MysteryCakesLemonCupcakeDish>();
-            AddGameDataObject<MysteryCakesLemonDoughnutDish>();
-            AddGameDataObject<MysteryCakesLemonSpongeCakeDish>();
+            // Mastery Cakes Dishes
+            AddGameDataObject<MasteryCakeBatterRecipe>();
+            AddGameDataObject<MasteryCakesCoffeeCookieDish>();
+            AddGameDataObject<MasteryCakesCoffeeCupcakeDish>();
+            AddGameDataObject<MasteryCakesCoffeeDoughnutDish>();
+            AddGameDataObject<MasteryCakesCoffeeSpongeCakeDish>();
+            AddGameDataObject<MasteryCakesChocolateBrownieDish>();
+            AddGameDataObject<MasteryCakesChocolateCookieDish>();
+            AddGameDataObject<MasteryCakesChocolateCupcakeDish>();
+            AddGameDataObject<MasteryCakesChocolateDoughnutDish>();
+            AddGameDataObject<MasteryCakesChocolateSpongeCakeDish>();
+            AddGameDataObject<MasteryCakesLemonCookieDish>();
+            AddGameDataObject<MasteryCakesLemonCupcakeDish>();
+            AddGameDataObject<MasteryCakesLemonDoughnutDish>();
+            AddGameDataObject<MasteryCakesLemonSpongeCakeDish>();
 
-            // Mystery Coffee Dishes
-            AddGameDataObject<MysteryCoffeeBaseDish>();
-            AddGameDataObject<MysteryCoffeeCakeStandDish>();
-            AddGameDataObject<MysteryCoffeeExtraMilkDish>();
-            AddGameDataObject<MysteryCoffeeExtraSugarDish>();
-            AddGameDataObject<MysteryCoffeeIcedDish>();
-            AddGameDataObject<MysteryCoffeeLatteDish>();
-            AddGameDataObject<MysteryTeaDish>();
+            // Mastery Coffee Dishes
+            AddGameDataObject<MasteryCoffeeBaseDish>();
+            AddGameDataObject<MasteryCoffeeCakeStandDish>();
+            AddGameDataObject<MasteryCoffeeExtraMilkDish>();
+            AddGameDataObject<MasteryCoffeeExtraSugarDish>();
+            AddGameDataObject<MasteryCoffeeIcedDish>();
+            AddGameDataObject<MasteryCoffeeLatteDish>();
+            AddGameDataObject<MasteryTeaDish>();
 
-            // Mystery Dumplings Dishes
-            AddGameDataObject<MysteryDumplingsBaseDish>();
-            AddGameDataObject<MysteryDumplingsSoySauceDish>();
-            AddGameDataObject<MysteryDumplingsSeaweedDish>();
+            // Mastery Dumplings Dishes
+            AddGameDataObject<MasteryDumplingsBaseDish>();
+            AddGameDataObject<MasteryDumplingsSoySauceDish>();
+            AddGameDataObject<MasteryDumplingsSeaweedDish>();
 
-            // Mystery Fish Dishes
-            AddGameDataObject<MysteryFishBlueDish>();
-            AddGameDataObject<MysteryFishPinkDish>();
-            AddGameDataObject<MysteryFishCrabCakeDish>();
-            AddGameDataObject<MysteryFishFilletDish>();
-            AddGameDataObject<MysteryFishOysterDish>();
-            AddGameDataObject<MysteryFishSpinyDish>();
+            // Mastery Fish Dishes
+            AddGameDataObject<MasteryFishBlueDish>();
+            AddGameDataObject<MasteryFishPinkDish>();
+            AddGameDataObject<MasteryFishCrabCakeDish>();
+            AddGameDataObject<MasteryFishFilletDish>();
+            AddGameDataObject<MasteryFishOysterDish>();
+            AddGameDataObject<MasteryFishSpinyDish>();
 
-            // Mystery Hot Dog Dishes
-            AddGameDataObject<MysteryHotdogBaseDish>();
-            AddGameDataObject<MysteryHotdogKetchupDish>();
-            AddGameDataObject<MysteryHotdogMustardDish>();
+            // Mastery Hot Dog Dishes
+            AddGameDataObject<MasteryHotdogBaseDish>();
+            AddGameDataObject<MasteryHotdogKetchupDish>();
+            AddGameDataObject<MasteryHotdogMustardDish>();
 
-            // Mystery Pies Dishes
-            AddGameDataObject<MysteryPiesBaseDish>();
-            AddGameDataObject<MysteryPiesMeatDish>();
-            AddGameDataObject<MysteryPiesMushroomDish>();
-            AddGameDataObject<MysteryPiesVegetableDish>();
+            // Mastery Pies Dishes
+            AddGameDataObject<MasteryPiesBaseDish>();
+            AddGameDataObject<MasteryPiesMeatDish>();
+            AddGameDataObject<MasteryPiesMushroomDish>();
+            AddGameDataObject<MasteryPiesVegetableDish>();
 
-            // Mystery Pizza Dishes
-            AddGameDataObject<MysteryPizzaBaseDish>();
-            AddGameDataObject<MysteryPizzaMushroomDish>();
-            AddGameDataObject<MysteryPizzaOnionDish>();
+            // Mastery Pizza Dishes
+            AddGameDataObject<MasteryPizzaBaseDish>();
+            AddGameDataObject<MasteryPizzaMushroomDish>();
+            AddGameDataObject<MasteryPizzaOnionDish>();
 
-            // Mystery Salad Dishes
-            AddGameDataObject<MysterySaladBaseDish>();
-            AddGameDataObject<MysterySaladTomatoDish>();
-            AddGameDataObject<MysterySaladToppingOliveDish>();
-            AddGameDataObject<MysterySaladToppingOnionDish>();
-            AddGameDataObject<MysterySaladAppleDish>();
-            AddGameDataObject<MysterySaladPotatoDish>();
+            // Mastery Salad Dishes
+            AddGameDataObject<MasterySaladBaseDish>();
+            AddGameDataObject<MasterySaladTomatoDish>();
+            AddGameDataObject<MasterySaladToppingOliveDish>();
+            AddGameDataObject<MasterySaladToppingOnionDish>();
+            AddGameDataObject<MasterySaladAppleDish>();
+            AddGameDataObject<MasterySaladPotatoDish>();
 
-            // Mystery Sandwich Dishes
-            AddGameDataObject<MysterySandwichBaseDish>();
-            AddGameDataObject<MysterySandwichClubDish>();
+            // Mastery Sandwich Dishes
+            AddGameDataObject<MasterySandwichBaseDish>();
+            AddGameDataObject<MasterySandwichClubDish>();
 
-            AddGameDataObject<MysterySandwichBreadDish>();
-            AddGameDataObject<MysterySandwichCheeseDish>();
-            AddGameDataObject<MysterySandwichEggDish>();
-            AddGameDataObject<MysterySandwichHamSliceDish>();
-            AddGameDataObject<MysterySandwichLettuceDish>();
-            AddGameDataObject<MysterySandwichMayoDish>();
-            AddGameDataObject<MysterySandwichOliveDish>();
-            AddGameDataObject<MysterySandwichPickleDish>();
-            AddGameDataObject<MysterySandwichTomatoDish>();
+            AddGameDataObject<MasterySandwichBreadDish>();
+            AddGameDataObject<MasterySandwichCheeseDish>();
+            AddGameDataObject<MasterySandwichEggDish>();
+            AddGameDataObject<MasterySandwichHamSliceDish>();
+            AddGameDataObject<MasterySandwichLettuceDish>();
+            AddGameDataObject<MasterySandwichMayoDish>();
+            AddGameDataObject<MasterySandwichOliveDish>();
+            AddGameDataObject<MasterySandwichPickleDish>();
+            AddGameDataObject<MasterySandwichTomatoDish>();
 
-            AddGameDataObject<MysterySandwichGiantDish>();
-            AddGameDataObject<MysterySandwichGiantBreadDish>();
-            AddGameDataObject<MysterySandwichGiantCheeseDish>();
-            AddGameDataObject<MysterySandwichGiantEggDish>();
-            AddGameDataObject<MysterySandwichGiantHamSliceDish>();
-            AddGameDataObject<MysterySandwichGiantLettuceDish>();
-            AddGameDataObject<MysterySandwichGiantMayoDish>();
-            AddGameDataObject<MysterySandwichGiantOliveDish>();
-            AddGameDataObject<MysterySandwichGiantPickleDish>();
-            AddGameDataObject<MysterySandwichGiantTomatoDish>();
+            AddGameDataObject<MasterySandwichGiantDish>();
+            AddGameDataObject<MasterySandwichGiantBreadDish>();
+            AddGameDataObject<MasterySandwichGiantCheeseDish>();
+            AddGameDataObject<MasterySandwichGiantEggDish>();
+            AddGameDataObject<MasterySandwichGiantHamSliceDish>();
+            AddGameDataObject<MasterySandwichGiantLettuceDish>();
+            AddGameDataObject<MasterySandwichGiantMayoDish>();
+            AddGameDataObject<MasterySandwichGiantOliveDish>();
+            AddGameDataObject<MasterySandwichGiantPickleDish>();
+            AddGameDataObject<MasterySandwichGiantTomatoDish>();
 
-            AddGameDataObject<MysterySandwichToastDish>();
-            AddGameDataObject<MysterySandwichToastSliceDish>();
-            AddGameDataObject<MysterySandwichToastCheeseDish>();
-            AddGameDataObject<MysterySandwichToastEggDish>();
-            AddGameDataObject<MysterySandwichToastHamSliceDish>();
-            AddGameDataObject<MysterySandwichToastLettuceDish>();
-            AddGameDataObject<MysterySandwichToastMayoDish>();
-            AddGameDataObject<MysterySandwichToastOliveDish>();
-            AddGameDataObject<MysterySandwichToastPickleDish>();
-            AddGameDataObject<MysterySandwichToastTomatoDish>();
+            AddGameDataObject<MasterySandwichToastDish>();
+            AddGameDataObject<MasterySandwichToastSliceDish>();
+            AddGameDataObject<MasterySandwichToastCheeseDish>();
+            AddGameDataObject<MasterySandwichToastEggDish>();
+            AddGameDataObject<MasterySandwichToastHamSliceDish>();
+            AddGameDataObject<MasterySandwichToastLettuceDish>();
+            AddGameDataObject<MasterySandwichToastMayoDish>();
+            AddGameDataObject<MasterySandwichToastOliveDish>();
+            AddGameDataObject<MasterySandwichToastPickleDish>();
+            AddGameDataObject<MasterySandwichToastTomatoDish>();
 
-            // Mystery Spaghetti Dishes
-            AddGameDataObject<MysterySpaghettiBaseDish>();
-            AddGameDataObject<MysterySpaghettiBologneseDish>();
-            AddGameDataObject<MysterySpaghettiCheesyDish>();
-            AddGameDataObject<MysterySpaghettiLasagneDish>();
-            AddGameDataObject<MysterySpaghettiStarchyDish>();
+            // Mastery Spaghetti Dishes
+            AddGameDataObject<MasterySpaghettiBaseDish>();
+            AddGameDataObject<MasterySpaghettiBologneseDish>();
+            AddGameDataObject<MasterySpaghettiCheesyDish>();
+            AddGameDataObject<MasterySpaghettiLasagneDish>();
+            AddGameDataObject<MasterySpaghettiStarchyDish>();
 
-            // Mystery Steak Dishes
-            AddGameDataObject<MysterySteakBaseDish>();
-            AddGameDataObject<MysterySteakBonedDish>();
-            AddGameDataObject<MysterySteakThickDish>();
-            AddGameDataObject<MysterySteakThinDish>();
-            AddGameDataObject<MysterySteakSauceMushroomSauceDish>();
-            AddGameDataObject<MysterySteakSauceRedWineJusDish>();
-            AddGameDataObject<MysterySteakToppingMushroomDish>();
-            AddGameDataObject<MysterySteakToppingTomatoDish>();
+            // Mastery Steak Dishes
+            AddGameDataObject<MasterySteakBaseDish>();
+            AddGameDataObject<MasterySteakBonedDish>();
+            AddGameDataObject<MasterySteakThickDish>();
+            AddGameDataObject<MasterySteakThinDish>();
+            AddGameDataObject<MasterySteakSauceMushroomSauceDish>();
+            AddGameDataObject<MasterySteakSauceRedWineJusDish>();
+            AddGameDataObject<MasterySteakToppingMushroomDish>();
+            AddGameDataObject<MasterySteakToppingTomatoDish>();
 
-            // Mystery Stir Fry Dishes
-            AddGameDataObject<MysteryStirFryBaseDish>();
-            AddGameDataObject<MysteryStirFryRiceDish>();
-            AddGameDataObject<MysteryStirFryBroccoliDish>();
-            AddGameDataObject<MysteryStirFryCarrotDish>();
-            AddGameDataObject<MysteryStirFryBambooDish>();
-            AddGameDataObject<MysteryStirFryMushroomDish>();
-            AddGameDataObject<MysteryStirFrySteakDish>();
-            AddGameDataObject<MysteryStirFrySoySauceDish>();
+            // Mastery Stir Fry Dishes
+            AddGameDataObject<MasteryStirFryBaseDish>();
+            AddGameDataObject<MasteryStirFryRiceDish>();
+            AddGameDataObject<MasteryStirFryBroccoliDish>();
+            AddGameDataObject<MasteryStirFryCarrotDish>();
+            AddGameDataObject<MasteryStirFryBambooDish>();
+            AddGameDataObject<MasteryStirFryMushroomDish>();
+            AddGameDataObject<MasteryStirFrySteakDish>();
+            AddGameDataObject<MasteryStirFrySoySauceDish>();
 
-            // Mystery Sundae Dishes
-            AddGameDataObject<MysterySundaeBaseDish>();
-            AddGameDataObject<MysterySundaeCherryDish>();
-            AddGameDataObject<MysterySundaeChocolateIceCreamDish>();
-            AddGameDataObject<MysterySundaeChocolateSyrupDish>();
-            AddGameDataObject<MysterySundaeGlassDish>();
-            AddGameDataObject<MysterySundaeNutsDish>();
-            AddGameDataObject<MysterySundaeStrawberryIceCreamDish>();
-            AddGameDataObject<MysterySundaeStrawberrySyrupDish>();
-            AddGameDataObject<MysterySundaeVanillaIceCreamDish>();
+            // Mastery Sundae Dishes
+            AddGameDataObject<MasterySundaeBaseDish>();
+            AddGameDataObject<MasterySundaeCherryDish>();
+            AddGameDataObject<MasterySundaeChocolateIceCreamDish>();
+            AddGameDataObject<MasterySundaeChocolateSyrupDish>();
+            AddGameDataObject<MasterySundaeGlassDish>();
+            AddGameDataObject<MasterySundaeNutsDish>();
+            AddGameDataObject<MasterySundaeStrawberryIceCreamDish>();
+            AddGameDataObject<MasterySundaeStrawberrySyrupDish>();
+            AddGameDataObject<MasterySundaeVanillaIceCreamDish>();
 
-            AddGameDataObject<MysterySundaeGiantDish>();
-            AddGameDataObject<MysterySundaeGiantCherryDish>();
-            AddGameDataObject<MysterySundaeGiantChocolateIceCreamDish>();
-            AddGameDataObject<MysterySundaeGiantChocolateSyrupDish>();
-            AddGameDataObject<MysterySundaeGiantGlassDish>();
-            AddGameDataObject<MysterySundaeGiantNutsDish>();
-            AddGameDataObject<MysterySundaeGiantStrawberryIceCreamDish>();
-            AddGameDataObject<MysterySundaeGiantStrawberrySyrupDish>();
-            AddGameDataObject<MysterySundaeGiantVanillaIceCreamDish>();
+            AddGameDataObject<MasterySundaeGiantDish>();
+            AddGameDataObject<MasterySundaeGiantCherryDish>();
+            AddGameDataObject<MasterySundaeGiantChocolateIceCreamDish>();
+            AddGameDataObject<MasterySundaeGiantChocolateSyrupDish>();
+            AddGameDataObject<MasterySundaeGiantGlassDish>();
+            AddGameDataObject<MasterySundaeGiantNutsDish>();
+            AddGameDataObject<MasterySundaeGiantStrawberryIceCreamDish>();
+            AddGameDataObject<MasterySundaeGiantStrawberrySyrupDish>();
+            AddGameDataObject<MasterySundaeGiantVanillaIceCreamDish>();
 
-            AddGameDataObject<MysteryHomemadeChocolateIceCreamDish>();
-            AddGameDataObject<MysteryHomemadeStrawberryIceCreamDish>();
-            AddGameDataObject<MysteryHomemadeVanillaIceCreamDish>();
+            AddGameDataObject<MasteryHomemadeChocolateIceCreamDish>();
+            AddGameDataObject<MasteryHomemadeStrawberryIceCreamDish>();
+            AddGameDataObject<MasteryHomemadeVanillaIceCreamDish>();
 
-            // Mystery Tacos Dishes
-            AddGameDataObject<MysteryTacosBaseDish>();
-            AddGameDataObject<MysteryTacosToppingCheeseDish>();
-            AddGameDataObject<MysteryTacosToppingLettuceDish>();
-            AddGameDataObject<MysteryTacosToppingOnionDish>();
-            AddGameDataObject<MysteryTacosToppingTomatoDish>();
+            // Mastery Tacos Dishes
+            AddGameDataObject<MasteryTacosBaseDish>();
+            AddGameDataObject<MasteryTacosToppingCheeseDish>();
+            AddGameDataObject<MasteryTacosToppingLettuceDish>();
+            AddGameDataObject<MasteryTacosToppingOnionDish>();
+            AddGameDataObject<MasteryTacosToppingTomatoDish>();
 
-            // Mystery Turkey Dishes
-            AddGameDataObject<MysteryTurkeyBaseDish>();
-            AddGameDataObject<MysteryNutRoastDish>();
-            AddGameDataObject<MysteryTurkeyCranberrySauceDish>();
-            AddGameDataObject<MysteryTurkeyGravyDish>();
-            AddGameDataObject<MysteryTurkeyStuffingDish>();
+            // Mastery Turkey Dishes
+            AddGameDataObject<MasteryTurkeyBaseDish>();
+            AddGameDataObject<MasteryNutRoastDish>();
+            AddGameDataObject<MasteryTurkeyCranberrySauceDish>();
+            AddGameDataObject<MasteryTurkeyGravyDish>();
+            AddGameDataObject<MasteryTurkeyStuffingDish>();
         }
     }
 }

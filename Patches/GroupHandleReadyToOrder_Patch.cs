@@ -1,7 +1,7 @@
 ﻿using HarmonyLib;
 using Kitchen;
 using KitchenLib.Utils;
-using KitchenMysteryMenu.Components;
+using KitchenMasteryMenu.Components;
 using Sirenix.Utilities;
 using System;
 using System.Collections.Generic;
@@ -11,7 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Unity.Entities;
 
-namespace KitchenMysteryMenu.Patches
+namespace KitchenMasteryMenu.Patches
 {
     [HarmonyPatch(typeof(GroupHandleReadyToOrder))]
     public class GroupHandleReadyToOrder_Patch
@@ -19,19 +19,19 @@ namespace KitchenMysteryMenu.Patches
         private static object[] SidesParameters = new object[]
         {
             new [] { new QueryHelper().All(typeof(CMenuItemSide))
-                .None(typeof(CDisabledMysteryMenu)).Build() }
+                .None(typeof(CDisabledMasteryMenu)).Build() }
         };
         private static object[] StartersParameters = new object[]
         {
             new [] { new QueryHelper().All(typeof(CMenuItemStarter))
-                .None(typeof(CDisabledMysteryMenu)).Build() }
+                .None(typeof(CDisabledMasteryMenu)).Build() }
         };
 
         [HarmonyPostfix]
         [HarmonyPatch("Initialise")]
         public static void Initialise_Postfix(ref GroupHandleReadyToOrder __instance)
         {
-            // Add CDisabled components to ensure only truly available, non-disabled mystery dishes are accounted for
+            // Add CDisabled components to ensure only truly available, non-disabled Mastery dishes are accounted for
             //  when determining if a customer will order a side or starter.
             Type t_CSB = typeof(ComponentSystemBase);
             MethodInfo m_GetEntityQuery = t_CSB.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance)

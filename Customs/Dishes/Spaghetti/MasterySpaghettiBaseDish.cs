@@ -1,0 +1,67 @@
+﻿using KitchenData;
+using KitchenLib.References;
+using KitchenLib.Utils;
+using KitchenMasteryMenu.Utils;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace KitchenMasteryMenu.Customs.Dishes.Spaghetti
+{
+    public class MasterySpaghettiBaseDish : GenericMasteryDish
+    {
+        protected override string NameTag => "Mastery Spaghetti Dish";
+        public override Dish OrigDish => (Dish)GDOUtils.GetExistingGDO(DishReferences.PomodoroBase);
+        public override DishType Type => DishType.Base;
+        public override DishCustomerChange CustomerMultiplier => DishCustomerChange.None;
+        public override Unlock.RewardLevel ExpReward => Unlock.RewardLevel.None;
+        public override UnlockGroup UnlockGroup => UnlockGroup.Dish;
+        public override bool IsUnlockable => false;
+        public override Item RequiredDishItem => (Item)GDOUtils.GetExistingGDO(ItemReferences.Plate);
+        public override bool RequiredNoDishItem => false;
+        public override bool IsAvailableAsLobbyOption => false;
+        public override int Difficulty => 2;
+        public override HashSet<Process> RequiredProcesses => new()
+        {
+            (Process)GDOUtils.GetExistingGDO(ProcessReferences.Chop),
+            (Process)GDOUtils.GetExistingGDO(ProcessReferences.RequireOven)
+        };
+        public override Dictionary<Locale, string> Recipe => new()
+        {
+            { Locale.English,
+                "<color=yellow>Requires ingredients:</color> Tomato, Spaghetti\n" +
+                "Put raw spaghetti into a pot with water and boil, then empty the water into a sink or bin. " +
+                "Chop tomato twice to make sauce. Combine boiled pasta on a plate with the sauce." }
+        };
+        public override List<(Locale, UnlockInfo)> InfoList => new()
+        {
+            (Locale.English, new UnlockInfo()
+            {
+                Name = "Mastery - Spaghetti",
+                Description = "Adds spaghetti as a main when <b>Tomatoes</b> and <b>Raw Spaghetti</b> are present",
+                FlavourText = $"{References.DishCardDoNotAddFlavorText}"
+            })
+        };
+
+        public override List<Dish.MenuItem> ResultingMenuItems => new()
+        {
+            new()
+            {
+                Item = (Item)GDOUtils.GetExistingGDO(ItemGroupReferences.PomodoroPlated),
+                Phase = MenuPhase.Main,
+                Weight = 1
+            }
+        };
+        public override HashSet<Item> MinimumRequiredMasteryIngredients => new HashSet<Item>()
+        {
+            (Item) GDOUtils.GetExistingGDO(ItemReferences.Tomato),
+            (Item) GDOUtils.GetExistingGDO(ItemReferences.Spaghetti)
+        };
+        public override List<Unlock> HardcodedRequirements => new()
+        {
+            GDOUtils.GetCastedGDO<Dish, MasteryMenuBaseMainsDish>()
+        };
+    }
+}

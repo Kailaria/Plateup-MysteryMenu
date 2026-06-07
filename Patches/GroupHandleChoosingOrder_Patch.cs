@@ -2,7 +2,7 @@
 using Kitchen;
 using KitchenData;
 using KitchenLib.Utils;
-using KitchenMysteryMenu.Components;
+using KitchenMasteryMenu.Components;
 using Sirenix.Utilities;
 using System;
 using System.Collections.Generic;
@@ -12,7 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Unity.Entities;
 
-namespace KitchenMysteryMenu.Patches
+namespace KitchenMasteryMenu.Patches
 {
     [HarmonyPatch(typeof(GroupHandleChoosingOrder))]
     public class GroupHandleChoosingOrder_Patch
@@ -20,24 +20,24 @@ namespace KitchenMysteryMenu.Patches
         private static object[] StarterPhaseParameters = new object[]
         {
             new [] { new QueryHelper().All(typeof(CMenuItem),typeof(CMenuItemStarter))
-                .None(typeof(CDisabledMysteryMenu)).Build() }
+                .None(typeof(CDisabledMasteryMenu)).Build() }
         };
         private static object[] MainPhaseParameters = new object[]
         {
             new [] { new QueryHelper().All(typeof(CMenuItem),typeof(CMenuItemMain))
-                .None(typeof(CDisabledMysteryMenu)).Build() }
+                .None(typeof(CDisabledMasteryMenu)).Build() }
         };
         private static object[] DessertsPhaseParameters = new object[]
         {
             new [] { new QueryHelper().All(typeof(CMenuItem),typeof(CMenuItemDessert))
-                .None(typeof(CDisabledMysteryMenu)).Build() }
+                .None(typeof(CDisabledMasteryMenu)).Build() }
         };
 
         [HarmonyPostfix]
         [HarmonyPatch("Initialise")]
         public static void Initialise_Postfix(ref GroupHandleChoosingOrder __instance)
         {
-            // Add CDisabled components to ensure only truly available mystery dishes count towards determining
+            // Add CDisabled components to ensure only truly available Mastery dishes count towards determining
             //  if the Desserts phase happens.
             Type t_CSB = typeof(ComponentSystemBase);
             MethodInfo m_GetEntityQuery = t_CSB.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance)

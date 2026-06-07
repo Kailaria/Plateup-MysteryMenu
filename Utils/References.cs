@@ -1,18 +1,18 @@
 ﻿using KitchenData;
 using KitchenLib.Utils;
-using KitchenMysteryMenu.Customs.Dishes;
+using KitchenMasteryMenu.Customs.Dishes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KitchenMysteryMenu.Utils
+namespace KitchenMasteryMenu.Utils
 {
     internal static class References
     {
-        public static readonly GameDataObject MysteryMenuBaseDish = GDOUtils.GetCastedGDO<Dish, MysteryMenuBaseMainsDish>();
-        public static readonly DynamicMenuType DynamicMenuTypeMystery = (DynamicMenuType)VariousUtils.GetID($"{Mod.MOD_GUID}:{((Dish)MysteryMenuBaseDish).Name}");
+        public static readonly GameDataObject MasteryMenuBaseDish = GDOUtils.GetCastedGDO<Dish, MasteryMenuBaseMainsDish>();
+        public static readonly DynamicMenuType DynamicMenuTypeMastery = (DynamicMenuType)VariousUtils.GetID($"{Mod.MOD_GUID}:{((Dish)MasteryMenuBaseDish).Name}");
         public static readonly int MaxIngredientCountForMinimumRecipe = 5;
 
         public static string DishCardDoNotAddFlavorText = "(This is an \"alsoAddsRecipes\" card. <b>DO NOT ADD</b> with Cards Manager)";
@@ -28,13 +28,13 @@ namespace KitchenMysteryMenu.Utils
 
         public static string PinkTintCakeText = "$cake$";
         public static string PinkTintCakesText = "$cakes$";
-        public static string ColorTextCakeBatter = MysteryDishUtils.ColorizeSpriteTextToCake("Cake Batter");
-        public static string ColorTextCakeFlavour = MysteryDishUtils.ColorizeSpriteTextToCake("Cake Flavour");
-        public static string ColorTextCakeFlavours = MysteryDishUtils.ColorizeSpriteTextToCake("Cake Flavours");
-        public static string ColorTextCakeForm = MysteryDishUtils.ColorizeSpriteTextToCake("Cake Form");
-        public static string ColorTextCakeForms = MysteryDishUtils.ColorizeSpriteTextToCake("Cake Forms");
-        public static string ColorTextHotDrink = MysteryDishUtils.ColorizeSpriteTextToHotDrink("Hot Drink");
-        public static string ColorTextHotDrinks = MysteryDishUtils.ColorizeSpriteTextToHotDrink("Hot Drinks");
+        public static string ColorTextCakeBatter = MasteryDishUtils.ColorizeSpriteTextToCake("Cake Batter");
+        public static string ColorTextCakeFlavour = MasteryDishUtils.ColorizeSpriteTextToCake("Cake Flavour");
+        public static string ColorTextCakeFlavours = MasteryDishUtils.ColorizeSpriteTextToCake("Cake Flavours");
+        public static string ColorTextCakeForm = MasteryDishUtils.ColorizeSpriteTextToCake("Cake Form");
+        public static string ColorTextCakeForms = MasteryDishUtils.ColorizeSpriteTextToCake("Cake Forms");
+        public static string ColorTextHotDrink = MasteryDishUtils.ColorizeSpriteTextToHotDrink("Hot Drink");
+        public static string ColorTextHotDrinks = MasteryDishUtils.ColorizeSpriteTextToHotDrink("Hot Drinks");
 
         // Temporary until KitchenLib updates w/ Sandos & Sundaes
         // Dishes

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MysteryMenu.Customs.Dishes
+namespace MasteryMenu.Customs.Dishes
 {
     public class SubstitutionIngredientSet
     {

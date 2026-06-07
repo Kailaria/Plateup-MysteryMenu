@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Unity.Entities;
 
-namespace KitchenMysteryMenu.Systems
+namespace KitchenMasteryMenu.Systems
 {
     public class PatchController : GameSystemBase
     {

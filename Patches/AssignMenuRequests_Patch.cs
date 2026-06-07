@@ -1,7 +1,9 @@
 ﻿using HarmonyLib;
 using Kitchen;
+using KitchenData;
 using KitchenLib.Utils;
-using KitchenMysteryMenu.Components;
+using KitchenMasteryMenu.Components;
+using KitchenMasteryMenu.Utils;
 using Sirenix.Utilities;
 using System;
 using System.Collections.Generic;
@@ -11,7 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Unity.Entities;
 
-namespace KitchenMysteryMenu.Patches
+namespace KitchenMasteryMenu.Patches
 {
     [HarmonyPatch(typeof(AssignMenuRequests))]
     public class AssignMenuRequests_Patch
@@ -19,24 +21,24 @@ namespace KitchenMysteryMenu.Patches
         private static object[] MenuItemsParameters = new object[]
         {
             new [] { new QueryHelper().All(typeof(CMenuItem))
-                .None(typeof(CDisabledMenuItem),typeof(CDisabledMysteryMenu)).Build() }
+                .None(typeof(CDisabledMenuItem),typeof(CDisabledMasteryMenu)).Build() }
         };
         private static object[] IngredientsParameters = new object[]
         {
             new [] { new QueryHelper().All(typeof(CAvailableIngredient))
-                .None(typeof(CDisabledMysteryMenu)).Build() }
+                .None(typeof(CDisabledMasteryMenu)).Build() }
         };
         private static object[] ExtrasParameters = new object[]
         {
             new [] { new QueryHelper().All(typeof(CPossibleExtra))
-                .None(typeof(CDisabledMysteryMenu)).Build() }
+                .None(typeof(CDisabledMasteryMenu)).Build() }
         };
 
         [HarmonyPostfix]
         [HarmonyPatch("Initialise")]
         public static void Initialise_Postfix(ref AssignMenuRequests __instance)
         {
-            // Add CDisabled components to ensure only truly available mystery dishes will be ordered.
+            // Add CDisabled components to ensure only truly available Mastery dishes will be ordered.
             Type t_CSB = typeof(ComponentSystemBase);
             MethodInfo m_GetEntityQuery = t_CSB.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance)
                 .Where(mi => mi.Name.Equals("GetEntityQuery") && mi.GetParameters().Any(p => p.ParameterType == typeof(EntityQueryDesc[])))
@@ -65,6 +67,32 @@ namespace KitchenMysteryMenu.Patches
                 Mod.Logger.LogException(e);
                 throw e;
             }
+        }
+
+        [HarmonyPostfix]
+        [HarmonyPatch("OrderItem")]
+        public static void OrderItem_Postfix(AssignMenuRequests __instance, Item item_data, EntityContext ctx, ItemList item_components, Entity group, ref float bonus_time, int member_index, MenuPhase phase, int source_menu_item)
+        {
+            var MasteryDish = MasteryDishCrossReference.GetMasteryDishById(source_menu_item);
+            Dish normalDish = null;
+            if (MasteryDish == default)
+            {
+                normalDish = (Dish)GDOUtils.GetExistingGDO(source_menu_item);
+            }
+            string sourceMenuItemName = "";
+            try
+            {
+                sourceMenuItemName = normalDish != default ? normalDish.name : MasteryDish.UniqueNameID;
+            }
+            catch (NullReferenceException e)
+            {
+                sourceMenuItemName = "ERROR: NAME FAILED";
+                Mod.Logger.LogError(e.StackTrace);
+            }
+            Mod.Logger.LogInfo($"AssignMenuRequests - OrderItem Postfix\n" +
+                $"|\titem_data {{id: {item_data.ID}, name: {item_data.name}}}\n" +
+                $"|\titem_components {{names: {String.Join(", ", item_components.AsArray().Select(i => ((Item)GDOUtils.GetExistingGDO(i)).name))}}}\n" +
+                $"|\tsource_menu_item {{id: {source_menu_item}, name?: {sourceMenuItemName}}}");
         }
     }
 }
